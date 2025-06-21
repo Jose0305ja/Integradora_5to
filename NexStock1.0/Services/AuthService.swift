@@ -22,6 +22,7 @@ class AuthService: ObservableObject {
     static let shared = AuthService()
     
     @Published var token: String? = nil
+    @Published var logoURL: String? = nil
 
     var isAuthenticated: Bool {
         return token != nil
