@@ -29,6 +29,8 @@ class LoginViewModel: ObservableObject {
                     print("✅ Login exitoso. Token: \(response.accessToken)")
                     UserDefaults.standard.set(response.accessToken, forKey: "authToken")
                     self?.isLoggedIn = true
+                    // Obtener configuraci\u00f3n del sistema al iniciar sesi\u00f3n
+                    SystemConfigViewModel().fetchConfig()
                     completion(true)
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription

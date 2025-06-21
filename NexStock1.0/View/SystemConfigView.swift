@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct SystemConfigView: View {
     @StateObject private var viewModel = SystemConfigViewModel()
     @State private var showImagePicker = false
+
+    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var authService: AuthService
 
     @Environment(\.presentationMode) var presentationMode
 
@@ -51,21 +55,38 @@ struct SystemConfigView: View {
 
                             SectionContainer(title: "") {
                                 VStack(spacing: 10) {
-                                        Image(uiImage: viewModel.logoImage ?? UIImage(named: "AppLogo")!)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 80, height: 80)
-                                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                                            .shadow(radius: 3)
-                                            .onTapGesture { showImagePicker = true }
+                         Group {
+                                        if viewModel.isUploading {
+                                            ProgressView()
+                                        } else if let image = viewModel.logoImage {
+                                            Image(uiImage: image)
+                                                .resizable()
+                                        } else if let urlString = viewModel.logoURL, let url = URL(string: urlString) {
+                                            AsyncImage(url: url) { phase in
+                                                if let img = phase.image {
+                                                    img.resizable()
+                                                } else {
+                                                    ProgressView()
+                                                }
+                                            }
+                                        } else {
+                                            Image("AppLogo")
+                                                .resizable()
+                                        }
+                                    }
+                                    .scaledToFit()
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .shadow(radius: 3)
 
                                     Text("tap_to_change_logo".localized)
-                                            .font(.caption)
-                                            .foregroundColor(.fourthColor)
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .frame(maxWidth: 240)
+                                        .font(.caption)
+                                        .foregroundColor(.fourthColor)
+                                        .multilineTextAlignment(.center)
+                                }
+                                .frame(maxWidth: 240)
                             }
+                            .onTapGesture { showImagePicker = true }
                         }
                         .frame(maxWidth: .infinity)
 
@@ -93,7 +114,8 @@ struct SystemConfigView: View {
 
                         // 💾 Botón guardar
                         Button(action: {
-                            viewModel.saveColors()
+
+                            viewModel.saveChanges()
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.down.fill")
@@ -119,11 +141,29 @@ struct SystemConfigView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear { viewModel.fetchConfig() }
         .sheet(isPresented: $showImagePicker) {
-            ImagePicker() { image in
+
+            ImagePicker(sourceType: sourceType) { image in
                 viewModel.logoImage = image
-                viewModel.updateLogo()
             }
         }
+
+        .alert("Cambios guardados", isPresented: $viewModel.showSuccessAlert) {
+            Button("OK", role: .cancel) { }
+        }
+        .alert("Error al guardar", isPresented: $viewModel.showErrorAlert) {
+            Button("OK", role: .cancel) { }
+        }
+        .overlay(
+            Group {
+                if viewModel.isSaving {
+                    Color.black.opacity(0.4).ignoresSafeArea()
+                    ProgressView("Guardando...")
+                        .padding(20)
+                        .background(.regularMaterial)
+                        .cornerRadius(12)
+                }
+            }
+        )
     }
 
     // 🎨 Selector de color sin título

@@ -67,5 +67,9 @@
     "cactus": "サボテン",
     "potato": "じゃがいも",
     "radish": "大根",
-    "carrot": "にんじん"
+    "carrot": "にんじん",
+  "config_saved": "Configuration saved",
+  "backend_error": "Error communicating with server",
+  "logo_updated": "Logo updated",
+  "logo_error": "Error updating logo"
 }

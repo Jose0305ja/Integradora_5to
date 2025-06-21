@@ -69,5 +69,9 @@
   "cactus": "Cactus",
   "potato": "Pomme de terre",
   "radish": "Radis",
-  "carrot": "Carotte"
+  "carrot": "Carotte",
+  "config_saved": "Configuration saved",
+  "backend_error": "Error communicating with server",
+  "logo_updated": "Logo updated",
+  "logo_error": "Error updating logo"
 }

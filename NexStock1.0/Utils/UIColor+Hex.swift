@@ -1,23 +1,37 @@
-import UIKit
+
+import SwiftUI
 
 extension UIColor {
     convenience init?(hex: String) {
-        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        if hexSanitized.hasPrefix("#") { hexSanitized.removeFirst() }
-        guard hexSanitized.count == 6, let int = Int(hexSanitized, radix: 16) else { return nil }
-        let red = CGFloat((int >> 16) & 0xFF) / 255.0
-        let green = CGFloat((int >> 8) & 0xFF) / 255.0
-        let blue = CGFloat(int & 0xFF) / 255.0
-        self.init(red: red, green: green, blue: blue, alpha: 1.0)
+        var hexSanitized = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int = UInt64()
+        guard Scanner(string: hexSanitized).scanHexInt64(&int) else { return nil }
+        let a, r, g, b: UInt64
+        switch hexSanitized.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            return nil
+        }
+        self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     }
 
     var toHex: String? {
-        var r: CGFloat = 0
-        var g: CGFloat = 0
-        var b: CGFloat = 0
-        var a: CGFloat = 0
-        guard getRed(&r, green: &g, blue: &b, alpha: &a) else { return nil }
-        let rgb = (Int)(r * 255) << 16 | (Int)(g * 255) << 8 | (Int)(b * 255)
-        return String(format: "#%06x", rgb)
+        guard let components = cgColor.components, components.count >= 3 else { return nil }
+        let r = Float(components[0])
+        let g = Float(components[1])
+        let b = Float(components[2])
+        return String(format: "#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255))
+    }
+}
+
+extension Color {
+    init?(hex: String) {
+        guard let uiColor = UIColor(hex: hex) else { return nil }
+        self.init(uiColor)
     }
 }

@@ -1,1 +1,23 @@
+<<<<<<< HEAD
 *.xcuserstate
+=======
+
+# Xcode project files
+*.xcuserstate
+*.xcuserdata/
+*.xcuserdatad/
+*.xccheckout
+*.moved-aside
+*.xcworkspace/xcuserdata/
+*.xcscmblueprint
+
+# Build & derived
+DerivedData/
+build/
+
+# macOS
+.DS_Store
+
+# SwiftPM
+.build/
+>>>>>>> 08a996024dff9056d01c471600b5f5562214af78
