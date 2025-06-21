@@ -13,6 +13,7 @@ struct HeaderView: View {
     @State private var showUsername = true
     @Environment(\.sizeCategory) var sizeCategory
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var authService: AuthService
 
     var body: some View {
         HStack {
@@ -54,11 +55,9 @@ struct HeaderView: View {
 
             // Menú con bola roja escalable
             Menu {
-                Button("settings".localized) {
-                    path.append(AppRoute.settings)
-                }
                 Button("logout".localized) {
-                    print("Cerrar sesión")
+                    authService.logout()
+                    path.removeLast(path.count)
                 }
             } label: {
                 Circle()
