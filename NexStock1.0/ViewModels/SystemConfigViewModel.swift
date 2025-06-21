@@ -75,9 +75,14 @@ class SystemConfigViewModel: ObservableObject {
         request.httpBody = try? JSONEncoder().encode(payload)
 
         do {
-            let (_, response) = try await URLSession.shared.data(for: request)
-            if let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) {
-                return true
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let http = response as? HTTPURLResponse {
+                if (200...299).contains(http.statusCode) {
+                    return true
+                } else {
+                    let body = String(data: data, encoding: .utf8) ?? "<no body>"
+                    print("Error saving colors. Status: \(http.statusCode). Body: \(body)")
+                }
             }
         } catch {
             print("Error saving colors:", error)
@@ -94,7 +99,14 @@ class SystemConfigViewModel: ObservableObject {
             var signedRequest = URLRequest(url: signedUrl)
             signedRequest.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
 
-            let (data, _) = try await URLSession.shared.data(for: signedRequest)
+            let (data, signedRes) = try await URLSession.shared.data(for: signedRequest)
+            if let http = signedRes as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
+                let body = String(data: data, encoding: .utf8) ?? "<no body>"
+                print("Error obtaining upload url. Status: \(http.statusCode). Body: \(body)")
+                isUploading = false
+                return false
+            }
+
             let response = try JSONDecoder().decode(UploadUrlResponse.self, from: data)
 
             var putRequest = URLRequest(url: URL(string: response.upload_url)!)
@@ -102,8 +114,12 @@ class SystemConfigViewModel: ObservableObject {
             putRequest.httpBody = imageData
             putRequest.setValue("image/png", forHTTPHeaderField: "Content-Type")
 
-            let (_, putRes) = try await URLSession.shared.data(for: putRequest)
+            let (putData, putRes) = try await URLSession.shared.data(for: putRequest)
             guard let httpPut = putRes as? HTTPURLResponse, httpPut.statusCode == 200 else {
+                let body = String(data: putData, encoding: .utf8) ?? "<no body>"
+                if let httpPut = putRes as? HTTPURLResponse {
+                    print("Error uploading image. Status: \(httpPut.statusCode). Body: \(body)")
+                }
                 isUploading = false
                 return false
             }
@@ -127,10 +143,15 @@ class SystemConfigViewModel: ObservableObject {
         request.httpBody = try? JSONEncoder().encode(payload)
 
         do {
-            let (_, response) = try await URLSession.shared.data(for: request)
-            if let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) {
-                isUploading = false
-                return true
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let http = response as? HTTPURLResponse {
+                if (200...299).contains(http.statusCode) {
+                    isUploading = false
+                    return true
+                } else {
+                    let body = String(data: data, encoding: .utf8) ?? "<no body>"
+                    print("Error sending logo url. Status: \(http.statusCode). Body: \(body)")
+                }
             }
         } catch {
             print("Error sending logo url:", error)
