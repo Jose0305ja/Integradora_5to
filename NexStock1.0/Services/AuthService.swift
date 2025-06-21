@@ -61,5 +61,6 @@ class AuthService: ObservableObject {
 
     func logout() {
         token = nil
+        UserDefaults.standard.removeObject(forKey: "authToken")
     }
 }

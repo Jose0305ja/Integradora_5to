@@ -140,6 +140,18 @@ struct SideMenuView: View {
                         .padding(.leading, 12)
                     }
 
+                    // Configuración
+                    Button {
+                        path.append(AppRoute.settings)
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "gearshape.fill")
+                            Text("settings".localized)
+                        }
+                    }
+                    .font(.title3.bold())
+                    .foregroundColor(.fourthColor)
+
                     Spacer()
                 }
                 .padding(.top, topSafeArea + 16)
