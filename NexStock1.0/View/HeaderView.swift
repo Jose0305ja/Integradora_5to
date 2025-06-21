@@ -14,6 +14,7 @@ struct HeaderView: View {
     @Environment(\.sizeCategory) var sizeCategory
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var authService: AuthService
+    @EnvironmentObject var theme: ThemeManager
 
     var body: some View {
         HStack {

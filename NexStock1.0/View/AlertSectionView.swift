@@ -11,6 +11,7 @@ import SwiftUI
 struct AlertSectionView: View {
     let alerts: [AlertModel]
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var theme: ThemeManager
 
     var body: some View {
         VStack(alignment: .center, spacing: 15) {

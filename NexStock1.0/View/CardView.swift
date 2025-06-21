@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CardView: View {
     let model: CardModel
+    @EnvironmentObject var theme: ThemeManager
 
     var body: some View {
         VStack(spacing: 12) {

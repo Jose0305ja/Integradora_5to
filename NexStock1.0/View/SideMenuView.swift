@@ -12,6 +12,7 @@ struct SideMenuView: View {
     @Binding var path: NavigationPath
     @State private var activeMenu: String? = nil
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var theme: ThemeManager
 
     private var topSafeArea: CGFloat {
         UIApplication.shared.connectedScenes

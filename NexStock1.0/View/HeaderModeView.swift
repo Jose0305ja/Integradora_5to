@@ -12,6 +12,7 @@ struct HeaderModeView: View {
     var title: String
     var showRedDot: Bool = false
     var onBack: (() -> Void)? = nil
+    @EnvironmentObject var theme: ThemeManager
 
     var body: some View {
         HStack {

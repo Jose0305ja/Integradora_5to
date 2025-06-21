@@ -9,6 +9,7 @@ import SwiftUI
 
 struct InventoryCardView: View {
     let product: ProductModel
+    @EnvironmentObject var theme: ThemeManager
 
     var body: some View {
         VStack(spacing: 8) {
