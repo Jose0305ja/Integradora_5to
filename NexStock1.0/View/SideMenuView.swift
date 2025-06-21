@@ -140,6 +140,8 @@ struct SideMenuView: View {
                         .padding(.leading, 12)
                     }
 
+                    Spacer()
+
                     // Configuración
                     Button {
                         path.append(AppRoute.settings)
@@ -151,8 +153,7 @@ struct SideMenuView: View {
                     }
                     .font(.title3.bold())
                     .foregroundColor(.fourthColor)
-
-                    Spacer()
+                    .padding(.bottom, 40)
                 }
                 .padding(.top, topSafeArea + 16)
                 .padding(.horizontal)
