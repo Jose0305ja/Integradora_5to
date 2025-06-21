@@ -1,6 +1,7 @@
 import SwiftUI
 
 class SystemConfigViewModel: ObservableObject {
+    private let authService = AuthService.shared
     @Published var primaryColor: Color = .primaryColor
     @Published var secondaryColor: Color = .secondaryColor
     @Published var tertiaryColor: Color = .tertiaryColor
@@ -10,7 +11,9 @@ class SystemConfigViewModel: ObservableObject {
 
     func fetchConfig() {
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return }
-        URLSession.shared.dataTask(with: url) { data, _, _ in
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
+        URLSession.shared.dataTask(with: request) { data, _, _ in
             guard let data = data,
                   let response = try? JSONDecoder().decode(SystemConfigResponse.self, from: data) else { return }
             DispatchQueue.main.async {
@@ -18,6 +21,7 @@ class SystemConfigViewModel: ObservableObject {
                 if let s = Color(hex: response.color_secondary) { self.secondaryColor = s }
                 if let t = Color(hex: response.color_tertiary) { self.tertiaryColor = t }
                 self.logoURL = response.logo_url
+                self.authService.logoURL = response.logo_url
             }
         }.resume()
     }
@@ -38,6 +42,7 @@ class SystemConfigViewModel: ObservableObject {
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
         request.httpBody = try? JSONEncoder().encode(payload)
 
         URLSession.shared.dataTask(with: request).resume()
@@ -49,7 +54,10 @@ class SystemConfigViewModel: ObservableObject {
         // 1. Obtener URL firmada
         guard let signedUrlRequest = URL(string: "https://auth.nexusutd.online/auth/config/upload-url?type=logo&ext=png") else { return }
 
-        URLSession.shared.dataTask(with: signedUrlRequest) { data, _, _ in
+        var getRequest = URLRequest(url: signedUrlRequest)
+        getRequest.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: getRequest) { data, _, _ in
             guard let data = data,
                   let response = try? JSONDecoder().decode(UploadUrlResponse.self, from: data),
                   let imageData = self.logoImage?.pngData() else { return }
@@ -74,11 +82,13 @@ class SystemConfigViewModel: ObservableObject {
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
         request.httpBody = try? JSONEncoder().encode(payload)
 
         URLSession.shared.dataTask(with: request) { _, _, _ in
             DispatchQueue.main.async {
                 self.isUploading = false
+                self.authService.logoURL = finalUrl
             }
         }.resume()
     }
