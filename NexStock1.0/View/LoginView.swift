@@ -23,8 +23,9 @@ struct LoginView: View {
                 DiagonalLines(colorScheme: colorScheme)
 
                 ScrollView {
+                    let spacing = max(geometry.size.height * 0.08, 20)
                     VStack(spacing: 30) {
-                        Spacer(minLength: geometry.size.height * 0.08)
+                        Spacer(minLength: spacing)
 
                         // Logo
                         Image("AppLogo")
@@ -88,7 +89,7 @@ struct LoginView: View {
                                 .cornerRadius(10)
                         }
 
-                        Spacer(minLength: geometry.size.height * 0.08)
+                        Spacer(minLength: spacing)
                     }
                     .frame(maxWidth: 500)
                     .padding()

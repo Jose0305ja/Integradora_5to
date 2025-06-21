@@ -23,6 +23,7 @@ struct AddProductSheet: View {
     @State private var selectedUnitType: UnitType? = nil
     @State private var stockMin = 0
     @State private var stockMax = 0
+    @State private var inputMethod: InputMethod = .manual
     @State private var showSuccessAlert = false
     @State private var showErrorAlert = false
 
@@ -124,8 +125,18 @@ struct AddProductSheet: View {
                         }
                     }
                 }
+
+                // Sección 6 - Método de entrada
+                Section(header: Text("input_method".localized)) {
+                    Picker("input_method".localized, selection: $inputMethod) {
+                        ForEach(InputMethod.allCases, id: \.self) { method in
+                            Text(method.rawValue.localized).tag(method)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
             }
-            .navigationTitle("Nuevo Producto")
+            .navigationTitle("new_product".localized)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Guardar") {
@@ -140,7 +151,8 @@ struct AddProductSheet: View {
                                 unit_type_id: unit.id,
                                 image_url: finalURL.absoluteString,
                                 stock_min: stockMin,
-                                stock_max: stockMax
+                                stock_max: stockMax,
+                                input_method: inputMethod
                             )
                             onSave(producto)
                             dismiss()
