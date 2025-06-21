@@ -8,8 +8,7 @@
 import SwiftUI
 import PhotosUI
 
-import SwiftUI
-import PhotosUI
+import Foundation
 
 struct AddProductSheet: View {
     var onSave: (ProductModel) -> Void
@@ -154,8 +153,19 @@ struct AddProductSheet: View {
                                 stock_max: stockMax,
                                 input_method: inputMethod
                             )
-                            onSave(producto)
-                            dismiss()
+
+                            ProductService.shared.addProduct(producto) { result in
+                                DispatchQueue.main.async {
+                                    switch result {
+                                    case .success:
+                                        onSave(producto)
+                                        showSuccessAlert = true
+                                    case .failure(let error):
+                                        print("Error saving product:", error)
+                                        showErrorAlert = true
+                                    }
+                                }
+                            }
                         }
                     }
                     .disabled(name.isEmpty || selectedCategory == nil || selectedUnitType == nil || finalURL == nil)
@@ -180,6 +190,14 @@ struct AddProductSheet: View {
                     isUploading = false
                 }
             }
+        }
+        .alert("Producto guardado", isPresented: $showSuccessAlert) {
+            Button("OK", role: .cancel) {
+                dismiss()
+            }
+        }
+        .alert("Ocurrió un error", isPresented: $showErrorAlert) {
+            Button("OK", role: .cancel) {}
         }
     }
 

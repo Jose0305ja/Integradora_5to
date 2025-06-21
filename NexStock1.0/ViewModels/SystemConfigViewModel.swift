@@ -86,12 +86,15 @@ class SystemConfigViewModel: ObservableObject {
     }
 
     private func updateLogo() async -> Bool {
-        guard let signedUrlRequest = URL(string: "https://auth.nexusutd.online/auth/config/upload-url?type=logo&ext=png"),
+        guard let signedUrl = URL(string: "https://auth.nexusutd.online/auth/config/upload-url?type=logo&ext=png"),
               let imageData = logoImage?.pngData() else { return false }
 
         isUploading = true
         do {
-            let (data, _) = try await URLSession.shared.data(from: signedUrlRequest)
+            var signedRequest = URLRequest(url: signedUrl)
+            signedRequest.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
+
+            let (data, _) = try await URLSession.shared.data(for: signedRequest)
             let response = try JSONDecoder().decode(UploadUrlResponse.self, from: data)
 
             var putRequest = URLRequest(url: URL(string: response.upload_url)!)
@@ -101,12 +104,14 @@ class SystemConfigViewModel: ObservableObject {
 
             let (_, putRes) = try await URLSession.shared.data(for: putRequest)
             guard let httpPut = putRes as? HTTPURLResponse, httpPut.statusCode == 200 else {
+                isUploading = false
                 return false
             }
 
             return await sendLogoUrlToBackend(finalUrl: response.final_url)
         } catch {
             print("Error updating logo:", error)
+            isUploading = false
             return false
         }
     }
