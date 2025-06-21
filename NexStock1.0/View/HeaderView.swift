@@ -53,17 +53,30 @@ struct HeaderView: View {
 
             Spacer()
 
-            // Menú con bola roja escalable
+            // Menú con logo dinámico
             Menu {
                 Button("logout".localized) {
                     authService.logout()
                     path.removeLast(path.count)
                 }
             } label: {
-                Circle()
-                    .fill(Color.red)
+                if let urlString = authService.logoURL, let url = URL(string: urlString) {
+                    AsyncImage(url: url) { phase in
+                        if let img = phase.image {
+                            img.resizable()
+                        } else {
+                            ProgressView()
+                        }
+                    }
                     .frame(width: iconSize, height: iconSize)
+                    .clipShape(Circle())
                     .shadow(radius: 1)
+                } else {
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: iconSize, height: iconSize)
+                        .shadow(radius: 1)
+                }
             }
         }
         .padding(.horizontal)
