@@ -16,9 +16,13 @@ struct LoginView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // 🟢 Fondo dinámico
-                (colorScheme == .dark ? Color(.systemGray6) : Color.white)
-                    .ignoresSafeArea()
+                // 🟢 Fondo dinámico renovado
+                LinearGradient(
+                    colors: backgroundColors,
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
 
                 DiagonalLines(colorScheme: colorScheme)
 
@@ -35,15 +39,19 @@ struct LoginView: View {
 
                         // Usuario
                         TextField("Usuario", text: $viewModel.username)
+                            .textContentType(.username)
                             .padding()
-                            .background(inputBackground)
-                            .cornerRadius(10)
+                            .background(
+                                .thinMaterial,
+                                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            )
                             .padding(.horizontal)
 
                         // Contraseña
                         ZStack(alignment: .trailing) {
                             if isPasswordVisible {
                                 TextField("Contraseña", text: $viewModel.password)
+                                    .textContentType(.password)
                             } else {
                                 SecureField("Contraseña", text: $viewModel.password)
                             }
@@ -56,8 +64,10 @@ struct LoginView: View {
                             }
                         }
                         .padding()
-                        .background(inputBackground)
-                        .cornerRadius(10)
+                        .background(
+                            .thinMaterial,
+                            in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        )
                         .padding(.horizontal)
 
                         // Mensaje de error
@@ -81,11 +91,12 @@ struct LoginView: View {
                             }
                         }) {
                             Text("Iniciar sesión")
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
                                 .padding(.horizontal, 30)
                                 .padding(.vertical, 12)
-                                .background(inputBackground)
-                                .cornerRadius(10)
+                                .background(Color.accentColor)
+                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                         }
 
                         Spacer(minLength: geometry.size.height * 0.08)
@@ -97,7 +108,8 @@ struct LoginView: View {
         }
     }
 
-    var inputBackground: Color {
-        colorScheme == .dark ? Color(.systemGray4) : Color.gray.opacity(0.3)
+    var backgroundColors: [Color] {
+        colorScheme == .dark ? [Color.black, Color.primaryColor.opacity(0.3)] :
+            [Color.white, Color.primaryColor.opacity(0.3)]
     }
 }
