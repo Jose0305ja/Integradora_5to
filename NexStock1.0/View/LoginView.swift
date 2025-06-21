@@ -16,11 +16,13 @@ struct LoginView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // 🟢 Fondo dinámico
-                (colorScheme == .dark ? Color(.systemGray6) : Color.white)
-                    .ignoresSafeArea()
-
-                DiagonalLines(colorScheme: colorScheme)
+                // Fondo con degradado para un estilo más limpio
+                LinearGradient(
+                    colors: [Color.primaryColor, Color.secondaryColor],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
 
                 ScrollView {
                     let spacing = max(geometry.size.height * 0.08, 20)
@@ -36,9 +38,10 @@ struct LoginView: View {
 
                         // Usuario
                         TextField("Usuario", text: $viewModel.username)
+                            .textFieldStyle(PlainTextFieldStyle())
                             .padding()
-                            .background(inputBackground)
-                            .cornerRadius(10)
+                            .background(.thinMaterial)
+                            .cornerRadius(12)
                             .padding(.horizontal)
 
                         // Contraseña
@@ -56,9 +59,10 @@ struct LoginView: View {
                                     .foregroundColor(.gray)
                             }
                         }
+                        .textFieldStyle(PlainTextFieldStyle())
                         .padding()
-                        .background(inputBackground)
-                        .cornerRadius(10)
+                        .background(.thinMaterial)
+                        .cornerRadius(12)
                         .padding(.horizontal)
 
                         // Mensaje de error
@@ -82,12 +86,15 @@ struct LoginView: View {
                             }
                         }) {
                             Text("Iniciar sesión")
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
-                                .padding(.horizontal, 30)
-                                .padding(.vertical, 12)
-                                .background(inputBackground)
-                                .cornerRadius(10)
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.primaryColor.opacity(0.9))
+                                .foregroundColor(.white)
+                                .cornerRadius(12)
+                                .shadow(radius: 3)
                         }
+                        .padding(.horizontal)
 
                         Spacer(minLength: spacing)
                     }
@@ -98,7 +105,4 @@ struct LoginView: View {
         }
     }
 
-    var inputBackground: Color {
-        colorScheme == .dark ? Color(.systemGray4) : Color.gray.opacity(0.3)
-    }
 }
