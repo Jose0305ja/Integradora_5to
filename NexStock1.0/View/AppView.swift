@@ -26,7 +26,8 @@ struct AppView: View {
                             content: {
                                 InventoryScreenView(path: $path)
                             },
-                            showMenu: $showMenu // ✅ YA FUNCIONA
+                            path: $path,
+                            showMenu: $showMenu
                         )
                     case .userManagement:
                         UserManagementView()
