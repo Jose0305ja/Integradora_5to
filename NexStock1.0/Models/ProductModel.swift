@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum InputMethod: String, Codable, CaseIterable {
+    case manual
+    case sensor
+}
+
 struct ProductModel: Identifiable, Codable {
     let id = UUID()
     let name: String
@@ -17,6 +22,7 @@ struct ProductModel: Identifiable, Codable {
     let image_url: String
     let stock_min: Int
     let stock_max: Int
+    let input_method: InputMethod
 
     var localized: String {
         NSLocalizedString(name, comment: "")
@@ -42,7 +48,8 @@ let sampleProducts: [ProductModel] = [
         unit_type_id: 1,
         image_url: "manzana",
         stock_min: 5,
-        stock_max: 50
+        stock_max: 50,
+        input_method: .manual
     ),
     ProductModel(
         name: "Zanahoria",
@@ -52,6 +59,7 @@ let sampleProducts: [ProductModel] = [
         unit_type_id: 1,
         image_url: "zanahoria",
         stock_min: 10,
-        stock_max: 100
+        stock_max: 100,
+        input_method: .sensor
     )
 ]

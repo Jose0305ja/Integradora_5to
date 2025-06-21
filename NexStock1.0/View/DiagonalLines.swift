@@ -14,23 +14,24 @@ struct DiagonalLines: View {
         GeometryReader { geometry in
             let width = geometry.size.width
             let height = geometry.size.height
+            let diag = sqrt(width * width + height * height)
             let baseColor = colorScheme == .dark ? Color.gray.opacity(0.4) : Color.gray
 
             ZStack {
                 DiagonalLine(opacity: 1.0, color: baseColor)
-                    .frame(width: width * 0.8, height: 30)
+                    .frame(width: diag, height: 30)
                     .offset(x: width * 0.25, y: -height * 0.05)
 
                 DiagonalLine(opacity: 0.7, color: baseColor)
-                    .frame(width: width * 0.8, height: 30)
+                    .frame(width: diag, height: 30)
                     .offset(x: width * 0.40, y: -height * 0.01)
 
                 DiagonalLine(opacity: 1.0, color: baseColor)
-                    .frame(width: width * 0.8, height: 30)
+                    .frame(width: diag, height: 30)
                     .offset(x: -width * 0.34, y: height * 0.85)
 
                 DiagonalLine(opacity: 0.7, color: baseColor)
-                    .frame(width: width * 0.8, height: 30)
+                    .frame(width: diag, height: 30)
                     .offset(x: -width * 0.69, y: height * 0.9)
             }
         }
