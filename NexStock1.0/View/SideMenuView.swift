@@ -153,7 +153,7 @@ struct SideMenuView: View {
                     }
                     .font(.title3.bold())
                     .foregroundColor(.fourthColor)
-                    .padding(.bottom, 20)
+                    .padding(.bottom, 40)
                 }
                 .padding(.top, topSafeArea + 16)
                 .padding(.horizontal)
