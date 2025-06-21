@@ -113,9 +113,7 @@ struct SystemConfigView: View {
 
                         // 💾 Botón guardar
                         Button(action: {
-
                             viewModel.saveChanges()
-                        codex/implement-system-configuration-handling-in-systemconfigview
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.down.fill")
@@ -142,9 +140,7 @@ struct SystemConfigView: View {
         .onAppear { viewModel.fetchConfig(authService: authService) }
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(sourceType: sourceType) { image in
-
                 viewModel.logoImage = image
-        codex/implement-system-configuration-handling-in-systemconfigview
             }
         }
 
@@ -165,7 +161,6 @@ struct SystemConfigView: View {
                 }
             }
         )
- codex/implement-system-configuration-handling-in-systemconfigview
     }
 
     // 🎨 Selector de color sin título
