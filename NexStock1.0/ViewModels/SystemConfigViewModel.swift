@@ -52,7 +52,7 @@ class SystemConfigViewModel: ObservableObject {
         URLSession.shared.dataTask(with: signedUrlRequest) { data, _, _ in
             guard let data = data,
                   let response = try? JSONDecoder().decode(UploadUrlResponse.self, from: data),
-                  let imageData = logoImage?.pngData() else { return }
+                  let imageData = self.logoImage?.pngData() else { return }
 
             // 2. Subir imagen a S3
             var putRequest = URLRequest(url: URL(string: response.upload_url)!)
