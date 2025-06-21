@@ -69,7 +69,7 @@ class SystemConfigViewModel: ObservableObject {
 
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return false }
         var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
+        request.httpMethod = "PATCH"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
         request.httpBody = try? JSONEncoder().encode(payload)
