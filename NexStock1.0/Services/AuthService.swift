@@ -7,6 +7,17 @@
 
 import Foundation
 
+enum AuthError: LocalizedError {
+    case invalidCredentials
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidCredentials:
+            return "Usuario y/o contraseña incorrectos"
+        }
+    }
+}
+
 class AuthService: ObservableObject {
     static let shared = AuthService()
     
@@ -40,7 +51,14 @@ class AuthService: ObservableObject {
                 return completion(.failure(error))
             }
 
-            guard let data = data else { return }
+            guard let httpResponse = response as? HTTPURLResponse,
+                  let data = data else {
+                return completion(.failure(AuthError.invalidCredentials))
+            }
+
+            if httpResponse.statusCode == 401 || httpResponse.statusCode == 400 {
+                return completion(.failure(AuthError.invalidCredentials))
+            }
 
             do {
                 let decoded = try JSONDecoder().decode(LoginResponse.self, from: data)
