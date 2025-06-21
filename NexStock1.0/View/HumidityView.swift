@@ -1,0 +1,88 @@
+//
+//  HumidityView.swift
+//  NexStock1.0
+//
+//  Created by Jose Antonio Rivera on 18/06/25.
+//
+
+import SwiftUI
+
+struct HumidityView: View {
+    @Binding var path: NavigationPath
+    @State private var showMenu = false
+    @StateObject private var viewModel = HumidityViewModel()
+    @EnvironmentObject var localization: LocalizationManager
+
+    var body: some View {
+        ZStack(alignment: .leading) {
+            Color.backColor.ignoresSafeArea()
+
+            VStack(spacing: 16) {
+                HeaderView(showMenu: $showMenu, path: $path)
+
+                ScrollView {
+                    VStack(spacing: 16) {
+                        // Selector de tiempo
+                        HStack(spacing: 12) {
+                            ForEach(viewModel.timeRanges, id: \.self) { range in
+                                Button(action: {
+                                    viewModel.selectedTimeRange = range
+                                }) {
+                                    Text(range)
+                                        .font(.subheadline)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 6)
+                                        .background(viewModel.selectedTimeRange == range ? Color.primary.opacity(0.1) : Color.clear)
+                                        .cornerRadius(8)
+                                        .foregroundColor(viewModel.selectedTimeRange == range ? .primary : .gray)
+                                }
+                            }
+                        }
+
+                        // Gráfica
+                        LineChartView(
+                            data: viewModel.chartValues,
+                            labels: viewModel.xAxisLabels
+                        )
+
+                        // Valores
+                        infoBox(title: "current_humidity".localized, value: "\(viewModel.current)%", color: .blue)
+                        infoBox(title: "average".localized, value: "\(viewModel.average)%")
+                        infoBox(title: "minimum".localized, value: "\(viewModel.min)%")
+                        infoBox(title: "maximum".localized, value: "\(viewModel.max)%")
+
+                        if viewModel.current > viewModel.optimalMax {
+                            Text("⚠️ Alerta: Humedad superior al rango óptimo")
+                                .font(.callout)
+                                .foregroundColor(.orange)
+                                .padding()
+                                .background(Color.orange.opacity(0.1))
+                                .cornerRadius(10)
+                        }
+                    }
+                    .padding()
+                }
+            }
+
+            if showMenu {
+                SideMenuView(isOpen: $showMenu, path: $path)
+                    .transition(.move(edge: .leading))
+                    .zIndex(1)
+            }
+        }
+        .animation(.easeInOut, value: showMenu)
+        .navigationBarBackButtonHidden(true)
+    }
+
+    private func infoBox(title: String, value: String, color: Color = .primary) -> some View {
+        VStack {
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.gray)
+            Text(value)
+                .font(.headline)
+                .foregroundColor(color)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}

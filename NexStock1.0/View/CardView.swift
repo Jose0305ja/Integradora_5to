@@ -1,0 +1,40 @@
+//
+//  CardView.swift
+//  NexStock1.0
+//
+//  Created by Jose Antonio Rivera on 07/06/25.
+//
+
+
+import SwiftUI
+
+struct CardView: View {
+    let model: CardModel
+
+    var body: some View {
+        VStack(spacing: 12) {
+            Text(model.title)
+                .font(.title3)
+                .fontWeight(.semibold)
+                .foregroundColor(.fourthColor)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
+
+            Text(model.subtitle)
+                .font(.headline)
+                .foregroundColor(.fourthColor.opacity(0.6))
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
+        }
+        
+        .frame(width: 160, height: 160)
+        .padding(EdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 10))
+        .background(Color.tertiaryColor)
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.fourthColor.opacity(0.2), lineWidth: 1)
+        )
+        .shadow(radius: 3)
+    }
+}
