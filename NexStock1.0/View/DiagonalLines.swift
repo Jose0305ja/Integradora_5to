@@ -18,21 +18,25 @@ struct DiagonalLines: View {
             let baseColor = colorScheme == .dark ? Color.gray.opacity(0.4) : Color.gray
 
             ZStack {
+                // Top-left corner
                 DiagonalLine(opacity: 1.0, color: baseColor)
                     .frame(width: diag, height: 30)
-                    .offset(x: width * 0.25, y: -height * 0.05)
+                    .offset(x: -width / 2, y: -height / 2)
 
+                // Top-right corner
                 DiagonalLine(opacity: 0.7, color: baseColor)
                     .frame(width: diag, height: 30)
-                    .offset(x: width * 0.40, y: -height * 0.01)
+                    .offset(x: width / 2, y: -height / 2)
 
+                // Bottom-left corner
                 DiagonalLine(opacity: 1.0, color: baseColor)
                     .frame(width: diag, height: 30)
-                    .offset(x: -width * 0.34, y: height * 0.85)
+                    .offset(x: -width / 2, y: height / 2)
 
+                // Bottom-right corner
                 DiagonalLine(opacity: 0.7, color: baseColor)
                     .frame(width: diag, height: 30)
-                    .offset(x: -width * 0.69, y: height * 0.9)
+                    .offset(x: width / 2, y: height / 2)
             }
         }
         .allowsHitTesting(false) // para que no interfiera con toques
