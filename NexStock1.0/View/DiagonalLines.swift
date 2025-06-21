@@ -20,19 +20,21 @@ struct DiagonalLines: View {
             ZStack {
                 DiagonalLine(opacity: 1.0, color: baseColor)
                     .frame(width: diag, height: 30)
-                    .offset(x: width * 0.25, y: -height * 0.05)
+                    // Upper-right lines
+                    .offset(x: width * 0.55, y: -height * 0.35)
 
                 DiagonalLine(opacity: 0.7, color: baseColor)
                     .frame(width: diag, height: 30)
-                    .offset(x: width * 0.40, y: -height * 0.01)
+                    .offset(x: width * 0.65, y: -height * 0.5)
 
                 DiagonalLine(opacity: 1.0, color: baseColor)
                     .frame(width: diag, height: 30)
-                    .offset(x: -width * 0.34, y: height * 0.85)
+                    // Bottom-left lines
+                    .offset(x: -width * 0.65, y: height * 0.5)
 
                 DiagonalLine(opacity: 0.7, color: baseColor)
                     .frame(width: diag, height: 30)
-                    .offset(x: -width * 0.69, y: height * 0.9)
+                    .offset(x: -width * 0.55, y: height * 0.35)
             }
         }
         .allowsHitTesting(false) // para que no interfiera con toques
