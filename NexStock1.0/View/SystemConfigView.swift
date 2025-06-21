@@ -137,7 +137,7 @@ struct SystemConfigView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear { viewModel.fetchConfig(authService: authService) }
+        .onAppear { viewModel.fetchConfig() }
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(sourceType: sourceType) { image in
                 viewModel.logoImage = image

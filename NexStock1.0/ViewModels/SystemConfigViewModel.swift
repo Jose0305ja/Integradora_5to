@@ -13,17 +13,19 @@ class SystemConfigViewModel: ObservableObject {
     @Published var showSuccessAlert = false
     @Published var showErrorAlert = false
 
-    func fetchConfig(authService: AuthService) {
+    func fetchConfig() {
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return }
 
         var request = URLRequest(url: url)
         request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
+
         URLSession.shared.dataTask(with: request) { data, _, _ in
             guard let data = data,
                   let response = try? JSONDecoder().decode(SystemConfigResponse.self, from: data) else {
                 print("❌ Invalid response while fetching config")
                 return
             }
+
             DispatchQueue.main.async {
                 if let p = Color(hex: response.color_primary) { self.primaryColor = p }
                 if let s = Color(hex: response.color_secondary) { self.secondaryColor = s }
