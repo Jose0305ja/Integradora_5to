@@ -11,7 +11,7 @@ class SystemConfigViewModel: ObservableObject {
     @Published var showSuccessAlert = false
     @Published var showErrorAlert = false
 
-    func fetchConfig() {
+    func fetchConfig(authService: AuthService) {
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
@@ -32,6 +32,7 @@ class SystemConfigViewModel: ObservableObject {
     private func hexString(from color: Color) -> String {
         UIColor(color).toHex ?? "#000000"
     }
+
 
     func saveChanges() {
         Task { await performSave() }
@@ -55,6 +56,7 @@ class SystemConfigViewModel: ObservableObject {
     }
 
     private func saveColors() async -> Bool {
+      codex/implement-system-configuration-handling-in-systemconfigview
         let payload: [String: String] = [
             "color_primary": hexString(from: primaryColor),
             "color_secondary": hexString(from: secondaryColor),
@@ -78,6 +80,7 @@ class SystemConfigViewModel: ObservableObject {
         }
         return false
     }
+
 
     private func updateLogo() async -> Bool {
         guard let signedUrlRequest = URL(string: "https://auth.nexusutd.online/auth/config/upload-url?type=logo&ext=png"),
@@ -112,6 +115,7 @@ class SystemConfigViewModel: ObservableObject {
 
     private func sendLogoUrlToBackend(finalUrl: String) async -> Bool {
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return false }
+ codex/implement-system-configuration-handling-in-systemconfigview
 
         let payload = ["logo_url": finalUrl]
         var request = URLRequest(url: url)
@@ -131,6 +135,7 @@ class SystemConfigViewModel: ObservableObject {
             print("Error sending logo url:", error)
         }
         return false
+ codex/implement-system-configuration-handling-in-systemconfigview
     }
 }
 

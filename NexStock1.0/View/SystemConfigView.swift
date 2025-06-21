@@ -13,6 +13,7 @@ struct SystemConfigView: View {
     @State private var showImagePicker = false
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var authService: AuthService
 
     @Environment(\.presentationMode) var presentationMode
 
@@ -54,7 +55,9 @@ struct SystemConfigView: View {
                             SectionContainer(title: "") {
                                 VStack(spacing: 10) {
                                     Group {
-                                        if let image = viewModel.logoImage {
+                                        if viewModel.isUploading {
+                                            ProgressView()
+                                        } else if let image = viewModel.logoImage {
                                             Image(uiImage: image)
                                                 .resizable()
                                         } else if let urlString = viewModel.logoURL, let url = URL(string: urlString) {
@@ -110,7 +113,9 @@ struct SystemConfigView: View {
 
                         // 💾 Botón guardar
                         Button(action: {
+
                             viewModel.saveChanges()
+                        codex/implement-system-configuration-handling-in-systemconfigview
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.down.fill")
@@ -134,10 +139,12 @@ struct SystemConfigView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear { viewModel.fetchConfig() }
+        .onAppear { viewModel.fetchConfig(authService: authService) }
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(sourceType: sourceType) { image in
+
                 viewModel.logoImage = image
+        codex/implement-system-configuration-handling-in-systemconfigview
             }
         }
         .alert("Cambios guardados", isPresented: $viewModel.showSuccessAlert) {
