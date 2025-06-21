@@ -8,9 +8,11 @@ class SystemConfigViewModel: ObservableObject {
     @Published var logoURL: String?
     @Published var isUploading = false
 
-    func fetchConfig() {
+    func fetchConfig(authService: AuthService) {
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return }
-        URLSession.shared.dataTask(with: url) { data, _, _ in
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
+        URLSession.shared.dataTask(with: request) { data, _, _ in
             guard let data = data,
                   let response = try? JSONDecoder().decode(SystemConfigResponse.self, from: data) else { return }
             DispatchQueue.main.async {
@@ -27,7 +29,7 @@ class SystemConfigViewModel: ObservableObject {
         UIColor(color).toHex ?? "#000000"
     }
 
-    func saveColors() {
+    func saveColors(authService: AuthService) {
         let payload: [String: String] = [
             "color_primary": hexString(from: primaryColor),
             "color_secondary": hexString(from: secondaryColor),
@@ -38,49 +40,74 @@ class SystemConfigViewModel: ObservableObject {
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
         request.httpBody = try? JSONEncoder().encode(payload)
 
         URLSession.shared.dataTask(with: request).resume()
     }
 
-    func updateLogo() {
+    @MainActor
+    func updateLogo(authService: AuthService) async {
+        guard let imageData = logoImage?.pngData() else { return }
         isUploading = true
 
-        // 1. Obtener URL firmada
-        guard let signedUrlRequest = URL(string: "https://auth.nexusutd.online/auth/config/upload-url?type=logo&ext=png") else { return }
+        guard let firma = await obtenerURLFirmada(authService: authService) else {
+            isUploading = false
+            return
+        }
 
-        URLSession.shared.dataTask(with: signedUrlRequest) { data, _, _ in
-            guard let data = data,
-                  let response = try? JSONDecoder().decode(UploadUrlResponse.self, from: data),
-                  let imageData = self.logoImage?.pngData() else { return }
+        do {
+            try await subirImagen(data: imageData, to: firma.upload_url)
+            await sendLogoUrlToBackend(finalUrl: firma.final_url, authService: authService)
+            logoURL = firma.final_url
+        } catch {
+            print("❌ Error actualizando logo:", error)
+        }
 
-            // 2. Subir imagen a S3
-            var putRequest = URLRequest(url: URL(string: response.upload_url)!)
-            putRequest.httpMethod = "PUT"
-            putRequest.httpBody = imageData
-            putRequest.setValue("image/png", forHTTPHeaderField: "Content-Type")
-
-            URLSession.shared.uploadTask(with: putRequest, from: imageData) { _, _, _ in
-                // 3. Enviar final_url al backend
-                self.sendLogoUrlToBackend(finalUrl: response.final_url)
-            }.resume()
-        }.resume()
+        isUploading = false
     }
 
-    private func sendLogoUrlToBackend(finalUrl: String) {
+    private func obtenerURLFirmada(authService: AuthService) async -> UploadUrlResponse? {
+        guard let url = URL(string: "https://auth.nexusutd.online/auth/config/upload-url?type=logo&ext=png") else { return nil }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
+
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
+            if let decoded = try? JSONDecoder().decode(UploadUrlResponse.self, from: data) {
+                return decoded
+            } else {
+                let raw = String(data: data, encoding: .utf8)
+                print("⚠️ Error decodificando firma. Respuesta cruda:", raw ?? "N/A")
+                return nil
+            }
+        } catch {
+            print("❌ Error al obtener URL firmada:", error)
+            return nil
+        }
+    }
+
+    private func subirImagen(data: Data, to urlString: String) async throws {
+        guard let url = URL(string: urlString) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.httpBody = data
+        request.setValue("image/png", forHTTPHeaderField: "Content-Type")
+        _ = try await URLSession.shared.data(for: request)
+    }
+
+    private func sendLogoUrlToBackend(finalUrl: String, authService: AuthService) async {
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return }
 
         let payload = ["logo_url": finalUrl]
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
         request.httpBody = try? JSONEncoder().encode(payload)
 
-        URLSession.shared.dataTask(with: request) { _, _, _ in
-            DispatchQueue.main.async {
-                self.isUploading = false
-            }
-        }.resume()
+        _ = try? await URLSession.shared.data(for: request)
     }
 }
 
