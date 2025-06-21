@@ -18,6 +18,7 @@ class LoginViewModel: ObservableObject {
     func login(completion: @escaping (Bool) -> Void) {
         print("🔐 Intentando login con usuario: \(username)")
         isLoading = true
+        errorMessage = nil
         let user = User(username: username, password: password)
 
         AuthService.shared.login(user: user) { [weak self] result in
