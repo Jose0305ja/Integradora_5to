@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MenuContainerView<Content: View>: View {
     @ViewBuilder var content: () -> Content
-    @State private var path = NavigationPath()
+    @Binding var path: NavigationPath
     @Binding var showMenu: Bool
     
     var body: some View {
