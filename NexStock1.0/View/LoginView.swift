@@ -16,37 +16,47 @@ struct LoginView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // 🟢 Fondo dinámico
-                (colorScheme == .dark ? Color(.systemGray6) : Color.white)
+                // Fondo adaptable
+                Color(.systemBackground)
                     .ignoresSafeArea()
 
                 DiagonalLines(colorScheme: colorScheme)
 
                 ScrollView {
-                    VStack(spacing: 30) {
-                        Spacer(minLength: geometry.size.height * 0.08)
+                    VStack(spacing: 24) {
+                        Spacer(minLength: geometry.size.height * 0.1)
 
                         // Logo
                         Image("AppLogo")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: min(geometry.size.width * 0.4, 140))
-                            .cornerRadius(30)
+                            .frame(width: min(geometry.size.width * 0.35, 120))
+                            .cornerRadius(24)
 
                         // Usuario
-                        TextField("Usuario", text: $viewModel.username)
-                            .padding()
-                            .background(inputBackground)
-                            .cornerRadius(10)
-                            .padding(.horizontal)
+                        HStack {
+                            Image(systemName: "person.fill")
+                                .foregroundColor(.gray)
+                            TextField("Usuario", text: $viewModel.username)
+                                .textContentType(.username)
+                                .autocapitalization(.none)
+                        }
+                        .padding()
+                        .background(fieldBackground)
+                        .cornerRadius(12)
 
                         // Contraseña
-                        ZStack(alignment: .trailing) {
-                            if isPasswordVisible {
-                                TextField("Contraseña", text: $viewModel.password)
-                            } else {
-                                SecureField("Contraseña", text: $viewModel.password)
+                        HStack {
+                            Image(systemName: "lock.fill")
+                                .foregroundColor(.gray)
+                            Group {
+                                if isPasswordVisible {
+                                    TextField("Contraseña", text: $viewModel.password)
+                                } else {
+                                    SecureField("Contraseña", text: $viewModel.password)
+                                }
                             }
+                            .textContentType(.password)
 
                             Button(action: {
                                 isPasswordVisible.toggle()
@@ -56,15 +66,14 @@ struct LoginView: View {
                             }
                         }
                         .padding()
-                        .background(inputBackground)
-                        .cornerRadius(10)
-                        .padding(.horizontal)
+                        .background(fieldBackground)
+                        .cornerRadius(12)
 
                         // Mensaje de error
                         if let error = viewModel.errorMessage {
                             Text(error)
                                 .foregroundColor(.red)
-                                .font(.caption)
+                                .font(.footnote)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
                                 .transition(.opacity)
@@ -81,16 +90,14 @@ struct LoginView: View {
                             }
                         }) {
                             Text("Iniciar sesión")
-                                .foregroundColor(colorScheme == .dark ? .white : .black)
-                                .padding(.horizontal, 30)
-                                .padding(.vertical, 12)
-                                .background(inputBackground)
-                                .cornerRadius(10)
+                                .frame(maxWidth: .infinity)
                         }
+                        .buttonStyle(.borderedProminent)
+                        .padding(.horizontal)
 
-                        Spacer(minLength: geometry.size.height * 0.08)
+                        Spacer(minLength: geometry.size.height * 0.1)
                     }
-                    .frame(maxWidth: 500)
+                    .frame(maxWidth: 400)
                     .padding()
                 }
             }
@@ -99,5 +106,9 @@ struct LoginView: View {
 
     var inputBackground: Color {
         colorScheme == .dark ? Color(.systemGray4) : Color.gray.opacity(0.3)
+    }
+
+    var fieldBackground: Color {
+        Color(.secondarySystemBackground)
     }
 }

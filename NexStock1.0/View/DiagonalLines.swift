@@ -14,7 +14,7 @@ struct DiagonalLines: View {
         GeometryReader { geometry in
             let width = geometry.size.width
             let height = geometry.size.height
-            let baseColor = colorScheme == .dark ? Color.gray.opacity(0.4) : Color.gray
+            let baseColor = colorScheme == .dark ? Color.gray.opacity(0.3) : Color.gray.opacity(0.5)
 
             ZStack {
                 DiagonalLine(opacity: 1.0, color: baseColor)
