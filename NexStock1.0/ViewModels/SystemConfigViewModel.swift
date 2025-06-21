@@ -7,11 +7,11 @@ class SystemConfigViewModel: ObservableObject {
     @Published var tertiaryColor: Color = .tertiaryColor
     @Published var logoImage: UIImage?
     @Published var logoURL: String?
+    @Published var isUploading = false
 
     @Published var isSaving = false
     @Published var showSuccessAlert = false
     @Published var showErrorAlert = false
-     codex/implement-system-configuration-handling-in-systemconfigview
 
     func fetchConfig(authService: AuthService) {
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return }
@@ -19,7 +19,6 @@ class SystemConfigViewModel: ObservableObject {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
         URLSession.shared.dataTask(with: request) { data, _, _ in
-     codex/implement-system-configuration-handling-in-systemconfigview
             guard let data = data,
                   let response = try? JSONDecoder().decode(SystemConfigResponse.self, from: data) else {
                 print("❌ Invalid response while fetching config")
@@ -35,11 +34,9 @@ class SystemConfigViewModel: ObservableObject {
         }.resume()
     }
 
-    // Convierte Color → Hex
     private func hexString(from color: Color) -> String {
         UIColor(color).toHex ?? "#000000"
     }
-
 
     func saveChanges() {
         Task { await performSave() }
@@ -63,7 +60,6 @@ class SystemConfigViewModel: ObservableObject {
     }
 
     private func saveColors() async -> Bool {
-      codex/implement-system-configuration-handling-in-systemconfigview
         let payload: [String: String] = [
             "color_primary": hexString(from: primaryColor),
             "color_secondary": hexString(from: secondaryColor),
@@ -77,7 +73,6 @@ class SystemConfigViewModel: ObservableObject {
         request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
         request.httpBody = try? JSONEncoder().encode(payload)
 
-
         do {
             let (_, response) = try await URLSession.shared.data(for: request)
             if let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) {
@@ -87,31 +82,21 @@ class SystemConfigViewModel: ObservableObject {
             print("Error saving colors:", error)
         }
         return false
-         codex/implement-system-configuration-handling-in-systemconfigview
     }
-
 
     private func updateLogo() async -> Bool {
         guard let signedUrlRequest = URL(string: "https://auth.nexusutd.online/auth/config/upload-url?type=logo&ext=png"),
               let imageData = logoImage?.pngData() else { return false }
 
-
-
-        var getRequest = URLRequest(url: signedUrlRequest)
-        getRequest.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
-
-        URLSession.shared.dataTask(with: getRequest) { data, _, _ in
-            guard let data = data,
-                  let response = try? JSONDecoder().decode(UploadUrlResponse.self, from: data),
-                  let imageData = self.logoImage?.pngData() else { return }
- codex/implement-system-configuration-handling-in-systemconfigview
-         codex/implement-system-configuration-handling-in-systemconfigview
+        isUploading = true
+        do {
+            let (data, _) = try await URLSession.shared.data(from: signedUrlRequest)
+            let response = try JSONDecoder().decode(UploadUrlResponse.self, from: data)
 
             var putRequest = URLRequest(url: URL(string: response.upload_url)!)
             putRequest.httpMethod = "PUT"
             putRequest.httpBody = imageData
             putRequest.setValue("image/png", forHTTPHeaderField: "Content-Type")
-
 
             let (_, putRes) = try await URLSession.shared.data(for: putRequest)
             guard let httpPut = putRes as? HTTPURLResponse, httpPut.statusCode == 200 else {
@@ -123,12 +108,10 @@ class SystemConfigViewModel: ObservableObject {
             print("Error updating logo:", error)
             return false
         }
-       codex/implement-system-configuration-handling-in-systemconfigview
     }
 
     private func sendLogoUrlToBackend(finalUrl: String) async -> Bool {
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return false }
- codex/implement-system-configuration-handling-in-systemconfigview
 
         let payload = ["logo_url": finalUrl]
         var request = URLRequest(url: url)
@@ -137,20 +120,17 @@ class SystemConfigViewModel: ObservableObject {
         request.setValue("Bearer \(authService.token ?? "")", forHTTPHeaderField: "Authorization")
         request.httpBody = try? JSONEncoder().encode(payload)
 
-
-
-        URLSession.shared.dataTask(with: request) { _, _, _ in
-            DispatchQueue.main.async {
-                self.isUploading = false
-                self.authService.logoURL = finalUrl
-              codex/implement-system-configuration-handling-in-systemconfigview
-         codex/implement-system-configuration-handling-in-systemconfigview
+        do {
+            let (_, response) = try await URLSession.shared.data(for: request)
+            if let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) {
+                isUploading = false
+                return true
             }
         } catch {
             print("Error sending logo url:", error)
         }
+        isUploading = false
         return false
- codex/implement-system-configuration-handling-in-systemconfigview
     }
 }
 
