@@ -147,6 +147,7 @@ struct SystemConfigView: View {
         codex/implement-system-configuration-handling-in-systemconfigview
             }
         }
+
         .alert("Cambios guardados", isPresented: $viewModel.showSuccessAlert) {
             Button("OK", role: .cancel) { }
         }
@@ -164,6 +165,7 @@ struct SystemConfigView: View {
                 }
             }
         )
+ codex/implement-system-configuration-handling-in-systemconfigview
     }
 
     // 🎨 Selector de color sin título
