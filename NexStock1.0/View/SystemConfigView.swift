@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct SystemConfigView: View {
-    @State private var primaryColor: Color = .primaryColor
-    @State private var secondaryColor: Color = .secondaryColor
-    @State private var backgroundColor: Color = .backColor
-    @State private var textColor: Color = .fourthColor
+    @StateObject private var viewModel = SystemConfigViewModel()
+    @State private var showImagePicker = false
     @EnvironmentObject var localization: LocalizationManager
 
     @Environment(\.presentationMode) var presentationMode
@@ -53,12 +51,13 @@ struct SystemConfigView: View {
 
                             SectionContainer(title: "") {
                                 VStack(spacing: 10) {
-                                        Image("AppLogo")
+                                        Image(uiImage: viewModel.logoImage ?? UIImage(named: "AppLogo")!)
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 80, height: 80)
                                             .clipShape(RoundedRectangle(cornerRadius: 12))
                                             .shadow(radius: 3)
+                                            .onTapGesture { showImagePicker = true }
 
                                     Text("tap_to_change_logo".localized)
                                             .font(.caption)
@@ -79,26 +78,22 @@ struct SystemConfigView: View {
                         // 🎨 Paleta 2x2
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
                             SectionContainer(title: "primary".localized) {
-                                colorSelector(color: $primaryColor)
+                                colorSelector(color: $viewModel.primaryColor)
                             }
 
                             SectionContainer(title: "secondary".localized) {
-                                colorSelector(color: $secondaryColor)
+                                colorSelector(color: $viewModel.secondaryColor)
                             }
 
-                            SectionContainer(title: "background".localized) {
-                                colorSelector(color: $backgroundColor)
-                            }
-
-                            SectionContainer(title: "text".localized) {
-                                colorSelector(color: $textColor)
+                            SectionContainer(title: "tertiary".localized) {
+                                colorSelector(color: $viewModel.tertiaryColor)
                             }
                         }
                         .padding(.horizontal)
 
                         // 💾 Botón guardar
                         Button(action: {
-                            print("save_changes".localized)
+                            viewModel.saveColors()
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.down.fill")
@@ -122,6 +117,13 @@ struct SystemConfigView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear { viewModel.fetchConfig() }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker() { image in
+                viewModel.logoImage = image
+                viewModel.updateLogo()
+            }
+        }
     }
 
     // 🎨 Selector de color sin título
