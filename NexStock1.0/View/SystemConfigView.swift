@@ -141,6 +141,9 @@ struct SystemConfigView: View {
                 viewModel.updateLogo()
             }
         }
+        .alert(isPresented: $viewModel.showAlert) {
+            Alert(title: Text(viewModel.alertMessage ?? ""))
+        }
     }
 
     // 🎨 Selector de color sin título
