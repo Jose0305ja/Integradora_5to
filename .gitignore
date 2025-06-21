@@ -1,0 +1,19 @@
+
+# Xcode project files
+*.xcuserstate
+*.xcuserdata/
+*.xcuserdatad/
+*.xccheckout
+*.moved-aside
+*.xcworkspace/xcuserdata/
+*.xcscmblueprint
+
+# Build & derived
+DerivedData/
+build/
+
+# macOS
+.DS_Store
+
+# SwiftPM
+.build/
