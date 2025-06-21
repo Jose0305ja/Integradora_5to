@@ -28,9 +28,18 @@ class SystemConfigViewModel: ObservableObject {
             }
 
             DispatchQueue.main.async {
-                if let p = Color(hex: response.color_primary) { self.primaryColor = p }
-                if let s = Color(hex: response.color_secondary) { self.secondaryColor = s }
-                if let t = Color(hex: response.color_tertiary) { self.tertiaryColor = t }
+                if let p = Color(hex: response.color_primary) {
+                    self.primaryColor = p
+                    ThemeManager.shared.primaryColor = p
+                }
+                if let s = Color(hex: response.color_secondary) {
+                    self.secondaryColor = s
+                    ThemeManager.shared.secondaryColor = s
+                }
+                if let t = Color(hex: response.color_tertiary) {
+                    self.tertiaryColor = t
+                    ThemeManager.shared.tertiaryColor = t
+                }
                 self.logoURL = response.logo_url
                 self.authService.logoURL = response.logo_url
             }
@@ -54,6 +63,9 @@ class SystemConfigViewModel: ObservableObject {
         isSaving = false
 
         if colorResult && logoResult {
+            ThemeManager.shared.primaryColor = primaryColor
+            ThemeManager.shared.secondaryColor = secondaryColor
+            ThemeManager.shared.tertiaryColor = tertiaryColor
             showSuccessAlert = true
         } else {
             showErrorAlert = true

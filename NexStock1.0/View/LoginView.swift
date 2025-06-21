@@ -12,6 +12,7 @@ struct LoginView: View {
     @State private var isPasswordVisible = false
     @Environment(\.colorScheme) var colorScheme
     @Binding var path: NavigationPath
+    @EnvironmentObject var theme: ThemeManager
 
     var body: some View {
         GeometryReader { geometry in

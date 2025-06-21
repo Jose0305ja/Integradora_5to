@@ -22,6 +22,7 @@ struct NexStock1_0App: App {
             AppView()
                 .environmentObject(localizationManager)
                 .environmentObject(authService)
+                .environmentObject(ThemeManager.shared)
         }
     }
 

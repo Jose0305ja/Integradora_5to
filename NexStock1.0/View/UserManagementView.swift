@@ -20,6 +20,7 @@ struct UserManagementView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var theme: ThemeManager
 
     var body: some View {
         ZStack {

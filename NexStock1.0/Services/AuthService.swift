@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum AuthError: LocalizedError {
     case invalidCredentials
@@ -66,6 +67,16 @@ class AuthService: ObservableObject {
 
                 DispatchQueue.main.async {
                     self.token = decoded.accessToken
+                    self.logoURL = decoded.settings.logo_url
+                    if let p = Color(hex: decoded.settings.color_primary) {
+                        ThemeManager.shared.primaryColor = p
+                    }
+                    if let s = Color(hex: decoded.settings.color_secondary) {
+                        ThemeManager.shared.secondaryColor = s
+                    }
+                    if let t = Color(hex: decoded.settings.color_tertiary) {
+                        ThemeManager.shared.tertiaryColor = t
+                    }
                 }
 
                 completion(.success(decoded))

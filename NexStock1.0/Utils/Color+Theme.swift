@@ -9,9 +9,9 @@
 import SwiftUI
 
 extension Color {
-    static let primaryColor = Color("appPrimaryColor")
+    static var primaryColor: Color { ThemeManager.shared.primaryColor }
     static let backColor = Color("appBackColor")
-    static let secondaryColor = Color("appSecondaryColor")
-    static let tertiaryColor = Color("appTertiaryColor")
+    static var secondaryColor: Color { ThemeManager.shared.secondaryColor }
+    static var tertiaryColor: Color { ThemeManager.shared.tertiaryColor }
     static let fourthColor = Color("appFourthColor")
 }

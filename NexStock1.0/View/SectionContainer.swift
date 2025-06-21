@@ -12,6 +12,7 @@ import SwiftUI
 struct SectionContainer<Content: View>: View {
     let title: String
     let content: Content
+    @EnvironmentObject var theme: ThemeManager
 
     init(title: String, @ViewBuilder content: () -> Content) {
         self.title = title

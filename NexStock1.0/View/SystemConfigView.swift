@@ -15,6 +15,7 @@ struct SystemConfigView: View {
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var authService: AuthService
+    @EnvironmentObject var theme: ThemeManager
 
     @Environment(\.presentationMode) var presentationMode
 
