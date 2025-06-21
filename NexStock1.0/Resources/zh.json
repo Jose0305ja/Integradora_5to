@@ -67,5 +67,9 @@
   "cactus": "仙人掌",
   "potato": "土豆",
   "radish": "萝卜",
-  "carrot": "胡萝卜"
+  "carrot": "胡萝卜",
+  "config_saved": "Configuration saved",
+  "backend_error": "Error communicating with server",
+  "logo_updated": "Logo updated",
+  "logo_error": "Error updating logo"
 }

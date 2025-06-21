@@ -68,5 +68,9 @@
     "cactus": "Nopal",
     "potato": "Papa",
     "radish": "Rábano",
-    "carrot": "Zanahoria"
+    "carrot": "Zanahoria",
+  "config_saved": "Configuración guardada",
+  "backend_error": "Error al comunicarse con el servidor",
+  "logo_updated": "Logo actualizado",
+  "logo_error": "Error al actualizar el logo"
 }
