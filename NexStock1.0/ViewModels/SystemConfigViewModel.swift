@@ -3,10 +3,24 @@ import SwiftUI
 class SystemConfigViewModel: ObservableObject {
     @Published var primaryColor: Color = .primaryColor
     @Published var secondaryColor: Color = .secondaryColor
-    @Published var backgroundColor: Color = .backColor
-    @Published var textColor: Color = .fourthColor
+    @Published var tertiaryColor: Color = .tertiaryColor
     @Published var logoImage: UIImage?
+    @Published var logoURL: String?
     @Published var isUploading = false
+
+    func fetchConfig() {
+        guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return }
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            guard let data = data,
+                  let response = try? JSONDecoder().decode(SystemConfigResponse.self, from: data) else { return }
+            DispatchQueue.main.async {
+                if let p = Color(hex: response.color_primary) { self.primaryColor = p }
+                if let s = Color(hex: response.color_secondary) { self.secondaryColor = s }
+                if let t = Color(hex: response.color_tertiary) { self.tertiaryColor = t }
+                self.logoURL = response.logo_url
+            }
+        }.resume()
+    }
 
     // Convierte Color → Hex
     private func hexString(from color: Color) -> String {
@@ -17,7 +31,7 @@ class SystemConfigViewModel: ObservableObject {
         let payload: [String: String] = [
             "color_primary": hexString(from: primaryColor),
             "color_secondary": hexString(from: secondaryColor),
-            "color_tertiary": hexString(from: textColor)
+            "color_tertiary": hexString(from: tertiaryColor)
         ]
 
         guard let url = URL(string: "https://auth.nexusutd.online/auth/config") else { return }
@@ -73,4 +87,11 @@ class SystemConfigViewModel: ObservableObject {
 struct UploadUrlResponse: Codable {
     let upload_url: String
     let final_url: String
+}
+
+struct SystemConfigResponse: Codable {
+    let logo_url: String?
+    let color_primary: String
+    let color_secondary: String
+    let color_tertiary: String
 }
