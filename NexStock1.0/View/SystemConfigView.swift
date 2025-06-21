@@ -110,7 +110,7 @@ struct SystemConfigView: View {
 
                         // 💾 Botón guardar
                         Button(action: {
-                            viewModel.saveColors()
+                            viewModel.saveChanges()
                         }) {
                             HStack {
                                 Image(systemName: "square.and.arrow.down.fill")
@@ -138,9 +138,25 @@ struct SystemConfigView: View {
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(sourceType: sourceType) { image in
                 viewModel.logoImage = image
-                viewModel.updateLogo()
             }
         }
+        .alert("Cambios guardados", isPresented: $viewModel.showSuccessAlert) {
+            Button("OK", role: .cancel) { }
+        }
+        .alert("Error al guardar", isPresented: $viewModel.showErrorAlert) {
+            Button("OK", role: .cancel) { }
+        }
+        .overlay(
+            Group {
+                if viewModel.isSaving {
+                    Color.black.opacity(0.4).ignoresSafeArea()
+                    ProgressView("Guardando...")
+                        .padding(20)
+                        .background(.regularMaterial)
+                        .cornerRadius(12)
+                }
+            }
+        )
     }
 
     // 🎨 Selector de color sin título
