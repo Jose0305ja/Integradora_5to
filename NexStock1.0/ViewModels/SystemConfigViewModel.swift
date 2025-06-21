@@ -39,7 +39,9 @@ class SystemConfigViewModel: ObservableObject {
     }
 
     func saveChanges() {
-        Task { await performSave() }
+        Task { [weak self] in
+            await self?.performSave()
+        }
     }
 
     @MainActor
