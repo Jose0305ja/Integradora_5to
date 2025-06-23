@@ -17,13 +17,9 @@ struct LoginView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Fondo con degradado para un estilo más limpio
-                LinearGradient(
-                    colors: [Color.primaryColor, Color.secondaryColor],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
+                // Fondo animado con barrido de colores giratorio
+                AnimatedBackground()
+                    .ignoresSafeArea()
 
                 ScrollView {
                     let spacing = max(geometry.size.height * 0.08, 20)

@@ -21,7 +21,7 @@ struct InventoryCardView: View {
 
             Text(product.name)
                 .font(.headline)
-                .foregroundColor(.fourthColor)
+                .foregroundColor(.tertiaryColor)
 
             //Text(product.quantity)
               //  .font(.caption)

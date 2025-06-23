@@ -22,14 +22,14 @@ struct HeaderModeView: View {
             }) {
                 Image(systemName: "chevron.left")
                     .font(.title2)
-                    .foregroundColor(.fourthColor)
+                    .foregroundColor(.tertiaryColor)
             }
 
             Spacer()
 
             Text(title)
                 .font(.headline)
-                .foregroundColor(.fourthColor)
+                .foregroundColor(.tertiaryColor)
 
             Spacer()
 
@@ -44,6 +44,6 @@ struct HeaderModeView: View {
         .padding(.horizontal)
         .padding(.top, 10)
         .padding(.bottom, 4)
-        .background(Color.secondaryColor)
+        .background(Color.primaryColor)
     }
 }

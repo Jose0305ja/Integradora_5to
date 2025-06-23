@@ -44,7 +44,7 @@ struct SideMenuView: View {
                         } label: {
                             Image(systemName: "xmark")
                                 .font(.system(size: 26, weight: .bold))
-                                .foregroundColor(.fourthColor)
+                                .foregroundColor(.tertiaryColor)
                                 .padding(.trailing)
                         }
                     }
@@ -54,7 +54,7 @@ struct SideMenuView: View {
                         path.append(AppRoute.home)
                     }
                     .font(.title3.bold())
-                    .foregroundColor(.fourthColor)
+                    .foregroundColor(.tertiaryColor)
 
                     // Finanzas
                     Button {
@@ -64,7 +64,7 @@ struct SideMenuView: View {
                     } label: {
                         Text("finance".localized)
                             .font(.title3.bold())
-                            .foregroundColor(.fourthColor)
+                            .foregroundColor(.tertiaryColor)
                     }
 
                     if activeMenu == "finanzas" {
@@ -76,7 +76,7 @@ struct SideMenuView: View {
                             Text("analysis".localized)
                         }
                         .font(.body)
-                        .foregroundColor(.fourthColor)
+                        .foregroundColor(.tertiaryColor)
                         .padding(.leading, 12)
                     }
 
@@ -88,7 +88,7 @@ struct SideMenuView: View {
                     } label: {
                         Text("inventory".localized)
                             .font(.title3.bold())
-                            .foregroundColor(.fourthColor)
+                            .foregroundColor(.tertiaryColor)
                     }
 
                     if activeMenu == "inventario" {
@@ -101,7 +101,7 @@ struct SideMenuView: View {
                             Text("Almacén")
                         }
                         .font(.body)
-                        .foregroundColor(.fourthColor)
+                        .foregroundColor(.tertiaryColor)
                         .padding(.leading, 12)
                     }
 
@@ -113,7 +113,7 @@ struct SideMenuView: View {
                     } label: {
                         Text("monitoring".localized)
                             .font(.title3.bold())
-                            .foregroundColor(.fourthColor)
+                            .foregroundColor(.tertiaryColor)
                     }
 
                     if activeMenu == "monitoreo" {
@@ -137,7 +137,7 @@ struct SideMenuView: View {
                             }
                         }
                         .font(.body)
-                        .foregroundColor(.fourthColor)
+                        .foregroundColor(.tertiaryColor)
                         .padding(.leading, 12)
                     }
 
@@ -153,13 +153,13 @@ struct SideMenuView: View {
                         }
                     }
                     .font(.title3.bold())
-                    .foregroundColor(.fourthColor)
+                    .foregroundColor(.tertiaryColor)
                     .padding(.bottom, 40)
                 }
                 .padding(.top, topSafeArea + 16)
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.secondaryColor)
+                .background(Color.primaryColor)
                 .ignoresSafeArea()
                 .transition(.move(edge: .leading))
                 .animation(.easeInOut, value: isOpen)
