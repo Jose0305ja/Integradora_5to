@@ -97,6 +97,21 @@ struct SystemConfigView: View {
                             .foregroundColor(.primary)
                             .frame(maxWidth: .infinity, alignment: .center)
 
+                        // 🎨 Paletas predefinidas
+                        Text("palettes".localized)
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                            .frame(maxWidth: .infinity, alignment: .center)
+
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(viewModel.palettes) { palette in
+                                    palettePreview(palette)
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
+
                         // 🎨 Paleta 2x2
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
                             SectionContainer(title: "primary".localized) {
@@ -177,5 +192,28 @@ struct SystemConfigView: View {
                 .clipShape(Circle())
         }
         .frame(maxWidth: .infinity)
+    }
+
+    // 🎨 Vista de paleta de colores
+    @ViewBuilder
+    private func palettePreview(_ palette: ColorPalette) -> some View {
+        VStack(spacing: 4) {
+            HStack(spacing: 4) {
+                Circle().fill(palette.primary).frame(width: 20, height: 20)
+                Circle().fill(palette.secondary).frame(width: 20, height: 20)
+                Circle().fill(palette.tertiary).frame(width: 20, height: 20)
+            }
+            Text(palette.name)
+                .font(.caption2)
+                .foregroundColor(.primary)
+        }
+        .padding(6)
+        .background(Color.secondaryColor.opacity(0.5))
+        .cornerRadius(8)
+        .onTapGesture {
+            viewModel.primaryColor = palette.primary
+            viewModel.secondaryColor = palette.secondary
+            viewModel.tertiaryColor = palette.tertiary
+        }
     }
 }

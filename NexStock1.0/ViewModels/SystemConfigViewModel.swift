@@ -3,6 +3,8 @@ import SwiftUI
 class SystemConfigViewModel: ObservableObject {
     private let authService = AuthService.shared
 
+    let palettes = ColorPalette.predefined
+
     @Published var primaryColor: Color = .primaryColor
     @Published var secondaryColor: Color = .secondaryColor
     @Published var tertiaryColor: Color = .tertiaryColor
