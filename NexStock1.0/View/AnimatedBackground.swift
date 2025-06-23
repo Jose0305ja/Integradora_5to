@@ -1,24 +1,28 @@
 import SwiftUI
 
 struct AnimatedBackground: View {
-    @State private var angle: Angle = .zero
+    @State private var startPoint = UnitPoint.topLeading
+    @State private var endPoint = UnitPoint.bottomTrailing
 
     var body: some View {
-        AngularGradient(
+        LinearGradient(
             gradient: Gradient(colors: [
                 Color.primaryColor,
                 Color.secondaryColor,
                 Color.tertiaryColor,
                 Color.primaryColor
             ]),
-            center: .center,
-            angle: angle
+            startPoint: startPoint,
+            endPoint: endPoint
         )
         .animation(
-            .linear(duration: 10)
-                .repeatForever(autoreverses: false),
-            value: angle
+            .linear(duration: 8)
+                .repeatForever(autoreverses: true),
+            value: startPoint
         )
-        .onAppear { angle = .degrees(360) }
+        .onAppear {
+            startPoint = .bottomTrailing
+            endPoint = .topLeading
+        }
     }
 }
