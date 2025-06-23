@@ -164,7 +164,12 @@ struct SystemConfigView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear { viewModel.fetchConfig() }
+        .onAppear {
+            previewTheme.primaryColor = viewModel.primaryColor
+            previewTheme.secondaryColor = viewModel.secondaryColor
+            previewTheme.tertiaryColor = viewModel.tertiaryColor
+            viewModel.fetchConfig()
+        }
         .onChange(of: viewModel.primaryColor) { previewTheme.primaryColor = $0 }
         .onChange(of: viewModel.secondaryColor) { previewTheme.secondaryColor = $0 }
         .onChange(of: viewModel.tertiaryColor) { previewTheme.tertiaryColor = $0 }
