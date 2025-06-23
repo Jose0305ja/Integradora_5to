@@ -15,6 +15,7 @@ struct SettingsView: View {
     @AppStorage("selectedAppearance") private var selectedAppearance: String = "system"
     @AppStorage("selectedLanguage") private var selectedLanguage: String = "es"
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var theme: ThemeManager
     @State private var notificationsEnabled = true
     @State private var userRole: UserRole = .admin
     @Environment(\.presentationMode) var presentationMode
@@ -119,12 +120,12 @@ struct SettingsView: View {
                                 .padding(.top, 4)
 
                             VStack(spacing: 8) {
-                                SettingsTile(iconName: "person.3.fill", title: "Usuarios")
+                                SettingsTile(iconName: "person.3.fill", title: "users".localized)
                                     .onTapGesture {
                                         path.append(AppRoute.userManagement)
                                     }
 
-                                SettingsTile(iconName: "desktopcomputer", title: "Sistema")
+                                SettingsTile(iconName: "desktopcomputer", title: "system".localized)
                                     .onTapGesture {
                                         path.append(AppRoute.systemConfig)
                                     }
@@ -138,6 +139,7 @@ struct SettingsView: View {
             }
         }
         .onChange(of: selectedLanguage) { newLanguage in
+            localization.selectedLanguage = newLanguage
             simulatePatchPreferences(language: newLanguage, theme: selectedAppearance)
         }
         .onChange(of: selectedAppearance) { newTheme in

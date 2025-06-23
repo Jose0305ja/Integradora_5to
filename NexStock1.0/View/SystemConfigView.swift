@@ -170,9 +170,18 @@ struct SystemConfigView: View {
             previewTheme.tertiaryColor = viewModel.tertiaryColor
             viewModel.fetchConfig()
         }
-        .onChange(of: viewModel.primaryColor) { previewTheme.primaryColor = $0 }
-        .onChange(of: viewModel.secondaryColor) { previewTheme.secondaryColor = $0 }
-        .onChange(of: viewModel.tertiaryColor) { previewTheme.tertiaryColor = $0 }
+        .onChange(of: viewModel.primaryColor) { newColor in
+            previewTheme.primaryColor = newColor
+            theme.primaryColor = newColor
+        }
+        .onChange(of: viewModel.secondaryColor) { newColor in
+            previewTheme.secondaryColor = newColor
+            theme.secondaryColor = newColor
+        }
+        .onChange(of: viewModel.tertiaryColor) { newColor in
+            previewTheme.tertiaryColor = newColor
+            theme.tertiaryColor = newColor
+        }
         .sheet(isPresented: $showImagePicker) {
 
             ImagePicker(sourceType: sourceType) { image in

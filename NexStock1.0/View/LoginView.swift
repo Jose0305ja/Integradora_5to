@@ -99,6 +99,17 @@ struct LoginView: View {
                     .padding()
                 }
             }
+            .overlay(
+                Group {
+                    if viewModel.isLoading {
+                        Color.black.opacity(0.4).ignoresSafeArea()
+                        ProgressView("Verificando...")
+                            .padding(20)
+                            .background(.regularMaterial)
+                            .cornerRadius(12)
+                    }
+                }
+            )
         }
     }
 
