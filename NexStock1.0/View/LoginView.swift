@@ -17,7 +17,7 @@ struct LoginView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Fondo animado con barrido de colores
+                // Fondo animado con barrido de colores giratorio
                 AnimatedBackground()
                     .ignoresSafeArea()
 
