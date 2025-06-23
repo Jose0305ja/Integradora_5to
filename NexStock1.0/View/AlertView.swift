@@ -11,6 +11,7 @@ struct AlertView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var theme: ThemeManager
 
     let alerts: [AlertModel] = [
         .init(sensor: "Sensor de movimiento", message: "Se ha detectado una vibración fuerte en la zona A.", time: "13:42", icon: "exclamationmark.triangle.fill"),

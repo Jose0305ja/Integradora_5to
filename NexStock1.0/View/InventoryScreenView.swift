@@ -13,6 +13,7 @@ struct InventoryScreenView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var authService: AuthService
+    @EnvironmentObject var theme: ThemeManager
 
     @State private var visibleLetterByCategory: [String: String] = [:]
     @State private var searchText: String = ""
