@@ -138,6 +138,7 @@ struct SettingsView: View {
             }
         }
         .onChange(of: selectedLanguage) { newLanguage in
+            localization.selectedLanguage = newLanguage
             simulatePatchPreferences(language: newLanguage, theme: selectedAppearance)
         }
         .onChange(of: selectedAppearance) { newTheme in
