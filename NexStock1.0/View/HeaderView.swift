@@ -26,7 +26,7 @@ struct HeaderView: View {
             }) {
                 Image(systemName: "line.horizontal.3")
                     .font(iconFont)
-                    .foregroundColor(.fourthColor)
+                    .foregroundColor(.tertiaryColor)
             }
 
             Spacer()
@@ -37,16 +37,16 @@ struct HeaderView: View {
                     VStack(spacing: 2) {
                         Text("welcome".localized)
                             .font(.caption)
-                            .foregroundColor(.fourthColor)
+                            .foregroundColor(.tertiaryColor)
                         Text("Jose Rodriguez")
                             .font(.caption2)
-                            .foregroundColor(.fourthColor)
+                            .foregroundColor(.tertiaryColor)
                     }
                     .transition(.opacity)
                 } else {
                     Text("NexStock")
                         .font(.headline)
-                        .foregroundColor(.fourthColor)
+                        .foregroundColor(.tertiaryColor)
                         .transition(.opacity)
                 }
             }
@@ -83,7 +83,7 @@ struct HeaderView: View {
         .padding(.horizontal)
         .padding(.top, 10)
         .padding(.bottom, 6)
-        .background(Color.secondaryColor)
+        .background(Color.primaryColor)
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 withAnimation {

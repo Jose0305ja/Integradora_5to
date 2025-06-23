@@ -16,24 +16,24 @@ struct CardView: View {
             Text(model.title)
                 .font(.title3)
                 .fontWeight(.semibold)
-                .foregroundColor(.fourthColor)
+                .foregroundColor(.tertiaryColor)
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
 
             Text(model.subtitle)
                 .font(.headline)
-                .foregroundColor(.fourthColor.opacity(0.6))
+                .foregroundColor(.tertiaryColor.opacity(0.6))
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
         }
         
         .frame(width: 160, height: 160)
         .padding(EdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 10))
-        .background(Color.tertiaryColor)
+        .background(Color.secondaryColor)
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.fourthColor.opacity(0.2), lineWidth: 1)
+                .stroke(Color.tertiaryColor.opacity(0.2), lineWidth: 1)
         )
         .shadow(radius: 3)
     }
