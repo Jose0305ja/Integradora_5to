@@ -160,6 +160,10 @@ class SystemConfigViewModel: ObservableObject {
             let (data, response) = try await URLSession.shared.data(for: request)
             if let http = response as? HTTPURLResponse {
                 if (200...299).contains(http.statusCode) {
+                    DispatchQueue.main.async {
+                        self.logoURL = finalUrl
+                        self.authService.logoURL = finalUrl
+                    }
                     isUploading = false
                     return true
                 } else {
