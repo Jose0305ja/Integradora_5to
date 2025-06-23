@@ -50,6 +50,8 @@ struct SettingRow: View {
     var icon: String
     var title: String
     var subtitle: String? = nil
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -86,6 +88,8 @@ struct ToggleRow: View {
     var icon: String
     var title: String
     @Binding var isOn: Bool
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -114,6 +118,8 @@ struct ToggleRow: View {
 struct SettingsTile: View {
     var iconName: String
     var title: String
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(spacing: 16) {
