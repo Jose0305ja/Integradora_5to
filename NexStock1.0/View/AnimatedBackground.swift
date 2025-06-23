@@ -16,8 +16,7 @@ struct AnimatedBackground: View {
             endPoint: endPoint
         )
         .animation(
-            .linear(duration: 8)
-                .repeatForever(autoreverses: true),
+            .linear(duration: 8),
             value: startPoint
         )
         .onAppear {
