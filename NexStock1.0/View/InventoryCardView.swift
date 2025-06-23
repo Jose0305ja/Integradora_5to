@@ -28,7 +28,7 @@ struct InventoryCardView: View {
                 //.foregroundColor(.fourthColor.opacity(0.6))
         }
         .padding()
-        .background(Color.secondaryColor)
+        .background(theme.secondaryColor)
         .cornerRadius(12)
         .shadow(radius: 2)
     }

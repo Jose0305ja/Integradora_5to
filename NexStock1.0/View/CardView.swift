@@ -29,11 +29,11 @@ struct CardView: View {
         
         .frame(width: 160, height: 160)
         .padding(EdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 10))
-        .background(Color.secondaryColor)
+        .background(theme.secondaryColor)
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.tertiaryColor.opacity(0.2), lineWidth: 1)
+                .stroke(theme.tertiaryColor.opacity(0.2), lineWidth: 1)
         )
         .shadow(radius: 3)
     }

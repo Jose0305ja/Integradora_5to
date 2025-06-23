@@ -13,9 +13,9 @@ struct AnimatedBackground: View {
                 // 🎨 Fondo estático con tus colores
                 LinearGradient(
                     gradient: Gradient(colors: [
-                        Color.primaryColor.opacity(0.95),
-                        Color.secondaryColor.opacity(0.9),
-                        Color.tertiaryColor.opacity(0.95)
+                        theme.primaryColor.opacity(0.95),
+                        theme.secondaryColor.opacity(0.9),
+                        theme.tertiaryColor.opacity(0.95)
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing

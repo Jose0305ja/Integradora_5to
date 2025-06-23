@@ -35,11 +35,11 @@ struct SectionContainer<Content: View>: View {
                 content
             }
             .padding()
-            .background(Color.secondaryColor)
+            .background(theme.secondaryColor)
             .cornerRadius(15)
             .overlay(
                 RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color.tertiaryColor.opacity(0.2), lineWidth: 1)
+                    .stroke(theme.tertiaryColor.opacity(0.2), lineWidth: 1)
             )
         }
     }
@@ -55,20 +55,20 @@ struct SettingRow: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: icon)
-                    .foregroundColor(.tertiaryColor)
+                    .foregroundColor(theme.tertiaryColor)
                     .font(.body)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
                         .font(.body)
-                        .foregroundColor(.tertiaryColor)
+                        .foregroundColor(theme.tertiaryColor)
                         .multilineTextAlignment(.leading)
                         .lineLimit(nil)
 
                     if let subtitle = subtitle {
                         Text(subtitle)
                             .font(.caption)
-                            .foregroundColor(.tertiaryColor.opacity(0.7))
+                            .foregroundColor(theme.tertiaryColor.opacity(0.7))
                             .lineLimit(nil)
                     }
                 }
@@ -91,12 +91,12 @@ struct ToggleRow: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center, spacing: 12) {
                 Image(systemName: icon)
-                    .foregroundColor(.tertiaryColor)
+                    .foregroundColor(theme.tertiaryColor)
                     .font(.body)
 
                 Text(title)
                     .font(.body)
-                    .foregroundColor(.tertiaryColor)
+                    .foregroundColor(theme.tertiaryColor)
                     .multilineTextAlignment(.leading)
                     .lineLimit(nil)
 
@@ -121,19 +121,19 @@ struct SettingsTile: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 40, height: 40)
-                .foregroundColor(.tertiaryColor)
+                .foregroundColor(theme.tertiaryColor)
 
             Text(title)
                 .font(.body)
                 .fontWeight(.semibold)
-                .foregroundColor(.tertiaryColor)
+                .foregroundColor(theme.tertiaryColor)
                 .multilineTextAlignment(.center)
                 .lineLimit(nil)
                 .minimumScaleFactor(0.7)
         }
         .frame(maxWidth: .infinity) // más alto para texto largo
         .padding(EdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 10))
-        .background(Color.secondaryColor)
+        .background(theme.secondaryColor)
         .cornerRadius(15)
         .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
         .accessibilityElement(children: .combine)

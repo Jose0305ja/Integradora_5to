@@ -164,6 +164,7 @@ struct SystemConfigView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .id(localization.selectedLanguage)
         .onAppear {
             previewTheme.primaryColor = viewModel.primaryColor
             previewTheme.secondaryColor = viewModel.secondaryColor
@@ -181,6 +182,18 @@ struct SystemConfigView: View {
         .onChange(of: viewModel.tertiaryColor) { newColor in
             previewTheme.tertiaryColor = newColor
             theme.tertiaryColor = newColor
+        }
+        .onChange(of: theme.primaryColor) { newValue in
+            viewModel.primaryColor = newValue
+            previewTheme.primaryColor = newValue
+        }
+        .onChange(of: theme.secondaryColor) { newValue in
+            viewModel.secondaryColor = newValue
+            previewTheme.secondaryColor = newValue
+        }
+        .onChange(of: theme.tertiaryColor) { newValue in
+            viewModel.tertiaryColor = newValue
+            previewTheme.tertiaryColor = newValue
         }
         .sheet(isPresented: $showImagePicker) {
 
@@ -234,7 +247,7 @@ struct SystemConfigView: View {
                 .foregroundColor(.primary)
         }
         .padding(6)
-        .background(Color.secondaryColor.opacity(0.5))
+        .background(theme.secondaryColor.opacity(0.5))
         .cornerRadius(8)
         .onTapGesture {
             viewModel.primaryColor = palette.primary

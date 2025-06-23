@@ -27,22 +27,22 @@ struct AlertSectionView: View {
 
                     Text(alert.message)
                         .font(.subheadline)
-                        .foregroundColor(.tertiaryColor)
+                .foregroundColor(theme.tertiaryColor)
                         .multilineTextAlignment(.center)
                         .lineLimit(nil)
                         .minimumScaleFactor(0.8)
 
                     Text(alert.time)
                         .font(.caption2)
-                        .foregroundColor(.tertiaryColor)
+                        .foregroundColor(theme.tertiaryColor)
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.secondaryColor)
+                .background(theme.secondaryColor)
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.tertiaryColor.opacity(0.2), lineWidth: 1)
+                        .stroke(theme.tertiaryColor.opacity(0.2), lineWidth: 1)
                 )
                 .shadow(radius: 2)
                 .padding(.horizontal)

@@ -68,7 +68,7 @@ struct UserManagementView: View {
 
                                     Text(user.role)
                                         .font(.caption)
-                                        .foregroundColor(.primaryColor)
+                                        .foregroundColor(theme.primaryColor)
                                 }
 
                                 Spacer()
@@ -107,7 +107,7 @@ struct UserManagementView: View {
                                 }
                             }
                             .padding()
-                            .background(Color.secondaryColor.opacity(0.9))
+                            .background(theme.secondaryColor.opacity(0.9))
                             .cornerRadius(16)
                             .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                             .padding(.horizontal)
@@ -118,6 +118,7 @@ struct UserManagementView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .id(localization.selectedLanguage)
     }
 }
 
