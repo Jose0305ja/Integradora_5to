@@ -12,6 +12,7 @@ struct HumidityView: View {
     @State private var showMenu = false
     @StateObject private var viewModel = HumidityViewModel()
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var theme: ThemeManager
 
     var body: some View {
         ZStack(alignment: .leading) {
