@@ -16,6 +16,7 @@ struct SystemConfigView: View {
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var authService: AuthService
     @EnvironmentObject var theme: ThemeManager
+    @StateObject private var previewTheme = ThemeManager()
 
     @Environment(\.presentationMode) var presentationMode
 
@@ -128,6 +129,14 @@ struct SystemConfigView: View {
                         }
                         .padding(.horizontal)
 
+                        // 👀 Vista previa
+                        SectionContainer(title: "preview".localized) {
+                            MiniPreviewView()
+                                .frame(height: 140)
+                                .environmentObject(previewTheme)
+                        }
+                        .padding(.horizontal)
+
                         // 💾 Botón guardar
                         Button(action: {
 
@@ -156,6 +165,9 @@ struct SystemConfigView: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear { viewModel.fetchConfig() }
+        .onChange(of: viewModel.primaryColor) { previewTheme.primaryColor = $0 }
+        .onChange(of: viewModel.secondaryColor) { previewTheme.secondaryColor = $0 }
+        .onChange(of: viewModel.tertiaryColor) { previewTheme.tertiaryColor = $0 }
         .sheet(isPresented: $showImagePicker) {
 
             ImagePicker(sourceType: sourceType) { image in
