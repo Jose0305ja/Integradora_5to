@@ -22,7 +22,7 @@ struct AlertSectionView: View {
             ForEach(alerts) { alert in
                 VStack(spacing: 8) {
                     Image(systemName: alert.icon)
-                        .foregroundColor(.yellow)
+                        .foregroundColor(alert.severity.color)
                         .font(.title2)
 
                     Text(alert.message)
@@ -38,7 +38,13 @@ struct AlertSectionView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(Color.secondaryColor)
+                .background(
+                    LinearGradient(
+                        colors: [alert.severity.color.opacity(0.2), Color.secondaryColor],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
                 .cornerRadius(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)

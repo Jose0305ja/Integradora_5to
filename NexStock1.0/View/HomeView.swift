@@ -31,9 +31,9 @@ struct HomeView: View {
                         ])
 
                         AlertSectionView(alerts: [
-                            AlertModel(sensor: "Sensor de movimiento", message: "Movimiento detectado en zona 3", time: "14:22 h", icon: "exclamationmark.triangle.fill"),
-                            AlertModel(sensor: "Sensor de humedad", message: "Humedad superior al 80%", time: "13:45 h", icon: "exclamationmark.triangle.fill"),
-                            AlertModel(sensor: "Sensor de temperatura", message: "Temperatura superior a 25 grados", time: "12:13 h", icon: "exclamationmark.triangle.fill")
+                            AlertModel(sensor: "Sensor de movimiento", message: "Movimiento detectado en zona 3", time: "14:22 h", icon: "exclamationmark.triangle.fill", severity: .high),
+                            AlertModel(sensor: "Sensor de humedad", message: "Humedad superior al 80%", time: "13:45 h", icon: "exclamationmark.triangle.fill", severity: .medium),
+                            AlertModel(sensor: "Sensor de temperatura", message: "Temperatura superior a 25 grados", time: "12:13 h", icon: "exclamationmark.triangle.fill", severity: .low)
                         ])
                     }
                     .padding()
