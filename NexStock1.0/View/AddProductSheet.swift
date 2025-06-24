@@ -14,6 +14,8 @@ struct AddProductSheet: View {
     var onSave: (ProductModel) -> Void
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authService: AuthService
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     @State private var name = ""
     @State private var brand = ""

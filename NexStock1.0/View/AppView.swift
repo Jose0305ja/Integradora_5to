@@ -10,6 +10,8 @@ import SwiftUI
 struct AppView: View {
     @State private var path = NavigationPath()
     @State private var showMenu = false // ✅ AGREGA ESTA LÍNEA
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         NavigationStack(path: $path) {

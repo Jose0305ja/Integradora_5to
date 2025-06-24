@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MiniPreviewView: View {
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(spacing: 0) {

@@ -10,6 +10,7 @@ import SwiftUI
 struct InventoryCardView: View {
     let product: ProductModel
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(spacing: 8) {

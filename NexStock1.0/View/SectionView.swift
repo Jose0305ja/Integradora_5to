@@ -11,6 +11,8 @@ import SwiftUI
 struct SectionView: View {
     let title: String
     let cards: [CardModel]
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {

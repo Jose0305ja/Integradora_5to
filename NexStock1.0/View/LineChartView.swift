@@ -10,6 +10,8 @@ import SwiftUI
 struct LineChartView: View {
     let data: [Double]
     let labels: [String] // Ej: ["8AM", "10AM", "12PM", ...]
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(spacing: 0) {
