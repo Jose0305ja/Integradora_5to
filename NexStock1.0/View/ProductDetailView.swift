@@ -24,7 +24,7 @@ struct ProductDetailView: View {
                         .padding()
                 } else if let error = viewModel.errorMessage {
                     Text(error)
-                        .foregroundColor(.red)
+                        .foregroundColor(.tertiaryColor)
                         .padding()
                 } else if selectedTab == 0 {
                     infoView
@@ -68,7 +68,7 @@ struct ProductDetailView: View {
                     Text("\("current_stock".localized): \(detail.stock_actual.map(String.init) ?? "no_information".localized)")
                         .font(.body)
                         .fontWeight(critical ? .bold : .regular)
-                        .foregroundColor(critical ? .red : .primary)
+                        .foregroundColor(critical ? Color.primaryColor : .tertiaryColor)
 
                     Text("\("minimum_stock".localized): \(detail.stock_min.map(String.init) ?? "no_information".localized)")
                         .font(.body)
@@ -86,7 +86,7 @@ struct ProductDetailView: View {
                 .padding()
                 .background(Color.secondaryColor)
                 .cornerRadius(12)
-                .shadow(radius: 2)
+            .shadow(color: Color.tertiaryColor.opacity(0.1), radius: 2)
                 .padding(.horizontal)
             }
         }
@@ -145,14 +145,14 @@ struct ProductDetailView: View {
 
         var body: some View {
             VStack(alignment: .leading, spacing: 6) {
-                Text(formattedDate())
-                    .font(.footnote)
-                    .foregroundColor(.gray)
+                    Text(formattedDate())
+                        .font(.footnote)
+                        .foregroundColor(.tertiaryColor.opacity(0.7))
 
                 HStack {
                     Text(move.type.localized)
                         .font(.body.bold())
-                        .foregroundColor(isDecrease ? .red : .green)
+                        .foregroundColor(isDecrease ? Color.primaryColor : .tertiaryColor)
                     Spacer()
                     Text("\(diff > 0 ? "+" : "")\(move.quantity)")
                         .font(.body.bold())
@@ -168,20 +168,20 @@ struct ProductDetailView: View {
                 if let comment = move.comment, !comment.isEmpty {
                     Text(comment)
                         .font(.footnote)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.tertiaryColor.opacity(0.7))
                         .multilineTextAlignment(.leading)
                 }
                 if let user = move.user {
                     Text(user)
                         .font(.footnote)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.tertiaryColor.opacity(0.7))
                 }
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.secondaryColor)
             .cornerRadius(12)
-            .shadow(radius: 1)
+            .shadow(color: Color.tertiaryColor.opacity(0.05), radius: 1)
         }
     }
 }

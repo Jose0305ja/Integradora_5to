@@ -20,7 +20,7 @@ struct SectionView: View {
             Text(title)
                 .font(.title2)
                 .fontWeight(.bold)
-                .foregroundColor(.primary)
+                .foregroundColor(.tertiaryColor)
                 .frame(maxWidth: .infinity, alignment: .center)
 
             // 🔄 Tarjetas centradas si solo hay una, scroll si hay varias

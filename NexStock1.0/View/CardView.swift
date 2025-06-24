@@ -36,6 +36,6 @@ struct CardView: View {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.tertiaryColor.opacity(0.2), lineWidth: 1)
         )
-        .shadow(radius: 3)
+        .shadow(color: Color.tertiaryColor.opacity(0.2), radius: 3)
     }
 }

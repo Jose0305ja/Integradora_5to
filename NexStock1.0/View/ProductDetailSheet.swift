@@ -54,7 +54,7 @@ struct ProductDetailSheet: View {
                         .padding()
                     } else if let message = errorMessage {
                         Text(message)
-                            .foregroundColor(.red)
+                            .foregroundColor(.tertiaryColor)
                     }
                 }
             }
