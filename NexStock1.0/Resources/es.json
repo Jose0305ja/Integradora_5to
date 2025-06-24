@@ -78,7 +78,16 @@
   "config_saved": "Configuración guardada",
   "backend_error": "Error al comunicarse con el servidor",
   "logo_updated": "Logo actualizado",
-  "logo_error": "Error al actualizar el logo"
-  ,"palettes": "Paletas"
-  ,"preview": "Vista previa"
+  "logo_error": "Error al actualizar el logo",
+  "palettes": "Paletas",
+  "preview": "Vista previa",
+  "information": "Información",
+  "movements": "Movimientos",
+  "current_stock": "Existencias actuales",
+  "minimum_stock": "Stock mínimo",
+  "maximum_stock": "Stock máximo",
+  "brand": "Marca",
+  "last_updated": "Última actualización",
+  "description": "Descripción",
+  "no_movements": "No hay movimientos registrados"
 }

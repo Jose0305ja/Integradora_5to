@@ -18,7 +18,7 @@ struct InventoryScreenView: View {
     @State private var visibleLetterByCategory: [String: String] = [:]
     @State private var searchText: String = ""
     @State private var showAddProductSheet = false
-    @State private var selectedProduct: DetailedProductModel? = nil
+    @State private var selectedProduct: ProductModel? = nil
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -64,7 +64,7 @@ struct InventoryScreenView: View {
     }
 
     private var productList: some View {
-        InventoryGroupView()
+        InventoryGroupView(selectedProduct: $selectedProduct)
             .navigationBarBackButtonHidden(true)
     }
 

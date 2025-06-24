@@ -23,6 +23,8 @@ struct DetailedProductModel: Identifiable, Codable {
     let stock_min: Int
     let stock_max: Int
     let input_method: InputMethod
+    let stock_actual: Int?
+    let updated_at: String?
 
     init(id: Int = 0,
          name: String,
@@ -33,7 +35,9 @@ struct DetailedProductModel: Identifiable, Codable {
          image_url: String,
          stock_min: Int,
          stock_max: Int,
-         input_method: InputMethod) {
+         input_method: InputMethod,
+         stock_actual: Int? = nil,
+         updated_at: String? = nil) {
         self.id = id
         self.name = name
         self.brand = brand
@@ -44,6 +48,8 @@ struct DetailedProductModel: Identifiable, Codable {
         self.stock_min = stock_min
         self.stock_max = stock_max
         self.input_method = input_method
+        self.stock_actual = stock_actual
+        self.updated_at = updated_at
     }
 
     var localized: String {

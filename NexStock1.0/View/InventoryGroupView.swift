@@ -2,6 +2,8 @@ import SwiftUI
 
 struct InventoryGroupView: View {
     @StateObject private var viewModel = PaginatedInventoryViewModel()
+    @Binding var selectedProduct: ProductModel?
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         ScrollView {
@@ -16,6 +18,9 @@ struct InventoryGroupView: View {
                                 HStack(spacing: 16) {
                                     ForEach(items) { product in
                                         ProductCard(product: product)
+                                            .onTapGesture {
+                                                selectedProduct = product
+                                            }
                                             .onAppear {
                                                 viewModel.loadMoreIfNeeded(currentItem: product, category: category)
                                             }
@@ -50,9 +55,9 @@ struct ProductCard: View {
             }
             Text(product.name)
                 .font(.headline)
-            Text("Stock: \(product.stock_actual)")
+            Text("\("current_stock".localized): \(product.stock_actual)")
                 .font(.caption)
-            Text("Sensor: \(product.sensor_type)")
+            Text("\("sensor".localized): \(product.sensor_type)")
                 .font(.caption)
         }
         .padding()
@@ -63,7 +68,7 @@ struct ProductCard: View {
 
 struct InventoryGroupView_Previews: PreviewProvider {
     static var previews: some View {
-        InventoryGroupView()
+        InventoryGroupView(selectedProduct: .constant(nil))
             .environmentObject(ThemeManager())
             .environmentObject(LocalizationManager())
     }
