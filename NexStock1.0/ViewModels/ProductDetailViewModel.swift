@@ -16,7 +16,8 @@ class ProductDetailViewModel: ObservableObject {
                 switch result {
                 case .success(let response):
                     self.detail = response.product
-                    self.movements = response.movements
+                    // If the backend doesn't provide movements we default to an empty list
+                    self.movements = response.movements ?? []
                     print("Product detail loaded", response)
                 case .failure(let error):
                     print("Failed to load detail", error)
