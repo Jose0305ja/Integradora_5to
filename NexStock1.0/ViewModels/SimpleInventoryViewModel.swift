@@ -5,7 +5,7 @@ class SimpleInventoryViewModel: ObservableObject {
     @Published var productsByCategory: [String: [ProductModel]] = [:]
 
     func fetchProducts() {
-        guard let url = URL(string: "https://inventory.nexusutd.online/inventory/home") else {
+        guard let url = URL(string: "https://inventory.nexusutd.online/inventory/products/general") else {
             return
         }
 
