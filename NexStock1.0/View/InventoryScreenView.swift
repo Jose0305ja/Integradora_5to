@@ -111,7 +111,7 @@ struct InventoryScreenView: View {
                 .foregroundColor(.white)
                 .font(.system(size: 20, weight: .bold))
                 .padding()
-                .background(Circle().fill(Color.accentColor))
+                .background(Circle().fill(Color.primaryColor))
                 .shadow(radius: 5)
         }
         .padding(.trailing, 24)

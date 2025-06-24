@@ -3,6 +3,7 @@ import SwiftUI
 struct AnimatedBackground: View {
     @State private var offset: CGFloat = -1.2
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         GeometryReader { geometry in
