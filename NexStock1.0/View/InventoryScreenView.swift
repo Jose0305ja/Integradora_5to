@@ -18,16 +18,7 @@ struct InventoryScreenView: View {
     @State private var visibleLetterByCategory: [String: String] = [:]
     @State private var searchText: String = ""
     @State private var showAddProductSheet = false
-    @State private var products: [ProductModel] = []
-    @State private var selectedProduct: ProductModel? = nil
-
-    // Categories provided by the backend
-    let categories: [Category] = [
-        Category(id: 1, name: "Alimentos"),
-        Category(id: 2, name: "Bebidas"),
-        Category(id: 3, name: "Insumos"),
-        Category(id: 4, name: "Productos de limpieza")
-    ]
+    @State private var selectedProduct: DetailedProductModel? = nil
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -36,8 +27,7 @@ struct InventoryScreenView: View {
         }
         .overlay(addButton, alignment: .bottomTrailing)
         .sheet(isPresented: $showAddProductSheet) {
-            AddProductSheet { nuevoProducto in
-                products.append(nuevoProducto)
+            AddProductSheet { _ in
                 showAddProductSheet = false
             }
             .environmentObject(authService)
@@ -53,7 +43,6 @@ struct InventoryScreenView: View {
                 }
             }
         }
-        .onAppear(perform: fetchProducts)
     }
 
     private var content: some View {
@@ -75,44 +64,8 @@ struct InventoryScreenView: View {
     }
 
     private var productList: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 30) {
-                ForEach(categories, id: \.id) { category in
-                    let filtered = products
-                        .filter { $0.category_id == category.id }
-                        .filter {
-                            searchText.isEmpty ||
-                            $0.name.folding(options: .diacriticInsensitive, locale: .current)
-                                .localizedCaseInsensitiveContains(
-                                    searchText.folding(options: .diacriticInsensitive, locale: .current)
-                                )
-                        }
-
-                    if !filtered.isEmpty {
-                        VStack(alignment: .leading) {
-                            Text(category.name)
-                                .font(.title3.bold())
-                                .foregroundColor(.primary)
-
-                            ForEach(filtered, id: \.id) { product in
-                                InventoryCardView(product: product) {
-                                    selectedProduct = product
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-
-                if products.isEmpty {
-                    Text("No hay productos disponibles.")
-                        .foregroundColor(.secondary)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                }
-            }
-        }
-        .navigationBarBackButtonHidden(true)
+        InventoryGroupView()
+            .navigationBarBackButtonHidden(true)
     }
 
     private var addButton: some View {
@@ -130,28 +83,4 @@ struct InventoryScreenView: View {
         .padding(.bottom, 24)
     }
 
-    private func fetchProducts() {
-        var all: [ProductModel] = []
-        let group = DispatchGroup()
-        let appendQueue = DispatchQueue(label: "inventory.product.append")
-
-        for category in categories {
-            group.enter()
-            ProductService.shared.fetchGeneralProducts(categoryID: category.id) { result in
-                switch result {
-                case .success(let data):
-                    appendQueue.async {
-                        all.append(contentsOf: data)
-                        group.leave()
-                    }
-                case .failure:
-                    group.leave()
-                }
-            }
-        }
-
-        group.notify(queue: .main) {
-            self.products = all
-        }
-    }
 }
