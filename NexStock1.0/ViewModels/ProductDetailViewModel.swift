@@ -9,17 +9,35 @@ class ProductDetailViewModel: ObservableObject {
     func fetch(id: String) {
         guard !isLoading else { return }
         isLoading = true
+
         ProductService.shared.fetchProductDetail(id: id) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }
-                self.isLoading = false
+
                 switch result {
                 case .success(let response):
                     self.detail = response.product
-                    self.movements = response.movements
+                    self.fetchMovements(id: id)
                     print("Product detail loaded", response)
                 case .failure(let error):
+                    self.isLoading = false
                     print("Failed to load detail", error)
+                    self.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    private func fetchMovements(id: String) {
+        ProductService.shared.fetchProductMovements(id: id) { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                self.isLoading = false
+
+                switch result {
+                case .success(let movements):
+                    self.movements = movements
+                case .failure(let error):
                     self.errorMessage = error.localizedDescription
                 }
             }
