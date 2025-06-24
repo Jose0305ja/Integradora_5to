@@ -19,6 +19,7 @@ struct InventoryScreenView: View {
     @State private var searchText: String = ""
     @State private var showAddProductSheet = false
     @State private var products: [ProductModel] = sampleProducts
+    @State private var selectedProduct: ProductModel? = nil
 
     let categories: [Category] = [
         Category(id: 1, name: "Frutas"),
@@ -41,6 +42,9 @@ struct InventoryScreenView: View {
                 showAddProductSheet = false
             }
             .environmentObject(authService)
+        }
+        .sheet(item: $selectedProduct) { product in
+            ProductDetailSheet(product: product)
         }
         .navigationBarBackButtonHidden(true)
         .onChange(of: showAddProductSheet) { isPresented in
@@ -92,7 +96,9 @@ struct InventoryScreenView: View {
                                 .foregroundColor(.primary)
 
                             ForEach(filtered, id: \.id) { product in
-                                InventoryCardView(product: product)
+                                InventoryCardView(product: product) {
+                                    selectedProduct = product
+                                }
                             }
                         }
                         .padding(.horizontal)

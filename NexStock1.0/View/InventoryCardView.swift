@@ -9,16 +9,27 @@ import SwiftUI
 
 struct InventoryCardView: View {
     let product: ProductModel
+    var onTap: (() -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(spacing: 8) {
-            Image(product.image_url)
-                .resizable()
-                .scaledToFit()
+            if let url = URL(string: product.image_url), product.image_url.hasPrefix("http") {
+                AsyncImage(url: url) { image in
+                    image.resizable()
+                } placeholder: {
+                    ProgressView()
+                }
                 .frame(width: 80, height: 80)
                 .cornerRadius(10)
+            } else {
+                Image(product.image_url)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 80, height: 80)
+                    .cornerRadius(10)
+            }
 
             Text(product.name)
                 .font(.headline)
@@ -32,5 +43,8 @@ struct InventoryCardView: View {
         .background(Color.secondaryColor)
         .cornerRadius(12)
         .shadow(radius: 2)
+        .onTapGesture {
+            onTap?()
+        }
     }
 }
