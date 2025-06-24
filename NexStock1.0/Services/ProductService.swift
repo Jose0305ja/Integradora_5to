@@ -105,4 +105,22 @@ class ProductService {
             }
         }.resume()
     }
+
+    /// Fetch only the movement history for a product
+    func fetchProductMovements(id: String, completion: @escaping (Result<[ProductMovement], Error>) -> Void) {
+        guard let url = URL(string: baseURL + "/" + id + "/movements") else { return }
+
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let data = data {
+                do {
+                    let decoded = try JSONDecoder().decode(ProductMovementsResponse.self, from: data)
+                    completion(.success(decoded.movements))
+                } catch {
+                    completion(.failure(error))
+                }
+            } else if let error = error {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
 }

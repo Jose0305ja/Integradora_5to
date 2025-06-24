@@ -68,19 +68,45 @@ struct ProductDetailView: View {
     }
 
     private var movementsView: some View {
-        List {
+        ScrollView {
             if viewModel.movements.isEmpty {
                 Text("no_movements".localized)
+                    .padding()
             } else {
-                ForEach(viewModel.movements) { move in
-                    VStack(alignment: .leading) {
-                        Text(move.created_at)
-                            .font(.caption)
-                        Text("\(move.type.localized) - \(move.quantity)")
-                        Text(move.user)
-                            .font(.caption2)
+                VStack(spacing: 12) {
+                    ForEach(viewModel.movements) { move in
+                        VStack(alignment: .leading, spacing: 4) {
+                            if let date = move.date, let time = move.time {
+                                Text("\(date) \(time)")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            } else if let created = move.created_at {
+                                Text(created)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            }
+
+                            Text("\(move.type.localized) - \(move.quantity)")
+                                .font(.subheadline.bold())
+
+                            if let comment = move.comment, !comment.isEmpty {
+                                Text(comment)
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                            if let user = move.user {
+                                Text(user)
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.secondaryColor)
+                        .cornerRadius(10)
                     }
                 }
+                .padding(.horizontal)
             }
         }
     }
