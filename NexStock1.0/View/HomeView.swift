@@ -14,6 +14,14 @@ struct HomeView: View {
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
+    /// Available product categories used for the home preview
+    private let categories: [Category] = [
+        .init(id: 1, name: "Alimentos"),
+        .init(id: 2, name: "Bebidas"),
+        .init(id: 3, name: "Insumos"),
+        .init(id: 4, name: "Productos de limpieza")
+    ]
+
     var body: some View {
         ZStack(alignment: .leading) {
             Color.backColor.ignoresSafeArea()
@@ -37,21 +45,9 @@ struct HomeView: View {
                             AlertModel(sensor: "Sensor de temperatura", message: "Temperatura superior a 25 grados", time: "12:13 h", icon: "exclamationmark.triangle.fill", severity: .low)
                         ])
 
-                        if let summary = inventoryVM.summary {
-                            if let expiring = summary.expiring {
-                                InventoryHomeSectionView(title: "Por vencer", products: expiring, loadMore: inventoryVM.loadMore)
-                            }
-                            if let out = summary.out_of_stock {
-                                InventoryHomeSectionView(title: "Agotados", products: out, loadMore: inventoryVM.loadMore)
-                            }
-                            if let low = summary.low_stock {
-                                InventoryHomeSectionView(title: "Bajo stock", products: low, loadMore: inventoryVM.loadMore)
-                            }
-                            if let near = summary.near_minimum {
-                                InventoryHomeSectionView(title: "Cerca del mínimo", products: near, loadMore: inventoryVM.loadMore)
-                            }
-                            if let over = summary.overstock {
-                                InventoryHomeSectionView(title: "Sobre inventario", products: over, loadMore: inventoryVM.loadMore)
+                        ForEach(categories, id: \.id) { category in
+                            if let products = inventoryVM.categorizedProducts[category.id], !products.isEmpty {
+                                InventoryHomeSectionView(title: category.name, products: Array(products.prefix(5)))
                             }
                         }
                     }
@@ -67,7 +63,7 @@ struct HomeView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
-        .onAppear { inventoryVM.fetchInitial() }
+        .task { await inventoryVM.fetchProducts() }
     }
 }
 
