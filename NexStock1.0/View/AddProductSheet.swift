@@ -59,31 +59,71 @@ struct AddProductSheet: View {
                     VStack(spacing: 20) {
                         // Sección 1
                         SectionContainer(title: "information".localized) {
-                            TextField("Nombre", text: $name)
-                                .textFieldStyle(.roundedBorder)
-                            TextField("Marca", text: $brand)
-                                .textFieldStyle(.roundedBorder)
-                            TextField("Descripción", text: $description)
-                                .textFieldStyle(.roundedBorder)
-                        }
+                            VStack(spacing: 12) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Nombre")
+                                        .font(.caption)
+                                        .foregroundColor(.tertiaryColor)
+                                    TextField("Nombre del producto", text: $name)
+                                        .padding(10)
+                                        .background(Color.fourthColor)
+                                        .cornerRadius(8)
+                                        .foregroundColor(.primary)
+                                }
 
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Marca")
+                                        .font(.caption)
+                                        .foregroundColor(.tertiaryColor)
+                                    TextField("Marca registrada", text: $brand)
+                                        .padding(10)
+                                        .background(Color.fourthColor)
+                                        .cornerRadius(8)
+                                        .foregroundColor(.primary)
+                                }
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Descripción")
+                                        .font(.caption)
+                                        .foregroundColor(.tertiaryColor)
+                                    TextField("Escribe una descripción breve...", text: $description)
+                                        .padding(10)
+                                        .background(Color.fourthColor)
+                                        .cornerRadius(8)
+                                        .foregroundColor(.primary)
+                                }
+                            }
+                            .padding(.vertical, 4)
+                        }
+                        .foregroundColor(.tertiaryColor)
+                        
                         // Sección 2
                         SectionContainer(title: "stock".localized) {
                             HStack {
                                 Text("Mínimo:")
                                 TextField("0", value: $stockMin, format: .number)
                                     .keyboardType(.numberPad)
+                                    .background(Color.backColor)
                                     .textFieldStyle(.roundedBorder)
+                                    .cornerRadius(8)
+                                    .foregroundColor(.primary)
                                 Stepper("", value: $stockMin, in: 0...100)
                                     .labelsHidden()
+                                    .background(Color.primaryColor)
+                                    .cornerRadius(14)
                             }
                             HStack {
                                 Text("Máximo:")
                                 TextField("0", value: $stockMax, format: .number)
                                     .keyboardType(.numberPad)
+                                    .background(Color.backColor)
                                     .textFieldStyle(.roundedBorder)
+                                    .cornerRadius(8)
+                                    .foregroundColor(.primary)
                                 Stepper("", value: $stockMax, in: 1...200)
                                     .labelsHidden()
+                                    .background(Color.primaryColor)
+                                    .cornerRadius(14)
                             }
                         }
 
@@ -100,6 +140,7 @@ struct AddProductSheet: View {
                                 Text("No hay imagen seleccionada")
                                     .font(.footnote)
                                     .frame(maxWidth: .infinity, alignment: .center)
+                                    .foregroundColor(.primary)
                             }
 
                             Button("Subir desde galería o cámara") {
