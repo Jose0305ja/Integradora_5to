@@ -90,6 +90,7 @@ struct ProductDetailView: View {
                 .padding(.horizontal)
             }
         }
+        .scrollContentBackground(.hidden)
     }
 
     private var movementsView: some View {
@@ -110,6 +111,7 @@ struct ProductDetailView: View {
                 .padding(.horizontal)
             }
         }
+        .scrollContentBackground(.hidden)
     }
 
     private func formattedDate(_ string: String?) -> String {

@@ -58,9 +58,7 @@ struct AddProductSheet: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         // Sección 1
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("information".localized)
-                                .font(.headline)
+                        SectionContainer(title: "information".localized) {
                             TextField("Nombre", text: $name)
                                 .textFieldStyle(.roundedBorder)
                             TextField("Marca", text: $brand)
@@ -68,15 +66,9 @@ struct AddProductSheet: View {
                             TextField("Descripción", text: $description)
                                 .textFieldStyle(.roundedBorder)
                         }
-                        .padding()
-                        .background(Color.secondaryColor)
-                        .cornerRadius(12)
-                        .shadow(radius: 2)
 
                         // Sección 2
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("stock".localized)
-                                .font(.headline)
+                        SectionContainer(title: "stock".localized) {
                             HStack {
                                 Text("Mínimo:")
                                 TextField("0", value: $stockMin, format: .number)
@@ -94,15 +86,9 @@ struct AddProductSheet: View {
                                     .labelsHidden()
                             }
                         }
-                        .padding()
-                        .background(Color.secondaryColor)
-                        .cornerRadius(12)
-                        .shadow(radius: 2)
 
                         // Sección 3
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("image".localized)
-                                .font(.headline)
+                        SectionContainer(title: "image".localized) {
                             if let image = selectedImage {
                                 Image(uiImage: image)
                                     .resizable()
@@ -131,15 +117,9 @@ struct AddProductSheet: View {
                                 Button("Cancelar", role: .cancel) {}
                             }
                         }
-                        .padding()
-                        .background(Color.secondaryColor)
-                        .cornerRadius(12)
-                        .shadow(radius: 2)
 
                         // Sección 4
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("category".localized)
-                                .font(.headline)
+                        SectionContainer(title: "category".localized) {
                             Picker("Categoría", selection: $selectedCategory) {
                                 ForEach(categories, id: \.self) { category in
                                     Text(category.name.localized).tag(category as Category?)
@@ -147,15 +127,9 @@ struct AddProductSheet: View {
                             }
                             .pickerStyle(.menu)
                         }
-                        .padding()
-                        .background(Color.secondaryColor)
-                        .cornerRadius(12)
-                        .shadow(radius: 2)
 
                         // Sección 5
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("unit".localized)
-                                .font(.headline)
+                        SectionContainer(title: "unit".localized) {
                             Picker("Tipo de unidad", selection: $selectedUnitType) {
                                 ForEach(unitTypes, id: \.self) { unit in
                                     Text(unit.name.localized).tag(unit as UnitType?)
@@ -163,15 +137,9 @@ struct AddProductSheet: View {
                             }
                             .pickerStyle(.menu)
                         }
-                        .padding()
-                        .background(Color.secondaryColor)
-                        .cornerRadius(12)
-                        .shadow(radius: 2)
 
                         // Sección 6 - Método de entrada
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("input_method".localized)
-                                .font(.headline)
+                        SectionContainer(title: "input_method".localized) {
                             Picker("input_method".localized, selection: $inputMethod) {
                                 ForEach(InputMethod.allCases, id: \.self) { method in
                                     Text(method.rawValue.localized).tag(method)
@@ -179,13 +147,10 @@ struct AddProductSheet: View {
                             }
                             .pickerStyle(SegmentedPickerStyle())
                         }
-                        .padding()
-                        .background(Color.secondaryColor)
-                        .cornerRadius(12)
-                        .shadow(radius: 2)
                     }
                     .padding()
                 }
+                .scrollContentBackground(.hidden)
             }
             .navigationTitle("new_product".localized)
             .toolbar {
