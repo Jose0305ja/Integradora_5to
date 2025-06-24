@@ -17,9 +17,12 @@ class ProductService {
 
         URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data {
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("🧾 JSON recibido: \(jsonString)")
+                }
                 do {
-                    let decoded = try JSONDecoder().decode(ProductsResponse.self, from: data)
-                    completion(.success(decoded.products))
+                    let decoded = try JSONDecoder().decode([ProductModel].self, from: data)
+                    completion(.success(decoded))
                 } catch {
                     completion(.failure(error))
                 }
@@ -41,9 +44,12 @@ class ProductService {
 
         URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data {
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("🧾 JSON recibido: \(jsonString)")
+                }
                 do {
-                    let decoded = try JSONDecoder().decode(ProductsResponse.self, from: data)
-                    completion(.success(decoded.products))
+                    let decoded = try JSONDecoder().decode([ProductModel].self, from: data)
+                    completion(.success(decoded))
                 } catch {
                     completion(.failure(error))
                 }

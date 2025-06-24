@@ -30,8 +30,10 @@ class InventoryHomeViewModel: ObservableObject {
 
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            let decoded = try JSONDecoder().decode(ProductsResponse.self, from: data)
-            let products = decoded.products
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("🧾 JSON recibido: \(jsonString)")
+            }
+            let products = try JSONDecoder().decode([ProductModel].self, from: data)
 
             DispatchQueue.main.async {
                 if products.count < self.pageSize {
