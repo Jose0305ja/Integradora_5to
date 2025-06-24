@@ -8,18 +8,20 @@ struct ProductDetailSheet: View {
 
     var body: some View {
         NavigationStack {
-            Group {
-                if isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                } else if let details = details {
-                    VStack(spacing: 12) {
-                        if let imageURL = details.image_url, let url = URL(string: imageURL) {
-                            AsyncImage(url: url) { image in
-                                image.resizable()
-                            } placeholder: {
-                                ProgressView()
-                            }
+            ZStack {
+                Color.primaryColor.ignoresSafeArea()
+                Group {
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                    } else if let details = details {
+                        VStack(spacing: 12) {
+                            if let imageURL = details.image_url, let url = URL(string: imageURL) {
+                                AsyncImage(url: url) { image in
+                                    image.resizable()
+                                } placeholder: {
+                                    ProgressView()
+                                }
                             .frame(width: 150, height: 150)
                             .cornerRadius(12)
                         } else {
@@ -48,11 +50,13 @@ struct ProductDetailSheet: View {
                         if let sensor = details.sensor_type {
                             Text("Sensor: \(sensor.localized)")
                         }
+                        }
+                        .padding()
+                        .foregroundColor(.tertiaryColor)
+                    } else if let message = errorMessage {
+                        Text(message)
+                            .foregroundColor(.tertiaryColor)
                     }
-                    .padding()
-                } else if let message = errorMessage {
-                    Text(message)
-                        .foregroundColor(.red)
                 }
             }
             .navigationTitle("information".localized)

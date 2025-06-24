@@ -10,7 +10,7 @@ struct ProductDetailView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.backColor.ignoresSafeArea()
+                Color.primaryColor.ignoresSafeArea()
                 VStack(spacing: 16) {
                     Picker("", selection: $selectedTab) {
                         Text("information".localized).tag(0)
@@ -24,7 +24,7 @@ struct ProductDetailView: View {
                         .padding()
                 } else if let error = viewModel.errorMessage {
                     Text(error)
-                        .foregroundColor(.red)
+                        .foregroundColor(.tertiaryColor)
                         .padding()
                 } else if selectedTab == 0 {
                     infoView
@@ -68,7 +68,7 @@ struct ProductDetailView: View {
                     Text("\("current_stock".localized): \(detail.stock_actual.map(String.init) ?? "no_information".localized)")
                         .font(.body)
                         .fontWeight(critical ? .bold : .regular)
-                        .foregroundColor(critical ? .red : .primary)
+                        .foregroundColor(.tertiaryColor)
 
                     Text("\("minimum_stock".localized): \(detail.stock_min.map(String.init) ?? "no_information".localized)")
                         .font(.body)
@@ -90,6 +90,8 @@ struct ProductDetailView: View {
                 .padding(.horizontal)
             }
         }
+        .scrollContentBackground(.hidden)
+        .foregroundColor(.tertiaryColor)
     }
 
     private var movementsView: some View {
@@ -110,6 +112,8 @@ struct ProductDetailView: View {
                 .padding(.horizontal)
             }
         }
+        .scrollContentBackground(.hidden)
+        .foregroundColor(.tertiaryColor)
     }
 
     private func formattedDate(_ string: String?) -> String {
@@ -145,12 +149,12 @@ struct ProductDetailView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(formattedDate())
                     .font(.footnote)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.tertiaryColor.opacity(0.7))
 
                 HStack {
                     Text(move.type.localized)
                         .font(.body.bold())
-                        .foregroundColor(isDecrease ? .red : .green)
+                        .foregroundColor(.tertiaryColor)
                     Spacer()
                     Text("\(diff > 0 ? "+" : "")\(move.quantity)")
                         .font(.body.bold())
@@ -166,13 +170,13 @@ struct ProductDetailView: View {
                 if let comment = move.comment, !comment.isEmpty {
                     Text(comment)
                         .font(.footnote)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.tertiaryColor.opacity(0.7))
                         .multilineTextAlignment(.leading)
                 }
                 if let user = move.user {
                     Text(user)
                         .font(.footnote)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.tertiaryColor.opacity(0.7))
                 }
             }
             .padding()
