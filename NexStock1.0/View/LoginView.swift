@@ -13,6 +13,7 @@ struct LoginView: View {
     @Environment(\.colorScheme) var colorScheme
     @Binding var path: NavigationPath
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         GeometryReader { geometry in

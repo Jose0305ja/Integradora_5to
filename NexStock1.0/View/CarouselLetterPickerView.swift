@@ -15,6 +15,8 @@ struct CarouselLetterPickerView: View {
     @Binding var selectedLetter: String
     @State private var lastCenteredLetter: String?
     @State private var debounceTimer: Timer?
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         GeometryReader { outerGeo in

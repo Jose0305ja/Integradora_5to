@@ -10,6 +10,7 @@ import SwiftUI
 struct CardView: View {
     let model: CardModel
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(spacing: 12) {

@@ -13,6 +13,7 @@ struct HeaderModeView: View {
     var showRedDot: Bool = false
     var onBack: (() -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         HStack {

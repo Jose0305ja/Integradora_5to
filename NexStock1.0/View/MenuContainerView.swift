@@ -12,6 +12,8 @@ struct MenuContainerView<Content: View>: View {
     @ViewBuilder var content: () -> Content
     @Binding var path: NavigationPath
     @Binding var showMenu: Bool
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
     
     var body: some View {
         ZStack(alignment: .leading) {

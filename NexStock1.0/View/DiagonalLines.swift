@@ -9,6 +9,8 @@ import SwiftUI
 
 struct DiagonalLines: View {
     var colorScheme: ColorScheme
+    @EnvironmentObject var theme: ThemeManager
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         GeometryReader { geometry in
