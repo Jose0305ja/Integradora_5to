@@ -92,5 +92,9 @@
   "stock": "在庫",
   "image": "画像",
   "category": "カテゴリー",
-  "unit": "単位"
+  "unit": "単位",
+  "close": "閉じる",
+  "no_information": "情報なし",
+  "before": "前",
+  "after": "後"
 }

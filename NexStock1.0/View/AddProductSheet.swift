@@ -53,90 +53,138 @@ struct AddProductSheet: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                // Sección 1
-                Section(header: Text("information".localized)) {
-                    TextField("Nombre", text: $name)
-                    TextField("Marca", text: $brand)
-                    TextField("Descripción", text: $description)
-                }
-
-                // Sección 2
-                Section(header: Text("stock".localized)) {
-                    HStack {
-                        Text("Mínimo:")
-                        TextField("0", value: $stockMin, format: .number)
-                            .keyboardType(.numberPad)
-                            .textFieldStyle(.roundedBorder)
-                        Stepper("", value: $stockMin, in: 0...100)
-                            .labelsHidden()
-                    }
-
-                    HStack {
-                        Text("Máximo:")
-                        TextField("0", value: $stockMax, format: .number)
-                            .keyboardType(.numberPad)
-                            .textFieldStyle(.roundedBorder)
-                        Stepper("", value: $stockMax, in: 1...200)
-                            .labelsHidden()
-                    }
-                }
-
-                // Sección 3
-                Section(header: Text("image".localized)) {
-                    if let image = selectedImage {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 150)
-                    } else if isUploading {
-                        ProgressView("Subiendo imagen...")
-                    } else {
-                        Text("No hay imagen seleccionada")
-                    }
-
-                    Button("Subir desde galería o cámara") {
-                        showImageSourceOptions = true
-                    }
-                    .confirmationDialog("Selecciona origen de la imagen", isPresented: $showImageSourceOptions) {
-                        Button("Tomar foto") {
-                            sourceType = .camera
-                            showImagePicker = true
+            ZStack {
+                Color.backColor.ignoresSafeArea()
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Sección 1
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("information".localized)
+                                .font(.headline)
+                            TextField("Nombre", text: $name)
+                                .textFieldStyle(.roundedBorder)
+                            TextField("Marca", text: $brand)
+                                .textFieldStyle(.roundedBorder)
+                            TextField("Descripción", text: $description)
+                                .textFieldStyle(.roundedBorder)
                         }
-                        Button("Seleccionar de galería") {
-                            sourceType = .photoLibrary
-                            showImagePicker = true
-                        }
-                        Button("Cancelar", role: .cancel) {}
-                    }
-                }
+                        .padding()
+                        .background(Color.secondaryColor)
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
 
-                // Sección 4
-                Section(header: Text("category".localized)) {
-                    Picker("Categoría", selection: $selectedCategory) {
-                        ForEach(categories, id: \.self) { category in
-                            Text(category.name.localized).tag(category as Category?)
+                        // Sección 2
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("stock".localized)
+                                .font(.headline)
+                            HStack {
+                                Text("Mínimo:")
+                                TextField("0", value: $stockMin, format: .number)
+                                    .keyboardType(.numberPad)
+                                    .textFieldStyle(.roundedBorder)
+                                Stepper("", value: $stockMin, in: 0...100)
+                                    .labelsHidden()
+                            }
+                            HStack {
+                                Text("Máximo:")
+                                TextField("0", value: $stockMax, format: .number)
+                                    .keyboardType(.numberPad)
+                                    .textFieldStyle(.roundedBorder)
+                                Stepper("", value: $stockMax, in: 1...200)
+                                    .labelsHidden()
+                            }
                         }
-                    }
-                }
+                        .padding()
+                        .background(Color.secondaryColor)
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
 
-                // Sección 5
-                Section(header: Text("unit".localized)) {
-                    Picker("Tipo de unidad", selection: $selectedUnitType) {
-                        ForEach(unitTypes, id: \.self) { unit in
-                            Text(unit.name.localized).tag(unit as UnitType?)
-                        }
-                    }
-                }
+                        // Sección 3
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("image".localized)
+                                .font(.headline)
+                            if let image = selectedImage {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 150)
+                            } else if isUploading {
+                                ProgressView("Subiendo imagen...")
+                            } else {
+                                Text("No hay imagen seleccionada")
+                                    .font(.footnote)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                            }
 
-                // Sección 6 - Método de entrada
-                Section(header: Text("input_method".localized)) {
-                    Picker("input_method".localized, selection: $inputMethod) {
-                        ForEach(InputMethod.allCases, id: \.self) { method in
-                            Text(method.rawValue.localized).tag(method)
+                            Button("Subir desde galería o cámara") {
+                                showImageSourceOptions = true
+                            }
+                            .confirmationDialog("Selecciona origen de la imagen", isPresented: $showImageSourceOptions) {
+                                Button("Tomar foto") {
+                                    sourceType = .camera
+                                    showImagePicker = true
+                                }
+                                Button("Seleccionar de galería") {
+                                    sourceType = .photoLibrary
+                                    showImagePicker = true
+                                }
+                                Button("Cancelar", role: .cancel) {}
+                            }
                         }
+                        .padding()
+                        .background(Color.secondaryColor)
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
+
+                        // Sección 4
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("category".localized)
+                                .font(.headline)
+                            Picker("Categoría", selection: $selectedCategory) {
+                                ForEach(categories, id: \.self) { category in
+                                    Text(category.name.localized).tag(category as Category?)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                        }
+                        .padding()
+                        .background(Color.secondaryColor)
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
+
+                        // Sección 5
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("unit".localized)
+                                .font(.headline)
+                            Picker("Tipo de unidad", selection: $selectedUnitType) {
+                                ForEach(unitTypes, id: \.self) { unit in
+                                    Text(unit.name.localized).tag(unit as UnitType?)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                        }
+                        .padding()
+                        .background(Color.secondaryColor)
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
+
+                        // Sección 6 - Método de entrada
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("input_method".localized)
+                                .font(.headline)
+                            Picker("input_method".localized, selection: $inputMethod) {
+                                ForEach(InputMethod.allCases, id: \.self) { method in
+                                    Text(method.rawValue.localized).tag(method)
+                                }
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
+                        .padding()
+                        .background(Color.secondaryColor)
+                        .cornerRadius(12)
+                        .shadow(radius: 2)
                     }
-                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
                 }
             }
             .navigationTitle("new_product".localized)

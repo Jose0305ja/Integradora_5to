@@ -92,5 +92,9 @@
   "stock": "库存",
   "image": "图片",
   "category": "类别",
-  "unit": "单位"
+  "unit": "单位",
+  "close": "关闭",
+  "no_information": "没有信息",
+  "before": "之前",
+  "after": "之后"
 }
