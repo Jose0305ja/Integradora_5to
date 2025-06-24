@@ -91,6 +91,9 @@ class ProductService {
 
         URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data {
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("🧾 Detail JSON: \(jsonString)")
+                }
                 do {
                     let decoded = try JSONDecoder().decode(ProductDetailResponse.self, from: data)
                     completion(.success(decoded))
