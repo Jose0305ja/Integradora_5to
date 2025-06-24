@@ -12,14 +12,17 @@ class ProductService {
     static let shared = ProductService()
     private let baseURL = NetworkConfig.inventoryBaseURL + "/inventory/products"
 
-    func fetchProducts(completion: @escaping (Result<[ProductModel], Error>) -> Void) {
+    func fetchProducts(completion: @escaping (Result<[DetailedProductModel], Error>) -> Void) {
         guard let url = URL(string: baseURL) else { return }
 
         URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data {
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("🧾 JSON recibido: \(jsonString)")
+                }
                 do {
-                    let decoded = try JSONDecoder().decode(ProductsResponse.self, from: data)
-                    completion(.success(decoded.products))
+                    let decoded = try JSONDecoder().decode([DetailedProductModel].self, from: data)
+                    completion(.success(decoded))
                 } catch {
                     completion(.failure(error))
                 }
@@ -29,7 +32,7 @@ class ProductService {
         }.resume()
     }
 
-    func fetchGeneralProducts(page: Int = 1, categoryID: Int? = nil, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
+    func fetchGeneralProducts(page: Int = 1, categoryID: Int? = nil, completion: @escaping (Result<[DetailedProductModel], Error>) -> Void) {
         var components = URLComponents(string: baseURL + "/general")
         var queryItems = [URLQueryItem(name: "page", value: String(page))]
         if let categoryID = categoryID {
@@ -41,9 +44,12 @@ class ProductService {
 
         URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data {
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("🧾 JSON recibido: \(jsonString)")
+                }
                 do {
-                    let decoded = try JSONDecoder().decode(ProductsResponse.self, from: data)
-                    completion(.success(decoded.products))
+                    let decoded = try JSONDecoder().decode([DetailedProductModel].self, from: data)
+                    completion(.success(decoded))
                 } catch {
                     completion(.failure(error))
                 }
@@ -53,7 +59,7 @@ class ProductService {
         }.resume()
     }
 
-    func addProduct(_ product: ProductModel, completion: @escaping (Result<Void, Error>) -> Void) {
+    func addProduct(_ product: DetailedProductModel, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: baseURL) else { return }
 
         var request = URLRequest(url: url)

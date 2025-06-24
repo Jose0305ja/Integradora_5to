@@ -2,8 +2,8 @@
 import Foundation
 
 class InventoryHomeViewModel: ObservableObject {
-    @Published var allProducts: [ProductModel] = []
-    @Published var categorizedProducts: [Int: [ProductModel]] = [:]
+    @Published var allProducts: [DetailedProductModel] = []
+    @Published var categorizedProducts: [Int: [DetailedProductModel]] = [:]
     @Published var isLoading = false
 
     private let pageSize = 20
@@ -30,8 +30,10 @@ class InventoryHomeViewModel: ObservableObject {
 
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            let decoded = try JSONDecoder().decode(ProductsResponse.self, from: data)
-            let products = decoded.products
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("🧾 JSON recibido: \(jsonString)")
+            }
+            let products = try JSONDecoder().decode([DetailedProductModel].self, from: data)
 
             DispatchQueue.main.async {
                 if products.count < self.pageSize {
@@ -51,7 +53,7 @@ class InventoryHomeViewModel: ObservableObject {
     }
 
     private func groupProductsByCategory() {
-        var grouped: [Int: [ProductModel]] = [:]
+        var grouped: [Int: [DetailedProductModel]] = [:]
         for product in allProducts {
             let categoryId = product.category_id
             grouped[categoryId, default: []].append(product)

@@ -11,7 +11,7 @@ import PhotosUI
 import Foundation
 
 struct AddProductSheet: View {
-    var onSave: (ProductModel) -> Void
+    var onSave: (DetailedProductModel) -> Void
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authService: AuthService
     @EnvironmentObject var theme: ThemeManager
@@ -146,7 +146,7 @@ struct AddProductSheet: View {
                         if let category = selectedCategory,
                            let unit = selectedUnitType,
                            let finalURL = finalURL {
-                            let producto = ProductModel(
+                            let producto = DetailedProductModel(
                                 name: name,
                                 brand: brand,
                                 description: description,

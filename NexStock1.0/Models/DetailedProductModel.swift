@@ -1,5 +1,5 @@
 //
-//  ProductModel.swift
+//  DetailedProductModel.swift
 //  NexStock1.0
 //
 //  Created by Jose Antonio Rivera on 14/06/25.
@@ -12,8 +12,8 @@ enum InputMethod: String, Codable, CaseIterable {
     case sensor
 }
 
-struct ProductModel: Identifiable, Codable {
-    let id = UUID()
+struct DetailedProductModel: Identifiable, Codable {
+    let id: Int
     let name: String
     let brand: String
     let description: String
@@ -23,6 +23,28 @@ struct ProductModel: Identifiable, Codable {
     let stock_min: Int
     let stock_max: Int
     let input_method: InputMethod
+
+    init(id: Int = 0,
+         name: String,
+         brand: String,
+         description: String,
+         category_id: Int,
+         unit_type_id: Int,
+         image_url: String,
+         stock_min: Int,
+         stock_max: Int,
+         input_method: InputMethod) {
+        self.id = id
+        self.name = name
+        self.brand = brand
+        self.description = description
+        self.category_id = category_id
+        self.unit_type_id = unit_type_id
+        self.image_url = image_url
+        self.stock_min = stock_min
+        self.stock_max = stock_max
+        self.input_method = input_method
+    }
 
     var localized: String {
         NSLocalizedString(name, comment: "")
@@ -39,8 +61,9 @@ struct UnitType: Identifiable, Codable, Hashable {
     let name: String
 }
 
-let sampleProducts: [ProductModel] = [
-    ProductModel(
+let sampleProducts: [DetailedProductModel] = [
+    DetailedProductModel(
+        id: 1,
         name: "Manzana",
         brand: "Del Valle",
         description: "Manzana roja fresca",
@@ -51,7 +74,8 @@ let sampleProducts: [ProductModel] = [
         stock_max: 50,
         input_method: .manual
     ),
-    ProductModel(
+    DetailedProductModel(
+        id: 2,
         name: "Zanahoria",
         brand: "CampoFresco",
         description: "Zanahoria orgánica",

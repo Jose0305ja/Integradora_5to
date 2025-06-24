@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct InventoryCardView: View {
-    let product: ProductModel
+    let product: DetailedProductModel
     var onTap: (() -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
