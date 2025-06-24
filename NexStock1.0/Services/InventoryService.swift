@@ -28,12 +28,14 @@ class InventoryService {
             if let data = data {
                 do {
                     let decoded = try JSONDecoder().decode(InventoryHomeResponse.self, from: data)
-                    let all = (decoded.expiring ?? []) +
-                              (decoded.out_of_stock ?? []) +
-                              (decoded.low_stock ?? []) +
-                              (decoded.near_minimum ?? []) +
-                              (decoded.overstock ?? []) +
-                              (decoded.all ?? [])
+                    let expiring = decoded.expiring ?? []
+                    let outOfStock = decoded.out_of_stock ?? []
+                    let lowStock = decoded.low_stock ?? []
+                    let nearMinimum = decoded.near_minimum ?? []
+                    let overstock = decoded.overstock ?? []
+                    let allItems = decoded.all ?? []
+
+                    let all = expiring + outOfStock + lowStock + nearMinimum + overstock + allItems
                     if let found = all.first(where: { $0.name.lowercased() == name.lowercased() }) {
                         completion(.success(found))
                     } else {
