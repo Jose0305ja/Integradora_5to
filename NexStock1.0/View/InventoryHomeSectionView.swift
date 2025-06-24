@@ -2,7 +2,9 @@ import SwiftUI
 
 struct InventoryHomeSectionView: View {
     let title: String
-    let products: [InventoryProduct]
+    /// Products to display within the section
+    let products: [ProductModel]
+    /// Optional action triggered when the "Ver más" button is pressed
     var loadMore: (() -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
@@ -24,7 +26,7 @@ struct InventoryHomeSectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {
                     ForEach(products) { product in
-                        HomeInventoryCardView(product: product)
+                        InventoryCardView(product: product)
                     }
                 }
                 .padding(.horizontal)

@@ -133,14 +133,20 @@ struct InventoryScreenView: View {
     private func fetchProducts() {
         var all: [ProductModel] = []
         let group = DispatchGroup()
+        let appendQueue = DispatchQueue(label: "inventory.product.append")
 
         for category in categories {
             group.enter()
             ProductService.shared.fetchGeneralProducts(categoryID: category.id) { result in
-                if case .success(let data) = result {
-                    all.append(contentsOf: data)
+                switch result {
+                case .success(let data):
+                    appendQueue.async {
+                        all.append(contentsOf: data)
+                        group.leave()
+                    }
+                case .failure:
+                    group.leave()
                 }
-                group.leave()
             }
         }
 
