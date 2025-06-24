@@ -19,10 +19,21 @@ struct ProductDetailInfo: Identifiable, Codable {
     let updated_at: String?
 }
 
+/// Represents a single stock movement for a product
 struct ProductMovement: Identifiable, Codable {
-    let id: Int
+    /// Some older endpoints may include an id field
+    let identifier: Int?
+    let date: String?
+    let time: String?
     let type: String
+    let stock_before: Int?
     let quantity: Int
-    let user: String
-    let created_at: String
+    let stock_after: Int?
+    let comment: String?
+
+    // Fields kept for backwards compatibility with previous endpoints
+    let user: String?
+    let created_at: String?
+
+    var id: Int { identifier ?? Int(Date().timeIntervalSince1970) }
 }
