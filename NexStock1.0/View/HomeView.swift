@@ -10,17 +10,10 @@ import SwiftUI
 struct HomeView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
-    @StateObject private var inventoryVM = InventoryHomeViewModel()
+    @StateObject private var summaryVM = HomeSummaryViewModel()
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
-    /// Available product categories used for the home preview
-    private let categories: [Category] = [
-        .init(id: 1, name: "Alimentos"),
-        .init(id: 2, name: "Bebidas"),
-        .init(id: 3, name: "Insumos"),
-        .init(id: 4, name: "Productos de limpieza")
-    ]
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -45,9 +38,21 @@ struct HomeView: View {
                             AlertModel(sensor: "Sensor de temperatura", message: "Temperatura superior a 25 grados", time: "12:13 h", icon: "exclamationmark.triangle.fill", severity: .low)
                         ])
 
-                        ForEach(categories, id: \.id) { category in
-                            if let products = inventoryVM.categorizedProducts[category.id], !products.isEmpty {
-                                InventoryHomeSectionView(title: category.name, products: Array(products.prefix(5)))
+                        if let summary = summaryVM.summary {
+                            if let items = summary.expiring, !items.isEmpty {
+                                HomeSummarySectionView(title: "expiring".localized, products: items)
+                            }
+                            if let items = summary.out_of_stock, !items.isEmpty {
+                                HomeSummarySectionView(title: "out_of_stock".localized, products: items)
+                            }
+                            if let items = summary.low_stock, !items.isEmpty {
+                                HomeSummarySectionView(title: "below_minimum".localized, products: items)
+                            }
+                            if let items = summary.near_minimum, !items.isEmpty {
+                                HomeSummarySectionView(title: "near_minimum".localized, products: items)
+                            }
+                            if let items = summary.overstock, !items.isEmpty {
+                                HomeSummarySectionView(title: "overstock".localized, products: items)
                             }
                         }
                     }
@@ -63,7 +68,7 @@ struct HomeView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
-        .task { await inventoryVM.fetchProducts() }
+        .task { summaryVM.fetchSummary() }
     }
 }
 

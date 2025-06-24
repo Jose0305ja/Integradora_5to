@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct InventoryGroupView: View {
-    @StateObject private var viewModel = SimpleInventoryViewModel()
+    @StateObject private var viewModel = PaginatedInventoryViewModel()
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                ForEach(viewModel.productsByCategory.keys.sorted(), id: \.self) { category in
-                    if let items = viewModel.productsByCategory[category] {
+                ForEach(viewModel.categories, id: \.self) { category in
+                    if let items = viewModel.productsByCategory[category], !items.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
                             Text(category)
                                 .font(.title3.bold())
@@ -16,6 +16,9 @@ struct InventoryGroupView: View {
                                 HStack(spacing: 16) {
                                     ForEach(items) { product in
                                         ProductCard(product: product)
+                                            .onAppear {
+                                                viewModel.loadMoreIfNeeded(currentItem: product, category: category)
+                                            }
                                     }
                                 }
                                 .padding(.horizontal)
@@ -26,7 +29,7 @@ struct InventoryGroupView: View {
             }
         }
         .onAppear {
-            viewModel.fetchProducts()
+            viewModel.fetchInitial()
         }
     }
 }

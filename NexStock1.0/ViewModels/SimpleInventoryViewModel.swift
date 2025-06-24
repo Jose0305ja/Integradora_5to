@@ -5,25 +5,24 @@ class SimpleInventoryViewModel: ObservableObject {
     @Published var productsByCategory: [String: [ProductModel]] = [:]
 
     func fetchProducts() {
-        guard let url = URL(string: "https://inventory.nexusutd.online/inventory/products/general") else {
-            return
+        let categories: [Int] = [1, 2, 3, 4]
+        var tempProducts: [ProductModel] = []
+        let group = DispatchGroup()
+
+        for id in categories {
+            group.enter()
+            ProductService.shared.fetchGeneralProducts(categoryID: id) { result in
+                if case .success(let prods) = result {
+                    tempProducts.append(contentsOf: prods)
+                }
+                group.leave()
+            }
         }
 
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            if let data = data {
-                do {
-                    let decoded = try JSONDecoder().decode(ProductResponse.self, from: data)
-                    DispatchQueue.main.async {
-                        self.products = decoded.products
-                        self.groupByCategory()
-                    }
-                } catch {
-                    print("Failed to decode products", error)
-                }
-            } else if let error = error {
-                print("Network error", error)
-            }
-        }.resume()
+        group.notify(queue: .main) {
+            self.products = tempProducts
+            self.groupByCategory()
+        }
     }
 
     private func groupByCategory() {
