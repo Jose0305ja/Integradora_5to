@@ -32,11 +32,14 @@ class ProductService {
         }.resume()
     }
 
-    func fetchGeneralProducts(page: Int = 1, categoryID: Int? = nil, completion: @escaping (Result<[DetailedProductModel], Error>) -> Void) {
+    func fetchGeneralProducts(category: String? = nil, page: Int = 1, limit: Int = 20, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
         var components = URLComponents(string: baseURL + "/general")
-        var queryItems = [URLQueryItem(name: "page", value: String(page))]
-        if let categoryID = categoryID {
-            queryItems.append(URLQueryItem(name: "category", value: String(categoryID)))
+        var queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "limit", value: String(limit))
+        ]
+        if let category = category {
+            queryItems.append(URLQueryItem(name: "category", value: category))
         }
         components?.queryItems = queryItems
 
@@ -48,8 +51,8 @@ class ProductService {
                     print("🧾 JSON recibido: \(jsonString)")
                 }
                 do {
-                    let decoded = try JSONDecoder().decode([DetailedProductModel].self, from: data)
-                    completion(.success(decoded))
+                    let decoded = try JSONDecoder().decode(ProductResponse.self, from: data)
+                    completion(.success(decoded.products))
                 } catch {
                     completion(.failure(error))
                 }
