@@ -9,10 +9,12 @@ struct ProductDetailView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 16) {
-                Picker("", selection: $selectedTab) {
-                    Text("information".localized).tag(0)
-                    Text("movements".localized).tag(1)
+            ZStack {
+                Color.backColor.ignoresSafeArea()
+                VStack(spacing: 16) {
+                    Picker("", selection: $selectedTab) {
+                        Text("information".localized).tag(0)
+                        Text("movements".localized).tag(1)
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
@@ -29,8 +31,9 @@ struct ProductDetailView: View {
                 } else {
                     movementsView
                 }
+                }
+                .padding(.top)
             }
-            .padding(.top)
             .navigationTitle(product.name.localized)
             .navigationBarTitleDisplayMode(.inline)
             .onAppear { viewModel.fetch(id: product.id) }
@@ -63,14 +66,20 @@ struct ProductDetailView: View {
 
                     let critical = (detail.stock_actual ?? 0) <= (detail.stock_min ?? Int.min)
                     Text("\("current_stock".localized): \(detail.stock_actual.map(String.init) ?? "no_information".localized)")
+                        .font(.body)
                         .fontWeight(critical ? .bold : .regular)
                         .foregroundColor(critical ? .red : .primary)
 
                     Text("\("minimum_stock".localized): \(detail.stock_min.map(String.init) ?? "no_information".localized)")
+                        .font(.body)
                     Text("\("maximum_stock".localized): \(detail.stock_max.map(String.init) ?? "no_information".localized)")
+                        .font(.body)
                     Text("\("brand".localized): \(detail.brand?.isEmpty == false ? detail.brand! : "no_information".localized)")
+                        .font(.body)
                     Text("\("last_updated".localized): \(formattedDate(detail.updated_at))")
+                        .font(.footnote)
                     Text("\("description".localized): \((detail.description?.isEmpty == false ? detail.description! : "no_information".localized))")
+                        .font(.body)
                         .multilineTextAlignment(.leading)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -135,16 +144,16 @@ struct ProductDetailView: View {
         var body: some View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(formattedDate())
-                    .font(.caption)
+                    .font(.footnote)
                     .foregroundColor(.gray)
 
                 HStack {
                     Text(move.type.localized)
-                        .font(.subheadline.bold())
+                        .font(.body.bold())
                         .foregroundColor(isDecrease ? .red : .green)
                     Spacer()
                     Text("\(diff > 0 ? "+" : "")\(move.quantity)")
-                        .font(.subheadline.bold())
+                        .font(.body.bold())
                 }
 
                 HStack {
@@ -152,17 +161,17 @@ struct ProductDetailView: View {
                     Spacer()
                     Text("\("after".localized): \(move.stock_after.map(String.init) ?? "no_information".localized)")
                 }
-                .font(.caption)
+                .font(.footnote)
 
                 if let comment = move.comment, !comment.isEmpty {
                     Text(comment)
-                        .font(.caption2)
+                        .font(.footnote)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.leading)
                 }
                 if let user = move.user {
                     Text(user)
-                        .font(.caption2)
+                        .font(.footnote)
                         .foregroundColor(.secondary)
                 }
             }
