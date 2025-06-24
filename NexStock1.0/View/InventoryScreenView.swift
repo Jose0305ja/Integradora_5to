@@ -20,6 +20,10 @@ struct InventoryScreenView: View {
     @State private var showAddProductSheet = false
     @State private var products: [ProductModel] = []
     @State private var selectedProduct: ProductModel? = nil
+    @State private var pagesByCategory: [Int: Int] = [:]
+    @State private var hasMoreByCategory: [Int: Bool] = [:]
+
+    private let pageSize = 20
 
     // Categories provided by the backend
     let categories: [Category] = [
@@ -100,6 +104,13 @@ struct InventoryScreenView: View {
                                     selectedProduct = product
                                 }
                             }
+
+                            if hasMoreByCategory[category.id] ?? false {
+                                Button("Ver más") {
+                                    fetchMore(for: category)
+                                }
+                                .padding(.top, 4)
+                            }
                         }
                         .padding(.horizontal)
                     }
@@ -125,21 +136,31 @@ struct InventoryScreenView: View {
     }
 
     private func fetchProducts() {
-        var all: [ProductModel] = []
-        let group = DispatchGroup()
+        pagesByCategory = [:]
+        hasMoreByCategory = [:]
+        products = []
 
         for category in categories {
-            group.enter()
-            ProductService.shared.fetchGeneralProducts(categoryID: category.id) { result in
-                if case .success(let data) = result {
-                    all.append(contentsOf: data)
-                }
-                group.leave()
-            }
+            pagesByCategory[category.id] = 1
+            hasMoreByCategory[category.id] = true
+            fetchMore(for: category)
         }
+    }
 
-        group.notify(queue: .main) {
-            self.products = all
+    private func fetchMore(for category: Category) {
+        guard hasMoreByCategory[category.id] == true else { return }
+        let page = pagesByCategory[category.id] ?? 1
+
+        ProductService.shared.fetchGeneralProducts(page: page, categoryID: category.id) { result in
+            DispatchQueue.main.async {
+                if case .success(let data) = result {
+                    products.append(contentsOf: data)
+                    pagesByCategory[category.id] = page + 1
+                    hasMoreByCategory[category.id] = data.count == pageSize
+                } else {
+                    hasMoreByCategory[category.id] = false
+                }
+            }
         }
     }
 }
