@@ -4,6 +4,7 @@ class ProductDetailViewModel: ObservableObject {
     @Published var detail: ProductDetailInfo?
     @Published var movements: [ProductMovement] = []
     @Published var isLoading = false
+    @Published var errorMessage: String?
 
     func fetch(id: String) {
         guard !isLoading else { return }
@@ -16,8 +17,10 @@ class ProductDetailViewModel: ObservableObject {
                 case .success(let response):
                     self.detail = response.product
                     self.movements = response.movements
+                    print("Product detail loaded", response)
                 case .failure(let error):
                     print("Failed to load detail", error)
+                    self.errorMessage = error.localizedDescription
                 }
             }
         }

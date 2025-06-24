@@ -20,6 +20,10 @@ struct ProductDetailView: View {
                 if viewModel.isLoading {
                     ProgressView()
                         .padding()
+                } else if let error = viewModel.errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .padding()
                 } else if selectedTab == 0 {
                     infoView
                 } else {
@@ -39,7 +43,7 @@ struct ProductDetailView: View {
         ScrollView {
             if let detail = viewModel.detail {
                 VStack(spacing: 12) {
-                    if let url = URL(string: detail.image_url) {
+                    if let urlString = detail.image_url, let url = URL(string: urlString) {
                         AsyncImage(url: url) { image in
                             image.resizable()
                         } placeholder: {
@@ -51,12 +55,12 @@ struct ProductDetailView: View {
 
                     Text(detail.name.localized)
                         .font(.title2.bold())
-                    Text("\("current_stock".localized): \(detail.stock_actual)")
-                    Text("\("minimum_stock".localized): \(detail.stock_min)")
-                    Text("\("maximum_stock".localized): \(detail.stock_max)")
-                    Text("\("brand".localized): \(detail.brand)")
-                    Text("\("last_updated".localized): \(detail.updated_at)")
-                    Text("\("description".localized): \(detail.description)")
+                    Text("\("current_stock".localized): \(detail.stock_actual ?? 0)")
+                    Text("\("minimum_stock".localized): \(detail.stock_min ?? 0)")
+                    Text("\("maximum_stock".localized): \(detail.stock_max ?? 0)")
+                    Text("\("brand".localized): \(detail.brand ?? "N/A")")
+                    Text("\("last_updated".localized): \(detail.updated_at ?? "N/A")")
+                    Text("\("description".localized): \(detail.description ?? "Sin descripción")")
                 }
                 .padding()
             }
