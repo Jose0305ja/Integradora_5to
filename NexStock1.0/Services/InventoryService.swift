@@ -2,7 +2,7 @@ import Foundation
 
 class InventoryService {
     static let shared = InventoryService()
-    private let baseURL = "https://inventory.nexusutd.online"
+    private let baseURL = NetworkConfig.inventoryBaseURL
 
     func fetchHomeSummary(limit: Int = 5, completion: @escaping (Result<InventoryHomeResponse, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/inventory/home?limit=\(limit)") else { return }
