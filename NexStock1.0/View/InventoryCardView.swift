@@ -9,6 +9,7 @@ import SwiftUI
 
 struct InventoryCardView: View {
     let product: ProductModel
+    var onTap: (() -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
@@ -32,5 +33,8 @@ struct InventoryCardView: View {
         .background(Color.secondaryColor)
         .cornerRadius(12)
         .shadow(radius: 2)
+        .onTapGesture {
+            onTap?()
+        }
     }
 }
