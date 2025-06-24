@@ -93,5 +93,9 @@
   "stock": "Stock",
   "image": "Imagen",
   "category": "Categoría",
-  "unit": "Unidad"
+  "unit": "Unidad",
+  "close": "Cerrar",
+  "no_information": "Sin información",
+  "before": "Antes",
+  "after": "Después"
 }

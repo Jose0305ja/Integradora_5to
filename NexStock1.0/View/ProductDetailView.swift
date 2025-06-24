@@ -9,13 +9,13 @@ struct ProductDetailView: View {
 
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 16) {
                 Picker("", selection: $selectedTab) {
                     Text("information".localized).tag(0)
                     Text("movements".localized).tag(1)
                 }
                 .pickerStyle(SegmentedPickerStyle())
-                .padding()
+                .padding(.horizontal)
 
                 if viewModel.isLoading {
                     ProgressView()
@@ -30,11 +30,14 @@ struct ProductDetailView: View {
                     movementsView
                 }
             }
+            .padding(.top)
             .navigationTitle(product.name.localized)
             .navigationBarTitleDisplayMode(.inline)
             .onAppear { viewModel.fetch(id: product.id) }
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Close", action: { dismiss() }) }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("close".localized) { dismiss() }
+                }
             }
         }
     }
@@ -42,27 +45,40 @@ struct ProductDetailView: View {
     private var infoView: some View {
         ScrollView {
             if let detail = viewModel.detail {
-                VStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 12) {
                     if let urlString = detail.image_url, let url = URL(string: urlString) {
                         AsyncImage(url: url) { image in
                             image.resizable()
+                                .scaledToFit()
                         } placeholder: {
                             ProgressView()
                         }
-                        .frame(width: 150, height: 150)
-                        .cornerRadius(8)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 160)
+                        .cornerRadius(12)
                     }
 
                     Text(detail.name.localized)
-                        .font(.title2.bold())
-                    Text("\("current_stock".localized): \(detail.stock_actual ?? 0)")
-                    Text("\("minimum_stock".localized): \(detail.stock_min ?? 0)")
-                    Text("\("maximum_stock".localized): \(detail.stock_max ?? 0)")
-                    Text("\("brand".localized): \(detail.brand ?? "N/A")")
-                    Text("\("last_updated".localized): \(detail.updated_at ?? "N/A")")
-                    Text("\("description".localized): \(detail.description ?? "Sin descripción")")
+                        .font(.title3.bold())
+
+                    let critical = (detail.stock_actual ?? 0) <= (detail.stock_min ?? Int.min)
+                    Text("\("current_stock".localized): \(detail.stock_actual.map(String.init) ?? "no_information".localized)")
+                        .fontWeight(critical ? .bold : .regular)
+                        .foregroundColor(critical ? .red : .primary)
+
+                    Text("\("minimum_stock".localized): \(detail.stock_min.map(String.init) ?? "no_information".localized)")
+                    Text("\("maximum_stock".localized): \(detail.stock_max.map(String.init) ?? "no_information".localized)")
+                    Text("\("brand".localized): \(detail.brand?.isEmpty == false ? detail.brand! : "no_information".localized)")
+                    Text("\("last_updated".localized): \(formattedDate(detail.updated_at))")
+                    Text("\("description".localized): \((detail.description?.isEmpty == false ? detail.description! : "no_information".localized))")
+                        .multilineTextAlignment(.leading)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
+                .background(Color.secondaryColor)
+                .cornerRadius(12)
+                .shadow(radius: 2)
+                .padding(.horizontal)
             }
         }
     }
@@ -71,43 +87,90 @@ struct ProductDetailView: View {
         ScrollView {
             if viewModel.movements.isEmpty {
                 Text("no_movements".localized)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.secondaryColor)
+                    .cornerRadius(12)
                     .padding()
             } else {
                 VStack(spacing: 12) {
                     ForEach(viewModel.movements) { move in
-                        VStack(alignment: .leading, spacing: 4) {
-                            if let date = move.date, let time = move.time {
-                                Text("\(date) \(time)")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                            } else if let created = move.created_at {
-                                Text(created)
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                            }
-
-                            Text("\(move.type.localized) - \(move.quantity)")
-                                .font(.subheadline.bold())
-
-                            if let comment = move.comment, !comment.isEmpty {
-                                Text(comment)
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
-                            if let user = move.user {
-                                Text(user)
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.secondaryColor)
-                        .cornerRadius(10)
+                        MovementRow(move: move)
                     }
                 }
                 .padding(.horizontal)
             }
+        }
+    }
+
+    private func formattedDate(_ string: String?) -> String {
+        guard let string = string else { return "no_information".localized }
+        if let date = ISO8601DateFormatter().date(from: string) {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .short
+            return formatter.string(from: date)
+        }
+        return string
+    }
+
+    private struct MovementRow: View {
+        let move: ProductMovement
+
+        private var diff: Int {
+            if let after = move.stock_after, let before = move.stock_before {
+                return after - before
+            }
+            return move.quantity
+        }
+
+        private var isDecrease: Bool { diff < 0 }
+
+        private func formattedDate() -> String {
+            if let date = move.date, let time = move.time { return "\(date) \(time)" }
+            if let created = move.created_at { return created }
+            return ""
+        }
+
+        var body: some View {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(formattedDate())
+                    .font(.caption)
+                    .foregroundColor(.gray)
+
+                HStack {
+                    Text(move.type.localized)
+                        .font(.subheadline.bold())
+                        .foregroundColor(isDecrease ? .red : .green)
+                    Spacer()
+                    Text("\(diff > 0 ? "+" : "")\(move.quantity)")
+                        .font(.subheadline.bold())
+                }
+
+                HStack {
+                    Text("\("before".localized): \(move.stock_before.map(String.init) ?? "no_information".localized)")
+                    Spacer()
+                    Text("\("after".localized): \(move.stock_after.map(String.init) ?? "no_information".localized)")
+                }
+                .font(.caption)
+
+                if let comment = move.comment, !comment.isEmpty {
+                    Text(comment)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.leading)
+                }
+                if let user = move.user {
+                    Text(user)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.secondaryColor)
+            .cornerRadius(12)
+            .shadow(radius: 1)
         }
     }
 }
