@@ -55,7 +55,6 @@ struct InventoryScreenView: View {
         }
         .onAppear(perform: fetchProducts)
     }
-    
 
     private var content: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -104,6 +103,13 @@ struct InventoryScreenView: View {
                         .padding(.horizontal)
                     }
                 }
+
+                if products.isEmpty {
+                    Text("No hay productos disponibles.")
+                        .foregroundColor(.secondary)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                }
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -143,4 +149,3 @@ struct InventoryScreenView: View {
         }
     }
 }
-    
