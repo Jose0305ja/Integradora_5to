@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ProductDetailSheet: View {
-    let product: ProductModel
+    let product: DetailedProductModel
     @State private var details: InventoryProduct?
     @State private var isLoading = true
     @State private var errorMessage: String?

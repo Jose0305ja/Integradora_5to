@@ -1,5 +1,5 @@
 //
-//  ProductModel.swift
+//  DetailedProductModel.swift
 //  NexStock1.0
 //
 //  Created by Jose Antonio Rivera on 14/06/25.
@@ -12,7 +12,7 @@ enum InputMethod: String, Codable, CaseIterable {
     case sensor
 }
 
-struct ProductModel: Identifiable, Codable {
+struct DetailedProductModel: Identifiable, Codable {
     let id: Int
     let name: String
     let brand: String
@@ -61,8 +61,8 @@ struct UnitType: Identifiable, Codable, Hashable {
     let name: String
 }
 
-let sampleProducts: [ProductModel] = [
-    ProductModel(
+let sampleProducts: [DetailedProductModel] = [
+    DetailedProductModel(
         id: 1,
         name: "Manzana",
         brand: "Del Valle",
@@ -74,7 +74,7 @@ let sampleProducts: [ProductModel] = [
         stock_max: 50,
         input_method: .manual
     ),
-    ProductModel(
+    DetailedProductModel(
         id: 2,
         name: "Zanahoria",
         brand: "CampoFresco",
