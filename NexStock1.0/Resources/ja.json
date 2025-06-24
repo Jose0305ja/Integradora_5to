@@ -80,4 +80,17 @@
   "logo_error": "Error updating logo"
   ,"palettes": "パレット"
   ,"preview": "プレビュー"
+  ,"information": "情報",
+  "movements": "動き",
+  "current_stock": "現在の在庫",
+  "minimum_stock": "最小在庫",
+  "maximum_stock": "最大在庫",
+  "brand": "ブランド",
+  "last_updated": "最終更新",
+  "description": "説明",
+  "no_movements": "移動はありません",
+  "stock": "在庫",
+  "image": "画像",
+  "category": "カテゴリー",
+  "unit": "単位"
 }

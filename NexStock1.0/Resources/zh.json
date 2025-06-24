@@ -80,4 +80,17 @@
   "logo_error": "Error updating logo"
   ,"palettes": "调色板"
   ,"preview": "预览"
+  ,"information": "信息",
+  "movements": "移动",
+  "current_stock": "当前库存",
+  "minimum_stock": "最小库存",
+  "maximum_stock": "最大库存",
+  "brand": "品牌",
+  "last_updated": "最后更新",
+  "description": "描述",
+  "no_movements": "没有记录的移动",
+  "stock": "库存",
+  "image": "图片",
+  "category": "类别",
+  "unit": "单位"
 }

@@ -34,19 +34,19 @@ struct ProductDetailSheet: View {
                             .font(.title2.bold())
 
                         if let stock = details.stock_actual {
-                            Text("Stock actual: \(stock)")
+                            Text("\("current_stock".localized): \(stock)")
                         }
                         if let date = details.expiration_date {
                             Text("Expira: \(date)")
                         }
                         if let min = details.stock_minimum {
-                            Text("Mínimo: \(min)")
+                            Text("\("minimum_stock".localized): \(min)")
                         }
                         if let max = details.stock_maximum {
-                            Text("Máximo: \(max)")
+                            Text("\("maximum_stock".localized): \(max)")
                         }
                         if let sensor = details.sensor_type {
-                            Text("Sensor: \(sensor)")
+                            Text("Sensor: \(sensor.localized)")
                         }
                     }
                     .padding()
@@ -55,7 +55,7 @@ struct ProductDetailSheet: View {
                         .foregroundColor(.red)
                 }
             }
-            .navigationTitle("Detalle")
+            .navigationTitle("information".localized)
             .onAppear(perform: fetchDetails)
         }
     }
