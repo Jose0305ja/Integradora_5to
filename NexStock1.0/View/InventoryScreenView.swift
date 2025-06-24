@@ -18,16 +18,15 @@ struct InventoryScreenView: View {
     @State private var visibleLetterByCategory: [String: String] = [:]
     @State private var searchText: String = ""
     @State private var showAddProductSheet = false
-    @State private var products: [ProductModel] = sampleProducts
+    @State private var products: [ProductModel] = []
     @State private var selectedProduct: ProductModel? = nil
 
+    // Categories provided by the backend
     let categories: [Category] = [
-        Category(id: 1, name: "Frutas"),
-        Category(id: 2, name: "Verduras"),
-        Category(id: 3, name: "Lácteos"),
-        Category(id: 4, name: "Bebidas"),
-        Category(id: 5, name: "Insumos"),
-        Category(id: 6, name: "Productos de limpieza")
+        Category(id: 1, name: "Alimentos"),
+        Category(id: 2, name: "Bebidas"),
+        Category(id: 3, name: "Insumos"),
+        Category(id: 4, name: "Productos de limpieza")
     ]
 
     var body: some View {
@@ -54,6 +53,7 @@ struct InventoryScreenView: View {
                 }
             }
         }
+        .onAppear(perform: fetchProducts)
     }
     
 
@@ -122,6 +122,16 @@ struct InventoryScreenView: View {
         }
         .padding(.trailing, 24)
         .padding(.bottom, 24)
+    }
+
+    private func fetchProducts() {
+        ProductService.shared.fetchProducts { result in
+            DispatchQueue.main.async {
+                if case .success(let data) = result {
+                    self.products = data
+                }
+            }
+        }
     }
 }
     

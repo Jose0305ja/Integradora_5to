@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
+    @StateObject private var inventoryVM = InventoryHomeViewModel()
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
@@ -35,6 +36,24 @@ struct HomeView: View {
                             AlertModel(sensor: "Sensor de humedad", message: "Humedad superior al 80%", time: "13:45 h", icon: "exclamationmark.triangle.fill", severity: .medium),
                             AlertModel(sensor: "Sensor de temperatura", message: "Temperatura superior a 25 grados", time: "12:13 h", icon: "exclamationmark.triangle.fill", severity: .low)
                         ])
+
+                        if let summary = inventoryVM.summary {
+                            if let expiring = summary.expiring {
+                                InventoryHomeSectionView(title: "Por vencer", products: expiring, loadMore: inventoryVM.loadMore)
+                            }
+                            if let out = summary.out_of_stock {
+                                InventoryHomeSectionView(title: "Agotados", products: out, loadMore: inventoryVM.loadMore)
+                            }
+                            if let low = summary.low_stock {
+                                InventoryHomeSectionView(title: "Bajo stock", products: low, loadMore: inventoryVM.loadMore)
+                            }
+                            if let near = summary.near_minimum {
+                                InventoryHomeSectionView(title: "Cerca del mínimo", products: near, loadMore: inventoryVM.loadMore)
+                            }
+                            if let over = summary.overstock {
+                                InventoryHomeSectionView(title: "Sobre inventario", products: over, loadMore: inventoryVM.loadMore)
+                            }
+                        }
                     }
                     .padding()
                 }
@@ -48,6 +67,7 @@ struct HomeView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
+        .onAppear { inventoryVM.fetchInitial() }
     }
 }
 

@@ -37,10 +37,12 @@ struct AddProductSheet: View {
     @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State private var showImageSourceOptions = false
 
+    // Categories provided by the backend
     let categories: [Category] = [
         .init(id: 1, name: "Alimentos"),
         .init(id: 2, name: "Bebidas"),
-        .init(id: 3, name: "Limpieza")
+        .init(id: 3, name: "Insumos"),
+        .init(id: 4, name: "Productos de limpieza")
     ]
 
     let unitTypes: [UnitType] = [
