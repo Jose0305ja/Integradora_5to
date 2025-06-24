@@ -9,7 +9,7 @@ struct ProductDetailSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.backColor.ignoresSafeArea()
+                Color.primaryColor.ignoresSafeArea()
                 Group {
                     if isLoading {
                         ProgressView()
@@ -50,11 +50,12 @@ struct ProductDetailSheet: View {
                         if let sensor = details.sensor_type {
                             Text("Sensor: \(sensor.localized)")
                         }
-                    }
+                        }
                         .padding()
+                        .foregroundColor(.tertiaryColor)
                     } else if let message = errorMessage {
                         Text(message)
-                            .foregroundColor(.red)
+                            .foregroundColor(.tertiaryColor)
                     }
                 }
             }
