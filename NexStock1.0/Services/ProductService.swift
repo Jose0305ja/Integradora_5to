@@ -32,14 +32,14 @@ class ProductService {
         }.resume()
     }
 
-    func fetchGeneralProducts(category: String? = nil, page: Int = 1, limit: Int = 20, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
+    func fetchGeneralProducts(categoryID: Int? = nil, page: Int = 1, limit: Int = 20, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
         var components = URLComponents(string: baseURL + "/general")
         var queryItems = [
             URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "limit", value: String(limit))
         ]
-        if let category = category {
-            queryItems.append(URLQueryItem(name: "category", value: category))
+        if let categoryID = categoryID {
+            queryItems.append(URLQueryItem(name: "category", value: String(categoryID)))
         }
         components?.queryItems = queryItems
 

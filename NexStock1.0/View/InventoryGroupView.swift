@@ -7,7 +7,7 @@ struct InventoryGroupView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 ForEach(viewModel.categories, id: \.self) { category in
-                    if let items = viewModel.productsByCategory[category] {
+                    if let items = viewModel.productsByCategory[category], !items.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
                             Text(category)
                                 .font(.title3.bold())
