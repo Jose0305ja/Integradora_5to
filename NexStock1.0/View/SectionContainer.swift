@@ -141,7 +141,7 @@ struct SettingsTile: View {
         .padding(EdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 10))
         .background(Color.secondaryColor)
         .cornerRadius(15)
-        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .shadow(color: Color.primaryColor.opacity(0.05), radius: 5, x: 0, y: 2)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(title))
         .accessibilityHint("Presiona para acceder a \(title.lowercased())")

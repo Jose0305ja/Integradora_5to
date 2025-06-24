@@ -54,7 +54,7 @@ struct AddProductSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.backColor.ignoresSafeArea()
+                Color.primaryColor.ignoresSafeArea()
                 ScrollView {
                     VStack(spacing: 20) {
                         // Sección 1
@@ -149,6 +149,7 @@ struct AddProductSheet: View {
                         }
                     }
                     .padding()
+                    .foregroundColor(.tertiaryColor)
                 }
                 .scrollContentBackground(.hidden)
             }
