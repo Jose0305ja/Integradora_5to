@@ -97,8 +97,12 @@ struct SideMenuView: View {
                                 path.append(AppRoute.product)
                             }
 
-                            Text("Proveedores")
-                            Text("Almacén")
+                            Text("expiring".localized)
+                            Text("out_of_stock".localized)
+                            Text("below_minimum".localized)
+                            Text("near_minimum".localized)
+                            Text("overstock".localized)
+                            Text("shopping_list".localized)
                         }
                         .font(.body)
                         .foregroundColor(.tertiaryColor)

@@ -29,6 +29,30 @@ class ProductService {
         }.resume()
     }
 
+    func fetchGeneralProducts(page: Int = 1, categoryID: Int? = nil, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
+        var components = URLComponents(string: baseURL + "/general")
+        var queryItems = [URLQueryItem(name: "page", value: String(page))]
+        if let categoryID = categoryID {
+            queryItems.append(URLQueryItem(name: "category", value: String(categoryID)))
+        }
+        components?.queryItems = queryItems
+
+        guard let url = components?.url else { return }
+
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let data = data {
+                do {
+                    let decoded = try JSONDecoder().decode([ProductModel].self, from: data)
+                    completion(.success(decoded))
+                } catch {
+                    completion(.failure(error))
+                }
+            } else if let error = error {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+
     func addProduct(_ product: ProductModel, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: baseURL) else { return }
 

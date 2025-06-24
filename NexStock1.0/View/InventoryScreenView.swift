@@ -55,7 +55,6 @@ struct InventoryScreenView: View {
         }
         .onAppear(perform: fetchProducts)
     }
-    
 
     private var content: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -104,6 +103,13 @@ struct InventoryScreenView: View {
                         .padding(.horizontal)
                     }
                 }
+
+                if products.isEmpty {
+                    Text("No hay productos disponibles.")
+                        .foregroundColor(.secondary)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                }
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -125,13 +131,21 @@ struct InventoryScreenView: View {
     }
 
     private func fetchProducts() {
-        ProductService.shared.fetchProducts { result in
-            DispatchQueue.main.async {
+        var all: [ProductModel] = []
+        let group = DispatchGroup()
+
+        for category in categories {
+            group.enter()
+            ProductService.shared.fetchGeneralProducts(categoryID: category.id) { result in
                 if case .success(let data) = result {
-                    self.products = data
+                    all.append(contentsOf: data)
                 }
+                group.leave()
             }
+        }
+
+        group.notify(queue: .main) {
+            self.products = all
         }
     }
 }
-    

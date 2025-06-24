@@ -1,33 +1,60 @@
+// InventoryHomeViewModel.swift
 import Foundation
 
 class InventoryHomeViewModel: ObservableObject {
-    @Published var summary: InventoryHomeResponse?
+    @Published var allProducts: [ProductModel] = []
+    @Published var categorizedProducts: [Int: [ProductModel]] = [:]
     @Published var isLoading = false
-    @Published var errorMessage: String?
 
-    private var limit = 5
+    private let pageSize = 20
+    private var currentPage = 0
+    private var isLastPage = false
 
-    func fetchInitial() {
-        fetchSummary(limit: limit)
-    }
-
-    func loadMore() {
-        limit += 5
-        fetchSummary(limit: limit)
-    }
-
-    private func fetchSummary(limit: Int) {
+    func fetchProducts(reset: Bool = false) async {
+        guard !isLoading, !isLastPage else { return }
         isLoading = true
-        InventoryService.shared.fetchHomeSummary(limit: limit) { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                switch result {
-                case .success(let data):
-                    self?.summary = data
-                case .failure(let error):
-                    self?.errorMessage = error.localizedDescription
-                }
-            }
+
+        if reset {
+            currentPage = 0
+            isLastPage = false
+            allProducts = []
+            categorizedProducts = [:]
         }
+
+        let urlString = "https://inventory.nexusutd.online/inventory/products/general?page=\(currentPage)"
+        guard let url = URL(string: urlString) else {
+            print("URL inválida")
+            isLoading = false
+            return
+        }
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let products = try JSONDecoder().decode([ProductModel].self, from: data)
+
+            DispatchQueue.main.async {
+                if products.count < self.pageSize {
+                    self.isLastPage = true
+                } else {
+                    self.currentPage += 1
+                }
+
+                self.allProducts += products
+                self.groupProductsByCategory()
+                self.isLoading = false
+            }
+        } catch {
+            print("Error al obtener productos: \(error)")
+            isLoading = false
+        }
+    }
+
+    private func groupProductsByCategory() {
+        var grouped: [Int: [ProductModel]] = [:]
+        for product in allProducts {
+            let categoryId = product.category_id
+            grouped[categoryId, default: []].append(product)
+        }
+        categorizedProducts = grouped
     }
 }
