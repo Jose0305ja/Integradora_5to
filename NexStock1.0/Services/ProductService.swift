@@ -10,7 +10,7 @@ import Foundation
 
 class ProductService {
     static let shared = ProductService()
-    private let baseURL = "http://192.168.1.105:3000/inventory/products"
+    private let baseURL = NetworkConfig.inventoryBaseURL + "/inventory/products"
 
     func fetchProducts(completion: @escaping (Result<[ProductModel], Error>) -> Void) {
         guard let url = URL(string: baseURL) else { return }

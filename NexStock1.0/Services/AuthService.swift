@@ -29,7 +29,7 @@ class AuthService: ObservableObject {
         return token != nil
     }
 
-    private let baseURL = "https://auth.nexusutd.online"
+    private let baseURL = NetworkConfig.authBaseURL
 
     func login(user: User, completion: @escaping (Result<LoginResponse, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/auth/login") else { return }
