@@ -18,8 +18,8 @@ class ProductService {
         URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data {
                 do {
-                    let decoded = try JSONDecoder().decode([ProductModel].self, from: data)
-                    completion(.success(decoded))
+                    let decoded = try JSONDecoder().decode(ProductsResponse.self, from: data)
+                    completion(.success(decoded.products))
                 } catch {
                     completion(.failure(error))
                 }
@@ -42,8 +42,8 @@ class ProductService {
         URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data {
                 do {
-                    let decoded = try JSONDecoder().decode([ProductModel].self, from: data)
-                    completion(.success(decoded))
+                    let decoded = try JSONDecoder().decode(ProductsResponse.self, from: data)
+                    completion(.success(decoded.products))
                 } catch {
                     completion(.failure(error))
                 }

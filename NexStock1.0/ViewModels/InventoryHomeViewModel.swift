@@ -24,13 +24,14 @@ class InventoryHomeViewModel: ObservableObject {
         let urlString = "https://inventory.nexusutd.online/inventory/products/general?page=\(currentPage)"
         guard let url = URL(string: urlString) else {
             print("URL inválida")
-            isLoading = false
+            DispatchQueue.main.async { self.isLoading = false }
             return
         }
 
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            let products = try JSONDecoder().decode([ProductModel].self, from: data)
+            let decoded = try JSONDecoder().decode(ProductsResponse.self, from: data)
+            let products = decoded.products
 
             DispatchQueue.main.async {
                 if products.count < self.pageSize {
@@ -45,7 +46,7 @@ class InventoryHomeViewModel: ObservableObject {
             }
         } catch {
             print("Error al obtener productos: \(error)")
-            isLoading = false
+            DispatchQueue.main.async { self.isLoading = false }
         }
     }
 
