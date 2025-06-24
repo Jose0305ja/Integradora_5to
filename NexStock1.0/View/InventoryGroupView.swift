@@ -7,21 +7,20 @@ struct InventoryGroupView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 ForEach(viewModel.categories, id: \.self) { category in
-                    if let items = viewModel.productsByCategory[category] {
-                        VStack(alignment: .leading, spacing: 12) {
+                    if let items = viewModel.productsByCategory[category], !items.isEmpty {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text(category)
                                 .font(.title3.bold())
                                 .padding(.horizontal)
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 16) {
-                                    ForEach(items) { product in
-                                        ProductCard(product: product)
-                                            .onAppear {
-                                                viewModel.loadMoreIfNeeded(currentItem: product, category: category)
-                                            }
-                                    }
+                            ForEach(items) { product in
+                                HStack(alignment: .top, spacing: 8) {
+                                    Text("\u{2022}")
+                                    Text(product.name)
                                 }
                                 .padding(.horizontal)
+                                .onAppear {
+                                    viewModel.loadMoreIfNeeded(currentItem: product, category: category)
+                                }
                             }
                         }
                     }
@@ -31,33 +30,6 @@ struct InventoryGroupView: View {
         .onAppear {
             viewModel.fetchInitial()
         }
-    }
-}
-
-struct ProductCard: View {
-    let product: ProductModel
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if let url = URL(string: product.image_url) {
-                AsyncImage(url: url) { image in
-                    image.resizable()
-                } placeholder: {
-                    ProgressView()
-                }
-                .frame(width: 120, height: 120)
-                .cornerRadius(8)
-            }
-            Text(product.name)
-                .font(.headline)
-            Text("Stock: \(product.stock_actual)")
-                .font(.caption)
-            Text("Sensor: \(product.sensor_type)")
-                .font(.caption)
-        }
-        .padding()
-        .background(Color.secondaryColor)
-        .cornerRadius(12)
     }
 }
 
