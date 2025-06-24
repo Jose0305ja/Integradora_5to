@@ -18,7 +18,7 @@ struct InventoryScreenView: View {
     @State private var visibleLetterByCategory: [String: String] = [:]
     @State private var searchText: String = ""
     @State private var showAddProductSheet = false
-    @State private var selectedProduct: DetailedProductModel? = nil
+    @State private var selectedProduct: ProductModel? = nil
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -33,7 +33,8 @@ struct InventoryScreenView: View {
             .environmentObject(authService)
         }
         .sheet(item: $selectedProduct) { product in
-            ProductDetailSheet(product: product)
+            ProductDetailView(product: product)
+                .environmentObject(localization)
         }
         .navigationBarBackButtonHidden(true)
         .onChange(of: showAddProductSheet) { isPresented in
@@ -64,8 +65,10 @@ struct InventoryScreenView: View {
     }
 
     private var productList: some View {
-        InventoryGroupView()
-            .navigationBarBackButtonHidden(true)
+        InventoryGroupView { product in
+            selectedProduct = product
+        }
+        .navigationBarBackButtonHidden(true)
     }
 
     private var addButton: some View {

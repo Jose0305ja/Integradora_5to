@@ -84,5 +84,18 @@
   "logo_updated": "Logo updated",
   "logo_error": "Error updating logo"
   ,"palettes": "Palettes"
-  ,"preview": "Preview"
+  ,"preview": "Preview",
+  "information": "Information",
+  "movements": "Movements",
+  "current_stock": "Current stock",
+  "minimum_stock": "Minimum stock",
+  "maximum_stock": "Maximum stock",
+  "brand": "Brand",
+  "last_updated": "Last updated",
+  "description": "Description",
+  "no_movements": "No movements recorded",
+  "stock": "Stock",
+  "image": "Image",
+  "category": "Category",
+  "unit": "Unit"
 }

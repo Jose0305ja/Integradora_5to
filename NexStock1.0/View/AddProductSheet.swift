@@ -55,14 +55,14 @@ struct AddProductSheet: View {
         NavigationStack {
             Form {
                 // Sección 1
-                Section(header: Text("Información")) {
+                Section(header: Text("information".localized)) {
                     TextField("Nombre", text: $name)
                     TextField("Marca", text: $brand)
                     TextField("Descripción", text: $description)
                 }
 
                 // Sección 2
-                Section(header: Text("Stock")) {
+                Section(header: Text("stock".localized)) {
                     HStack {
                         Text("Mínimo:")
                         TextField("0", value: $stockMin, format: .number)
@@ -83,7 +83,7 @@ struct AddProductSheet: View {
                 }
 
                 // Sección 3
-                Section(header: Text("Imagen")) {
+                Section(header: Text("image".localized)) {
                     if let image = selectedImage {
                         Image(uiImage: image)
                             .resizable()
@@ -112,19 +112,19 @@ struct AddProductSheet: View {
                 }
 
                 // Sección 4
-                Section(header: Text("Categoría")) {
+                Section(header: Text("category".localized)) {
                     Picker("Categoría", selection: $selectedCategory) {
                         ForEach(categories, id: \.self) { category in
-                            Text(category.name).tag(category as Category?)
+                            Text(category.name.localized).tag(category as Category?)
                         }
                     }
                 }
 
                 // Sección 5
-                Section(header: Text("Unidad")) {
+                Section(header: Text("unit".localized)) {
                     Picker("Tipo de unidad", selection: $selectedUnitType) {
                         ForEach(unitTypes, id: \.self) { unit in
-                            Text(unit.name).tag(unit as UnitType?)
+                            Text(unit.name.localized).tag(unit as UnitType?)
                         }
                     }
                 }

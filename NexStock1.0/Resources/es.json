@@ -81,4 +81,17 @@
   "logo_error": "Error al actualizar el logo"
   ,"palettes": "Paletas"
   ,"preview": "Vista previa"
+  ,"information": "Información",
+  "movements": "Movimientos",
+  "current_stock": "Existencia actual",
+  "minimum_stock": "Stock mínimo",
+  "maximum_stock": "Stock máximo",
+  "brand": "Marca",
+  "last_updated": "Última actualización",
+  "description": "Descripción",
+  "no_movements": "No hay movimientos registrados",
+  "stock": "Stock",
+  "image": "Imagen",
+  "category": "Categoría",
+  "unit": "Unidad"
 }

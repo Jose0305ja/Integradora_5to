@@ -80,4 +80,17 @@
   "logo_error": "Error updating logo"
   ,"palettes": "Palette"
   ,"preview": "Anteprima"
+  ,"information": "Informazioni",
+  "movements": "Movimenti",
+  "current_stock": "Stock attuale",
+  "minimum_stock": "Stock minimo",
+  "maximum_stock": "Stock massimo",
+  "brand": "Marca",
+  "last_updated": "Ultimo aggiornamento",
+  "description": "Descrizione",
+  "no_movements": "Nessun movimento registrato",
+  "stock": "Stock",
+  "image": "Immagine",
+  "category": "Categoria",
+  "unit": "Unità"
 }

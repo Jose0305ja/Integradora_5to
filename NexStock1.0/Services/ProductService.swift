@@ -85,4 +85,24 @@ class ProductService {
             }
         }.resume()
     }
+
+    func fetchProductDetail(id: String, completion: @escaping (Result<ProductDetailResponse, Error>) -> Void) {
+        guard let url = URL(string: baseURL + "/" + id) else { return }
+
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let data = data {
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("🧾 Detail JSON: \(jsonString)")
+                }
+                do {
+                    let decoded = try JSONDecoder().decode(ProductDetailResponse.self, from: data)
+                    completion(.success(decoded))
+                } catch {
+                    completion(.failure(error))
+                }
+            } else if let error = error {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
 }
