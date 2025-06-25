@@ -16,9 +16,10 @@ struct InventoryGroupView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 16) {
                                     ForEach(items) { product in
-                                        InventoryCardView(product: product) {
-                                            onProductTap(product)
-                                        }
+                                        InventoryCardView(product: product)
+                                            .onTapGesture {
+                                                onProductTap(product)
+                                            }
                                         .onAppear {
                                             viewModel.loadMoreIfNeeded(currentItem: product, category: category)
                                         }

@@ -16,9 +16,8 @@ struct HomeSummarySectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {
                     ForEach(products) { product in
-                        InventoryCardView(product: product) {
-                            onProductTap(product)
-                        }
+                        InventoryCardView(product: product)
+                            .onTapGesture { onProductTap(product) }
                     }
                 }
                 .padding(.horizontal)
