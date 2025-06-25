@@ -3,7 +3,7 @@ import SwiftUI
 struct HomeSummarySectionView: View {
     let title: String
     let products: [InventoryProduct]
-    var onProductTap: (InventoryProduct) -> Void = { _ in }
+    var onProductTap: (ProductModel) -> Void = { _ in }
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
@@ -16,9 +16,11 @@ struct HomeSummarySectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {
                     ForEach(products) { product in
-                        HomeInventoryCardView(product: product) {
-                            onProductTap(product)
-                        }
+                        let model = ProductModel(from: product)
+                        InventoryCardView(product: model)
+                            .onTapGesture {
+                                onProductTap(model)
+                            }
                     }
                 }
                 .padding(.horizontal)

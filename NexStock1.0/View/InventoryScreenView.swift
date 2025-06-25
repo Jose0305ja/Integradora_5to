@@ -9,15 +9,14 @@ import SwiftUI
 import Combine
 
 struct InventoryScreenView: View {
-    @State private var wasMenuOpenBeforeSheet = false
     @Environment(\.showMenuBinding) var showMenu
     @Binding var path: NavigationPath
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var authService: AuthService
     @EnvironmentObject var theme: ThemeManager
 
-    @State private var visibleLetterByCategory: [String: String] = [:]
     @StateObject private var searchVM = ProductSearchViewModel()
+    @StateObject private var inventoryVM = SimpleInventoryViewModel()
     @FocusState private var isSearchFocused: Bool
     @State private var showAddProductSheet = false
     @State private var selectedProduct: ProductModel? = nil
@@ -55,6 +54,7 @@ struct InventoryScreenView: View {
                 }
             }
         }
+        .task { inventoryVM.fetchProducts() }
     }
 
     private var content: some View {
@@ -86,8 +86,15 @@ struct InventoryScreenView: View {
     private var productList: some View {
         Group {
             if searchVM.query.isEmpty {
-                InventoryGroupView { product in
-                    selectedProduct = product
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+                        ForEach(inventoryVM.productsByCategory.keys.sorted(), id: \.self) { key in
+                            if let items = inventoryVM.productsByCategory[key] {
+                                InventoryHomeSectionView(title: key, products: items)
+                            }
+                        }
+                    }
+                    .padding(.top)
                 }
             } else {
                 ScrollView {

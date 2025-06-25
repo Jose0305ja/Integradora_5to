@@ -45,7 +45,11 @@ class ProductService {
 
         guard let url = components?.url else { return }
 
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let http = response as? HTTPURLResponse, http.statusCode == 404 {
+                completion(.failure(NSError(domain: "ProductService", code: 404, userInfo: [NSLocalizedDescriptionKey: "Producto no encontrado"])))
+                return
+            }
             if let data = data {
                 if let jsonString = String(data: data, encoding: .utf8) {
                     print("🧾 JSON recibido: \(jsonString)")
@@ -89,7 +93,11 @@ class ProductService {
     func fetchProductDetail(id: String, completion: @escaping (Result<ProductDetailResponse, Error>) -> Void) {
         guard let url = URL(string: baseURL + "/" + id) else { return }
 
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let http = response as? HTTPURLResponse, http.statusCode == 404 {
+                completion(.failure(NSError(domain: "ProductService", code: 404, userInfo: [NSLocalizedDescriptionKey: "Producto no encontrado"])))
+                return
+            }
             if let data = data {
                 if let jsonString = String(data: data, encoding: .utf8) {
                     print("🧾 Detail JSON: \(jsonString)")
