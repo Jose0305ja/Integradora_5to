@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct InventoryScreenView: View {
     @State private var wasMenuOpenBeforeSheet = false
@@ -16,7 +17,8 @@ struct InventoryScreenView: View {
     @EnvironmentObject var theme: ThemeManager
 
     @State private var visibleLetterByCategory: [String: String] = [:]
-    @State private var searchText: String = ""
+    @StateObject private var searchVM = ProductSearchViewModel()
+    @FocusState private var isSearchFocused: Bool
     @State private var showAddProductSheet = false
     @State private var selectedProduct: ProductModel? = nil
 
@@ -26,6 +28,15 @@ struct InventoryScreenView: View {
             content
         }
         .overlay(addButton, alignment: .bottomTrailing)
+        .overlay(
+            Group {
+                if isSearchFocused {
+                    Color.black.opacity(0.2)
+                        .ignoresSafeArea()
+                        .onTapGesture { isSearchFocused = false }
+                }
+            }
+        )
         .sheet(isPresented: $showAddProductSheet) {
             AddProductSheet { _ in
                 showAddProductSheet = false
@@ -58,15 +69,37 @@ struct InventoryScreenView: View {
         HStack {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.gray)
-            TextField("Buscar producto", text: $searchText)
+            TextField("Buscar producto", text: $searchVM.query)
                 .textFieldStyle(PlainTextFieldStyle())
+                .focused($isSearchFocused)
         }
         .padding(.horizontal)
     }
 
     private var productList: some View {
-        InventoryGroupView { product in
-            selectedProduct = product
+        Group {
+            if searchVM.query.isEmpty {
+                InventoryGroupView { product in
+                    selectedProduct = product
+                }
+            } else {
+                ScrollView {
+                    if searchVM.isLoading {
+                        ProgressView()
+                            .padding()
+                    } else {
+                        LazyVStack(alignment: .leading, spacing: 16) {
+                            ForEach(searchVM.results) { product in
+                                ProductCard(product: product) {
+                                    selectedProduct = product
+                                    isSearchFocused = false
+                                }
+                            }
+                        }
+                        .padding()
+                    }
+                }
+            }
         }
         .navigationBarBackButtonHidden(true)
     }

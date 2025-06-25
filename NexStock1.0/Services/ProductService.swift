@@ -123,4 +123,29 @@ class ProductService {
             }
         }.resume()
     }
+
+    func searchProducts(query: String, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
+        var components = URLComponents(string: baseURL + "/search")
+        components?.queryItems = [
+            URLQueryItem(name: "query", value: query)
+        ]
+
+        guard let url = components?.url else { return }
+
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let data = data {
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("🧾 Search JSON: \(jsonString)")
+                }
+                do {
+                    let decoded = try JSONDecoder().decode(ProductResponse.self, from: data)
+                    completion(.success(decoded.products))
+                } catch {
+                    completion(.failure(error))
+                }
+            } else if let error = error {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
 }
