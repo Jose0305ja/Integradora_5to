@@ -48,46 +48,59 @@ struct ProductDetailView: View {
     private var infoView: some View {
         ScrollView {
             if let detail = viewModel.detail {
-                VStack(alignment: .leading, spacing: 12) {
-                    if let urlString = detail.image_url, let url = URL(string: urlString) {
+                VStack(spacing: 16) {
+                    if let urlString = detail.image_url,
+                       let url = URL(string: urlString) {
                         AsyncImage(url: url) { image in
                             image.resizable()
                                 .scaledToFit()
                         } placeholder: {
                             ProgressView()
                         }
-                        .frame(maxWidth: .infinity)
                         .frame(height: 160)
+                        .frame(maxWidth: .infinity)
                         .cornerRadius(12)
                     }
 
                     Text(detail.name.localized)
                         .font(.title3.bold())
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                    let critical = (detail.stock_actual ?? 0) <= (detail.stock_min ?? Int.min)
-                    Text("\("current_stock".localized): \(detail.stock_actual.map(String.init) ?? "no_information".localized)")
-                        .font(.body)
-                        .fontWeight(critical ? .bold : .regular)
-                        .foregroundColor(.tertiaryColor)
-
-                    Text("\("minimum_stock".localized): \(detail.stock_min.map(String.init) ?? "no_information".localized)")
-                        .font(.body)
-                    Text("\("maximum_stock".localized): \(detail.stock_max.map(String.init) ?? "no_information".localized)")
-                        .font(.body)
-                    Text("\("brand".localized): \(detail.brand?.isEmpty == false ? detail.brand! : "no_information".localized)")
-                        .font(.body)
-                    Text("\("last_updated".localized): \(formattedDate(detail.updated_at))")
-                        .font(.footnote)
-                    Text("\("description".localized): \((detail.description?.isEmpty == false ? detail.description! : "no_information".localized))")
-                        .font(.body)
-                        .multilineTextAlignment(.leading)
+                    SectionContainer(title: "") {
+                        SettingRow(
+                            icon: "cube.box.fill",
+                            title: "current_stock".localized,
+                            subtitle: detail.stock_actual.map(String.init) ?? "no_information".localized
+                        )
+                        SettingRow(
+                            icon: "arrowtriangle.up.fill",
+                            title: "minimum_stock".localized,
+                            subtitle: detail.stock_min.map(String.init) ?? "no_information".localized
+                        )
+                        SettingRow(
+                            icon: "arrowtriangle.down.fill",
+                            title: "maximum_stock".localized,
+                            subtitle: detail.stock_max.map(String.init) ?? "no_information".localized
+                        )
+                        SettingRow(
+                            icon: "tag.fill",
+                            title: "brand".localized,
+                            subtitle: detail.brand?.isEmpty == false ? detail.brand! : "no_information".localized
+                        )
+                        SettingRow(
+                            icon: "clock.fill",
+                            title: "last_updated".localized,
+                            subtitle: formattedDate(detail.updated_at)
+                        )
+                        SettingRow(
+                            icon: "text.bubble.fill",
+                            title: "description".localized,
+                            subtitle: detail.description?.isEmpty == false ? detail.description! : "no_information".localized
+                        )
+                    }
+                    .foregroundColor(.tertiaryColor)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
-                .background(Color.secondaryColor)
-                .cornerRadius(12)
-                .shadow(radius: 2)
-                .padding(.horizontal)
             }
         }
         .scrollContentBackground(.hidden)
