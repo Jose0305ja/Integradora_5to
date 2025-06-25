@@ -124,10 +124,12 @@ class ProductService {
         }.resume()
     }
 
-    func searchProducts(query: String, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
+    func searchProducts(name: String, limit: Int = 20, offset: Int = 0, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
         var components = URLComponents(string: baseURL + "/search")
         components?.queryItems = [
-            URLQueryItem(name: "query", value: query)
+            URLQueryItem(name: "name", value: name),
+            URLQueryItem(name: "limit", value: String(limit)),
+            URLQueryItem(name: "offset", value: String(offset))
         ]
 
         guard let url = components?.url else { return }
