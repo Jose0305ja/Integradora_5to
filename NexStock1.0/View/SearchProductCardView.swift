@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SearchProductCardView: View {
     let product: SearchProduct
-    var onTap: () -> Void = {}
+    var onTap: ((ProductModel) -> Void)? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -35,7 +35,11 @@ struct SearchProductCardView: View {
         .padding()
         .background(Color.secondaryColor)
         .cornerRadius(12)
-        .onTapGesture { onTap() }
+        .onTapGesture {
+            if let onTap {
+                onTap(ProductModel(from: product))
+            }
+        }
     }
 }
 

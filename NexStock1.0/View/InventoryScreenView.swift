@@ -45,6 +45,7 @@ struct InventoryScreenView: View {
         }
         .sheet(item: $selectedProduct) { product in
             ProductDetailView(product: product)
+                .environmentObject(theme)
                 .environmentObject(localization)
         }
         .navigationBarBackButtonHidden(true)
@@ -101,10 +102,10 @@ struct InventoryScreenView: View {
                     } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
                             ForEach(searchVM.results) { product in
-                                SearchProductCardView(product: product) {
+                                SearchProductCardView(product: product, onTap: {
                                     isSearchFocused = false
-                                    selectedProduct = ProductModel(from: product)
-                                }
+                                    selectedProduct = $0
+                                })
                             }
                         }
                         .padding()
