@@ -86,9 +86,7 @@ struct InventoryScreenView: View {
     private var productList: some View {
         Group {
             if searchVM.query.isEmpty {
-                InventoryGroupView { product in
-                    selectedProduct = product
-                }
+                InventoryGroupView()
             } else {
                 ScrollView {
                     if searchVM.isLoading {
@@ -101,10 +99,11 @@ struct InventoryScreenView: View {
                     } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
                             ForEach(searchVM.results) { product in
-                                InventoryCardView(product: product) {
-                                    isSearchFocused = false
-                                    selectedProduct = ProductModel(from: product)
-                                }
+                                InventoryCardView(product: product)
+                                    .onTapGesture {
+                                        isSearchFocused = false
+                                        selectedProduct = ProductModel(from: product)
+                                    }
                             }
                         }
                         .padding()

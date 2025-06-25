@@ -2,7 +2,8 @@ import SwiftUI
 
 struct InventoryGroupView: View {
     @StateObject private var viewModel = PaginatedInventoryViewModel()
-    var onProductTap: (ProductModel) -> Void = { _ in }
+    @State private var selectedProduct: ProductModel? = nil
+    @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         ScrollView {
@@ -16,12 +17,13 @@ struct InventoryGroupView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 16) {
                                     ForEach(items) { product in
-                                        InventoryCardView(product: product) {
-                                            onProductTap(product)
-                                        }
-                                        .onAppear {
-                                            viewModel.loadMoreIfNeeded(currentItem: product, category: category)
-                                        }
+                                        InventoryCardView(product: product)
+                                            .onTapGesture {
+                                                selectedProduct = product
+                                            }
+                                            .onAppear {
+                                                viewModel.loadMoreIfNeeded(currentItem: product, category: category)
+                                            }
                                     }
                                 }
                                 .padding(.horizontal)
@@ -33,6 +35,10 @@ struct InventoryGroupView: View {
         }
         .onAppear {
             viewModel.fetchInitial()
+        }
+        .sheet(item: $selectedProduct) { product in
+            ProductDetailView(product: product)
+                .environmentObject(localization)
         }
     }
 }
