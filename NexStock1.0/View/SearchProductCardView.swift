@@ -15,12 +15,19 @@ struct SearchProductCardView: View {
                 .frame(width: 120, height: 120)
                 .cornerRadius(8)
             }
+
             Text(product.name.localized)
                 .font(.headline)
                 .foregroundColor(.tertiaryColor)
+
+            Text(product.category.localized)
+                .font(.subheadline)
+                .foregroundColor(.tertiaryColor)
+
             Text("Stock: \(product.stock_actual)")
                 .font(.caption)
                 .foregroundColor(.tertiaryColor)
+
             Text("Sensor: \(product.sensor_type.localized)")
                 .font(.caption)
                 .foregroundColor(.tertiaryColor)

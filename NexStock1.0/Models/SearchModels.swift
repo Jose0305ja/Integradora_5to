@@ -7,7 +7,9 @@ struct SearchResultResponse: Codable {
 }
 
 struct SearchProduct: Codable, Identifiable {
-    var id: UUID { UUID() }
+    /// A stable identifier generated on initialization since the
+    /// backend search endpoint does not provide one.
+    let id: UUID = UUID()
     let name: String
     let image_url: String
     let stock_actual: Int
