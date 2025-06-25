@@ -16,8 +16,8 @@ struct InventoryScreenView: View {
     @EnvironmentObject var authService: AuthService
     @EnvironmentObject var theme: ThemeManager
 
-    @State private var visibleLetterByCategory: [String: String] = [:]
     @StateObject private var searchVM = ProductSearchViewModel()
+    @StateObject private var inventoryVM = PaginatedInventoryViewModel()
     @FocusState private var isSearchFocused: Bool
     @State private var showAddProductSheet = false
     @State private var selectedProduct: ProductModel? = nil
@@ -86,9 +86,16 @@ struct InventoryScreenView: View {
     private var productList: some View {
         Group {
             if searchVM.query.isEmpty {
-                InventoryGroupView { product in
-                    selectedProduct = product
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
+                        ForEach(inventoryVM.categories, id: \.self) { category in
+                            if let items = inventoryVM.productsByCategory[category], !items.isEmpty {
+                                InventoryHomeSectionView(title: category.localized, products: items)
+                            }
+                        }
+                    }
                 }
+                .onAppear { inventoryVM.fetchInitial() }
             } else {
                 ScrollView {
                     if searchVM.isLoading {
@@ -101,10 +108,12 @@ struct InventoryScreenView: View {
                     } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
                             ForEach(searchVM.results) { product in
-                                SearchProductCardView(product: product) {
-                                    isSearchFocused = false
-                                    selectedProduct = ProductModel(from: product)
-                                }
+                                let converted = ProductModel(from: product)
+                                InventoryCardView(product: converted)
+                                    .onTapGesture {
+                                        isSearchFocused = false
+                                        selectedProduct = converted
+                                    }
                             }
                         }
                         .padding()

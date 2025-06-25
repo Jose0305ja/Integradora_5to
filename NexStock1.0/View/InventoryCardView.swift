@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct InventoryCardView: View {
-    let product: DetailedProductModel
+    /// Basic product information to show on the card
+    let product: ProductModel
     var onTap: (() -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
