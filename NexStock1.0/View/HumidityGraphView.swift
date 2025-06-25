@@ -4,6 +4,7 @@ struct HumidityGraphView: View {
     @Binding var path: NavigationPath
     @StateObject private var viewModel = HumidityGraphViewModel()
     @State private var showMenu = false
+    @State private var showErrorAlert = false
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
@@ -31,10 +32,19 @@ struct HumidityGraphView: View {
                         }
 
                         SectionContainer(title: "") {
-                            LineChartView(
-                                data: viewModel.chartValues,
-                                labels: viewModel.xAxisLabels
-                            )
+                            if viewModel.points.isEmpty {
+                                if let error = viewModel.errorMessage {
+                                    Text(error)
+                                        .foregroundColor(.red)
+                                } else {
+                                    Text("No hay datos disponibles")
+                                }
+                            } else {
+                                LineChartView(
+                                    data: viewModel.chartValues,
+                                    labels: viewModel.xAxisLabels
+                                )
+                            }
                         }
 
                         SectionContainer(title: "") {
@@ -58,6 +68,15 @@ struct HumidityGraphView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
+        .alert("Error", isPresented: $showErrorAlert) {
+            Button("OK", role: .cancel) { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
+        .onChange(of: viewModel.errorMessage) { _ in
+            showErrorAlert = viewModel.errorMessage != nil
+        }
+        .onAppear { viewModel.fetch() }
     }
 
     private func infoBox(title: String, value: String) -> some View {

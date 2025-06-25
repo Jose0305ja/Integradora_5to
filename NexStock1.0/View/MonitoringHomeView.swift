@@ -23,9 +23,18 @@ struct MonitoringHomeView: View {
                         }
 
                         SectionContainer(title: "Notifications") {
-                            ForEach(viewModel.notifications) { notification in
-                                MonitoringNotificationCard(notification: notification)
-                                    .onTapGesture { selectedNotification = notification }
+                            if viewModel.notifications.isEmpty {
+                                if let error = viewModel.errorMessage {
+                                    Text(error)
+                                        .foregroundColor(.red)
+                                } else {
+                                    Text("No hay datos disponibles")
+                                }
+                            } else {
+                                ForEach(viewModel.notifications) { notification in
+                                    MonitoringNotificationCard(notification: notification)
+                                        .onTapGesture { selectedNotification = notification }
+                                }
                             }
                         }
                     }
@@ -91,7 +100,7 @@ struct MonitoringNotificationCard: View {
         .padding()
         .background(Color.secondaryColor)
         .cornerRadius(12)
-        .shadow(radius: 1)
+        .shadow(radius: 2)
     }
 }
 
