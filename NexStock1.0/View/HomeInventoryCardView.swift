@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct HomeInventoryCardView: View {
-    let product: InventoryProduct
-    var onTap: (InventoryProduct) -> Void = { _ in }
+    let product: ProductModel
+    var onTap: ((ProductModel) -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(spacing: 8) {
-            if let urlString = product.image_url, let url = URL(string: urlString) {
+            if let url = URL(string: product.image_url) {
                 AsyncImage(url: url) { image in
                     image.resizable()
                 } placeholder: {
@@ -26,6 +26,6 @@ struct HomeInventoryCardView: View {
         .background(Color.secondaryColor)
         .cornerRadius(12)
         .shadow(radius: 2)
-        .onTapGesture { onTap(product) }
+        .onTapGesture { onTap?(product) }
     }
 }

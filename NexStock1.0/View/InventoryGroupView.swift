@@ -16,12 +16,10 @@ struct InventoryGroupView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 16) {
                                     ForEach(items) { product in
-                                        ProductCard(product: product) {
-                                            onProductTap(product)
-                                        }
-                                        .onAppear {
-                                            viewModel.loadMoreIfNeeded(currentItem: product, category: category)
-                                        }
+                                        HomeInventoryCardView(product: product, onTap: { onProductTap(product) })
+                                            .onAppear {
+                                                viewModel.loadMoreIfNeeded(currentItem: product, category: category)
+                                            }
                                     }
                                 }
                                 .padding(.horizontal)
@@ -34,35 +32,6 @@ struct InventoryGroupView: View {
         .onAppear {
             viewModel.fetchInitial()
         }
-    }
-}
-
-struct ProductCard: View {
-    let product: ProductModel
-    var onTap: () -> Void = {}
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if let url = URL(string: product.image_url) {
-                AsyncImage(url: url) { image in
-                    image.resizable()
-                } placeholder: {
-                    ProgressView()
-                }
-                .frame(width: 120, height: 120)
-                .cornerRadius(8)
-            }
-            Text(product.name.localized)
-                .font(.headline)
-            Text("Stock: \(product.stock_actual)")
-                .font(.caption)
-            Text("Sensor: \(product.sensor_type.localized)")
-                .font(.caption)
-        }
-        .padding()
-        .background(Color.secondaryColor)
-        .cornerRadius(12)
-        .onTapGesture { onTap() }
     }
 }
 

@@ -6,6 +6,7 @@ struct InventoryHomeSectionView: View {
     let products: [DetailedProductModel]
     /// Optional action triggered when the "Ver más" button is pressed
     var loadMore: (() -> Void)? = nil
+    var onProductTap: ((ProductModel) -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
@@ -26,7 +27,15 @@ struct InventoryHomeSectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {
                     ForEach(products) { product in
-                        InventoryCardView(product: product)
+                        let simple = ProductModel(
+                            id: String(product.id),
+                            name: product.name,
+                            image_url: product.image_url,
+                            stock_actual: 0,
+                            category: "",
+                            sensor_type: product.input_method.rawValue
+                        )
+                        HomeInventoryCardView(product: simple, onTap: { onProductTap?(simple) })
                     }
                 }
                 .padding(.horizontal)

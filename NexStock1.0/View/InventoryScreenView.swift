@@ -100,11 +100,11 @@ struct InventoryScreenView: View {
                             .padding()
                     } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
-                            ForEach(searchVM.results) { product in
-                                SearchProductCardView(product: product) { tapped in
+                            ForEach(searchVM.results.map { ProductModel(from: $0) }) { product in
+                                HomeInventoryCardView(product: product, onTap: {
                                     isSearchFocused = false
-                                    selectedProduct = ProductModel(from: tapped)
-                                }
+                                    selectedProduct = product
+                                })
                             }
                         }
                         .padding()

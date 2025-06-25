@@ -2,8 +2,8 @@ import SwiftUI
 
 struct HomeSummarySectionView: View {
     let title: String
-    let products: [InventoryProduct]
-    var onProductTap: (InventoryProduct) -> Void = { _ in }
+    let products: [ProductModel]
+    var onProductTap: (ProductModel) -> Void
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
