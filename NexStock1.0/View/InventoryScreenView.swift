@@ -99,7 +99,7 @@ struct InventoryScreenView: View {
                                     isSearchFocused = false
                                 }
                                 .onTapGesture {
-                                    detailPresenter.present(id: product.name, name: product.name)
+                                    detailPresenter.present(id: product.id, name: product.name)
                                 }
                             }
                         }

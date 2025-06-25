@@ -3,7 +3,8 @@ import SwiftUI
 
 /// Simple identifier used to present product details from any view.
 struct ProductIdentifier: Identifiable, Equatable {
-    let id: String
+    /// Backend identifier of the product
+    let id: Int
     let name: String
 }
 
@@ -12,7 +13,7 @@ final class ProductDetailPresenter: ObservableObject {
     @Published var selectedProduct: ProductIdentifier?
 
     /// Convenience method to present a product by id and name
-    func present(id: String, name: String) {
+    func present(id: Int, name: String) {
         selectedProduct = ProductIdentifier(id: id, name: name)
     }
 }

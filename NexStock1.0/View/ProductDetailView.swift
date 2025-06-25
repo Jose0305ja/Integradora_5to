@@ -203,7 +203,7 @@ struct ProductDetailView: View {
 
 struct ProductDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: ProductIdentifier(id: "1", name: "Apple"))
+        ProductDetailView(product: ProductIdentifier(id: 1, name: "Apple"))
             .environmentObject(LocalizationManager())
     }
 }

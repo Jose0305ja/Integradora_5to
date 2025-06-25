@@ -6,7 +6,7 @@ class ProductDetailViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    func fetch(id: String) {
+    func fetch(id: Int) {
         guard !isLoading else { return }
         isLoading = true
 
@@ -19,16 +19,15 @@ class ProductDetailViewModel: ObservableObject {
                     self.detail = response.product
                     self.fetchMovements(id: id)
                     print("Product detail loaded", response)
-                case .failure(let error):
+                case .failure:
                     self.isLoading = false
-                    print("Failed to load detail", error)
-                    self.errorMessage = error.localizedDescription
+                    self.errorMessage = "Producto no disponible"
                 }
             }
         }
     }
 
-    private func fetchMovements(id: String) {
+    private func fetchMovements(id: Int) {
         ProductService.shared.fetchProductMovements(id: id) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }

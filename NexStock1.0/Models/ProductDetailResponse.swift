@@ -8,7 +8,8 @@ struct ProductDetailResponse: Codable {
 }
 
 struct ProductDetailInfo: Identifiable, Codable {
-    let id: String
+    /// Backend identifier of the product
+    let id: Int
     let name: String
     let brand: String?
     let description: String?

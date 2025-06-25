@@ -27,7 +27,7 @@ struct HomeInventoryCardView: View {
         .cornerRadius(12)
         .shadow(radius: 2)
         .onTapGesture {
-            detailPresenter.present(id: product.name, name: product.name)
+            detailPresenter.present(id: product.id, name: product.name)
         }
     }
 }

@@ -37,14 +37,14 @@ struct SearchProductCardView: View {
         .background(Color.secondaryColor)
         .cornerRadius(12)
         .onTapGesture {
-            detailPresenter.present(id: product.name, name: product.name)
+            detailPresenter.present(id: product.id, name: product.name)
             onTap()
         }
     }
 }
 
 #Preview {
-    SearchProductCardView(product: SearchProduct(name: "Ejemplo", image_url: "", stock_actual: 0, category: "", sensor_type: "manual"))
+    SearchProductCardView(product: SearchProduct(id: 0, name: "Ejemplo", image_url: "", stock_actual: 0, category: "", sensor_type: "manual"))
         .environmentObject(ThemeManager())
         .environmentObject(LocalizationManager())
         .environmentObject(ProductDetailPresenter())

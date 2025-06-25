@@ -1,7 +1,8 @@
 import Foundation
 
 struct ProductModel: Identifiable, Codable {
-    let id: String
+    /// Identifier provided by the backend
+    let id: Int
     let name: String
     let image_url: String
     let stock_actual: Int
