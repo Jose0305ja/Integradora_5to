@@ -103,6 +103,7 @@ struct InventoryScreenView: View {
                             ForEach(searchVM.results) { product in
                                 SearchProductCardView(product: product) {
                                     isSearchFocused = false
+                                    selectedProduct = ProductModel(from: product)
                                 }
                             }
                         }

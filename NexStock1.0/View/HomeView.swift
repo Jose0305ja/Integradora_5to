@@ -13,6 +13,7 @@ struct HomeView: View {
     @StateObject private var summaryVM = HomeSummaryViewModel()
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
+    @State private var selectedProduct: ProductModel? = nil
 
 
     var body: some View {
@@ -40,19 +41,29 @@ struct HomeView: View {
 
                         if let summary = summaryVM.summary {
                             if let items = summary.expiring, !items.isEmpty {
-                                HomeSummarySectionView(title: "expiring".localized, products: items)
+                                HomeSummarySectionView(title: "expiring".localized, products: items) { product in
+                                    selectedProduct = ProductModel(from: product)
+                                }
                             }
                             if let items = summary.out_of_stock, !items.isEmpty {
-                                HomeSummarySectionView(title: "out_of_stock".localized, products: items)
+                                HomeSummarySectionView(title: "out_of_stock".localized, products: items) { product in
+                                    selectedProduct = ProductModel(from: product)
+                                }
                             }
                             if let items = summary.low_stock, !items.isEmpty {
-                                HomeSummarySectionView(title: "below_minimum".localized, products: items)
+                                HomeSummarySectionView(title: "below_minimum".localized, products: items) { product in
+                                    selectedProduct = ProductModel(from: product)
+                                }
                             }
                             if let items = summary.near_minimum, !items.isEmpty {
-                                HomeSummarySectionView(title: "near_minimum".localized, products: items)
+                                HomeSummarySectionView(title: "near_minimum".localized, products: items) { product in
+                                    selectedProduct = ProductModel(from: product)
+                                }
                             }
                             if let items = summary.overstock, !items.isEmpty {
-                                HomeSummarySectionView(title: "overstock".localized, products: items)
+                                HomeSummarySectionView(title: "overstock".localized, products: items) { product in
+                                    selectedProduct = ProductModel(from: product)
+                                }
                             }
                         }
                     }
@@ -68,6 +79,10 @@ struct HomeView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
+        .sheet(item: $selectedProduct) { product in
+            ProductDetailView(product: product)
+                .environmentObject(localization)
+        }
         .task { summaryVM.fetchSummary() }
     }
 }
