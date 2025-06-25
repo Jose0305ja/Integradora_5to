@@ -31,7 +31,7 @@ struct InventoryScreenView: View {
         .overlay(
             Group {
                 if isSearchFocused {
-                    Color.black.opacity(0.2)
+                    Color.black.opacity(0.3)
                         .ignoresSafeArea()
                         .onTapGesture { isSearchFocused = false }
                 }
@@ -68,12 +68,19 @@ struct InventoryScreenView: View {
     private var searchBar: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
+                .foregroundColor(.tertiaryColor.opacity(0.7))
             TextField("Buscar producto", text: $searchVM.query)
                 .textFieldStyle(PlainTextFieldStyle())
                 .focused($isSearchFocused)
         }
+        .padding()
+        .background(isSearchFocused ? Color.tertiaryColor : Color.secondaryColor)
+        .cornerRadius(12)
+        .shadow(radius: isSearchFocused ? 8 : 0)
         .padding(.horizontal)
+        .onChange(of: searchVM.query) { text in
+            if text.isEmpty { isSearchFocused = false }
+        }
     }
 
     private var productList: some View {
