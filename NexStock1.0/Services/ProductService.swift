@@ -87,7 +87,9 @@ class ProductService {
     }
 
     func fetchProductDetail(id: String, completion: @escaping (Result<ProductDetailResponse, Error>) -> Void) {
-        guard let url = URL(string: baseURL + "/" + id) else { return }
+        var components = URLComponents(string: baseURL + "/detail")
+        components?.queryItems = [URLQueryItem(name: "id", value: id)]
+        guard let url = components?.url else { return }
 
         URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data {
@@ -108,7 +110,9 @@ class ProductService {
 
     /// Fetch only the movement history for a product
     func fetchProductMovements(id: String, completion: @escaping (Result<[ProductMovement], Error>) -> Void) {
-        guard let url = URL(string: baseURL + "/" + id + "/movements") else { return }
+        var components = URLComponents(string: baseURL + "/movements")
+        components?.queryItems = [URLQueryItem(name: "id", value: id)]
+        guard let url = components?.url else { return }
 
         URLSession.shared.dataTask(with: url) { data, _, error in
             if let data = data {

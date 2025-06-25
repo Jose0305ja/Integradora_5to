@@ -51,6 +51,21 @@ struct DetailedProductModel: Identifiable, Codable {
     }
 }
 
+extension DetailedProductModel {
+    /// Creates a lightweight `ProductModel` instance used across the app
+    /// to present product details.
+    var asProductModel: ProductModel {
+        ProductModel(
+            id: String(id),
+            name: name,
+            image_url: image_url,
+            stock_actual: 0,
+            category: "",
+            sensor_type: input_method.rawValue
+        )
+    }
+}
+
 struct Category: Identifiable, Codable, Hashable {
     let id: Int
     let name: String

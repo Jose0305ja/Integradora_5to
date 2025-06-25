@@ -12,6 +12,7 @@ struct InventoryCardView: View {
     var onTap: (() -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var detailPresenter: ProductDetailPresenter
 
     var body: some View {
         VStack(spacing: 8) {
@@ -45,6 +46,7 @@ struct InventoryCardView: View {
         .shadow(radius: 2)
         .onTapGesture {
             onTap?()
+            detailPresenter.present(product: product.asProductModel)
         }
     }
 }

@@ -12,6 +12,7 @@ struct NexStock1_0App: App {
     @AppStorage("selectedAppearance") private var selectedAppearance = "system"
     @StateObject private var localizationManager = LocalizationManager.shared
     @StateObject private var authService = AuthService.shared
+    @StateObject private var detailPresenter = ProductDetailPresenter.shared
 
     init() {
         applyAppearance()
@@ -23,6 +24,7 @@ struct NexStock1_0App: App {
                 .environmentObject(localizationManager)
                 .environmentObject(authService)
                 .environmentObject(ThemeManager.shared)
+                .environmentObject(detailPresenter)
         }
     }
 

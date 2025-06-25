@@ -12,6 +12,7 @@ struct AppView: View {
     @State private var showMenu = false // ✅ AGREGA ESTA LÍNEA
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var detailPresenter: ProductDetailPresenter
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -43,6 +44,10 @@ struct AppView: View {
                         AlertView(path: $path)
                     }
                 }
+        }
+        .sheet(item: $detailPresenter.selectedProduct) { product in
+            ProductDetailView(product: product)
+                .environmentObject(localization)
         }
     }
 }

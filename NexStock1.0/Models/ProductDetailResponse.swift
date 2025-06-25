@@ -2,7 +2,7 @@ import Foundation
 
 struct ProductDetailResponse: Codable {
     let message: String?
-    let product: ProductDetailInfo
+    let product: ProductDetailInfo?
     /// Movements may be absent in the response so make it optional
     let movements: [ProductMovement]?
 }

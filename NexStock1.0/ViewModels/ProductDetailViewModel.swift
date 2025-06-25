@@ -16,9 +16,14 @@ class ProductDetailViewModel: ObservableObject {
 
                 switch result {
                 case .success(let response):
-                    self.detail = response.product
-                    self.fetchMovements(id: id)
-                    print("Product detail loaded", response)
+                    if let product = response.product {
+                        self.detail = product
+                        self.fetchMovements(id: id)
+                        print("Product detail loaded", response)
+                    } else {
+                        self.isLoading = false
+                        self.errorMessage = response.message ?? "Producto no disponible"
+                    }
                 case .failure(let error):
                     self.isLoading = false
                     print("Failed to load detail", error)
