@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SearchProductCardView: View {
     let product: SearchProduct
-    var onTap: () -> Void = {}
+    var onTap: (SearchProduct) -> Void = { _ in }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -35,7 +35,7 @@ struct SearchProductCardView: View {
         .padding()
         .background(Color.secondaryColor)
         .cornerRadius(12)
-        .onTapGesture { onTap() }
+        .onTapGesture { onTap(product) }
     }
 }
 

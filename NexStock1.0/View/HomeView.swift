@@ -79,8 +79,9 @@ struct HomeView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
-        .sheet(item: $selectedProduct) { product in
-            ProductDetailView(product: product)
+        .sheet(item: $selectedProduct) {
+            ProductDetailView(product: $0)
+                .environmentObject(theme)
                 .environmentObject(localization)
         }
         .task { summaryVM.fetchSummary() }

@@ -89,11 +89,20 @@ class ProductService {
     func fetchProductDetail(id: String, completion: @escaping (Result<ProductDetailResponse, Error>) -> Void) {
         guard let url = URL(string: baseURL + "/" + id) else { return }
 
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        URLSession.shared.dataTask(with: url) { data, response, error in
             if let data = data {
                 if let jsonString = String(data: data, encoding: .utf8) {
                     print("🧾 Detail JSON: \(jsonString)")
                 }
+
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 404 {
+                    let backendError = NSError(domain: "", code: 404, userInfo: [
+                        NSLocalizedDescriptionKey: "Producto no encontrado"
+                    ])
+                    completion(.failure(backendError))
+                    return
+                }
+
                 do {
                     let decoded = try JSONDecoder().decode(ProductDetailResponse.self, from: data)
                     completion(.success(decoded))
