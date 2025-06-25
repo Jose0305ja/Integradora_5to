@@ -3,6 +3,7 @@ import SwiftUI
 struct SearchProductCardView: View {
     let product: SearchProduct
     var onTap: () -> Void = {}
+    @EnvironmentObject var detailPresenter: ProductDetailPresenter
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -35,7 +36,10 @@ struct SearchProductCardView: View {
         .padding()
         .background(Color.secondaryColor)
         .cornerRadius(12)
-        .onTapGesture { onTap() }
+        .onTapGesture {
+            detailPresenter.present(id: product.name, name: product.name)
+            onTap()
+        }
     }
 }
 
@@ -43,4 +47,5 @@ struct SearchProductCardView: View {
     SearchProductCardView(product: SearchProduct(name: "Ejemplo", image_url: "", stock_actual: 0, category: "", sensor_type: "manual"))
         .environmentObject(ThemeManager())
         .environmentObject(LocalizationManager())
+        .environmentObject(ProductDetailPresenter())
 }

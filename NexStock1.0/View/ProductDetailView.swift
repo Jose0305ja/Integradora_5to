@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ProductDetailView: View {
-    let product: ProductModel
+    let product: ProductIdentifier
     @StateObject private var viewModel = ProductDetailViewModel()
     @EnvironmentObject var localization: LocalizationManager
     @Environment(\.dismiss) var dismiss
@@ -203,7 +203,7 @@ struct ProductDetailView: View {
 
 struct ProductDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: ProductModel(id: "1", name: "Apple", image_url: "", stock_actual: 0, category: "Alimentos", sensor_type: "temperature"))
+        ProductDetailView(product: ProductIdentifier(id: "1", name: "Apple"))
             .environmentObject(LocalizationManager())
     }
 }

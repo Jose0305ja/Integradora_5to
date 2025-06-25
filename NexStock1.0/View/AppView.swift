@@ -10,6 +10,7 @@ import SwiftUI
 struct AppView: View {
     @State private var path = NavigationPath()
     @State private var showMenu = false // ✅ AGREGA ESTA LÍNEA
+    @StateObject private var detailPresenter = ProductDetailPresenter()
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
@@ -43,6 +44,11 @@ struct AppView: View {
                         AlertView(path: $path)
                     }
                 }
+        }
+        .environmentObject(detailPresenter)
+        .sheet(item: $detailPresenter.selectedProduct) { info in
+            ProductDetailView(product: info)
+                .environmentObject(localization)
         }
     }
 }

@@ -4,6 +4,7 @@ struct HomeInventoryCardView: View {
     let product: InventoryProduct
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+    @EnvironmentObject var detailPresenter: ProductDetailPresenter
 
     var body: some View {
         VStack(spacing: 8) {
@@ -25,5 +26,8 @@ struct HomeInventoryCardView: View {
         .background(Color.secondaryColor)
         .cornerRadius(12)
         .shadow(radius: 2)
+        .onTapGesture {
+            detailPresenter.present(id: product.name, name: product.name)
+        }
     }
 }

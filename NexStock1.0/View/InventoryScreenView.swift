@@ -20,7 +20,7 @@ struct InventoryScreenView: View {
     @StateObject private var searchVM = ProductSearchViewModel()
     @FocusState private var isSearchFocused: Bool
     @State private var showAddProductSheet = false
-    @State private var selectedProduct: ProductModel? = nil
+    @EnvironmentObject var detailPresenter: ProductDetailPresenter
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -42,10 +42,6 @@ struct InventoryScreenView: View {
                 showAddProductSheet = false
             }
             .environmentObject(authService)
-        }
-        .sheet(item: $selectedProduct) { product in
-            ProductDetailView(product: product)
-                .environmentObject(localization)
         }
         .navigationBarBackButtonHidden(true)
         .onChange(of: showAddProductSheet) { isPresented in
@@ -86,9 +82,7 @@ struct InventoryScreenView: View {
     private var productList: some View {
         Group {
             if searchVM.query.isEmpty {
-                InventoryGroupView { product in
-                    selectedProduct = product
-                }
+                InventoryGroupView()
             } else {
                 ScrollView {
                     if searchVM.isLoading {
@@ -103,6 +97,9 @@ struct InventoryScreenView: View {
                             ForEach(searchVM.results) { product in
                                 SearchProductCardView(product: product) {
                                     isSearchFocused = false
+                                }
+                                .onTapGesture {
+                                    detailPresenter.present(id: product.name, name: product.name)
                                 }
                             }
                         }
