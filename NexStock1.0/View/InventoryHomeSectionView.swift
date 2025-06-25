@@ -8,6 +8,7 @@ struct InventoryHomeSectionView: View {
     var loadMore: (() -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+    @State private var selectedProduct: ProductModel? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -26,11 +27,17 @@ struct InventoryHomeSectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20) {
                     ForEach(products) { product in
-                        InventoryCardView(product: product)
+                        InventoryCardView(product: product) {
+                            selectedProduct = ProductModel(from: product)
+                        }
                     }
                 }
                 .padding(.horizontal)
             }
+        }
+        .sheet(item: $selectedProduct) { product in
+            ProductDetailView(product: product)
+                .environmentObject(localization)
         }
     }
 }

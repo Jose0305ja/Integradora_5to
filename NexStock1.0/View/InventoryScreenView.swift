@@ -101,7 +101,7 @@ struct InventoryScreenView: View {
                     } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
                             ForEach(searchVM.results) { product in
-                                SearchProductCardView(product: product) {
+                                InventoryCardView(product: product) {
                                     isSearchFocused = false
                                     selectedProduct = ProductModel(from: product)
                                 }
