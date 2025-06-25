@@ -40,7 +40,7 @@ struct MonitoringHomeView: View {
 
                         SectionContainer(title: "Notificaciones") {
                             if viewModel.notifications.isEmpty {
-                                Text("No hay notificaciones")
+                                Text("No hay notificaciones nuevas")
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             } else {
@@ -50,6 +50,11 @@ struct MonitoringHomeView: View {
                                     }
                                 }
                             }
+                        }
+
+                        if let error = viewModel.errorMessage {
+                            Text(error)
+                                .foregroundColor(.red)
                         }
                     }
                     .padding()
@@ -64,11 +69,10 @@ struct MonitoringHomeView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
-        .task { viewModel.fetch() }
-        .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
-            Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")) {
-                viewModel.errorMessage = nil
-            })
+        .onAppear {
+            if viewModel.notifications.isEmpty {
+                viewModel.fetch()
+            }
         }
     }
 }
