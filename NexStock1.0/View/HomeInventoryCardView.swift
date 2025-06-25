@@ -7,20 +7,33 @@ struct HomeInventoryCardView: View {
     @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
-        VStack(spacing: 8) {
-            if let urlString = product.image_url, let url = URL(string: urlString) {
+        VStack(alignment: .leading, spacing: 4) {
+            if let urlString = product.image_url,
+               let url = URL(string: urlString) {
                 AsyncImage(url: url) { image in
                     image.resizable()
                 } placeholder: {
                     ProgressView()
                 }
-                .frame(width: 80, height: 80)
-                .cornerRadius(10)
+                .frame(width: 120, height: 120)
+                .cornerRadius(8)
             }
 
             Text(product.name)
                 .font(.headline)
                 .foregroundColor(.tertiaryColor)
+
+            if let stock = product.stock_actual {
+                Text("Stock: \(stock)")
+                    .font(.caption)
+                    .foregroundColor(.tertiaryColor)
+            }
+
+            if let sensor = product.sensor_type {
+                Text("Sensor: \(sensor.localized)")
+                    .font(.caption)
+                    .foregroundColor(.tertiaryColor)
+            }
         }
         .padding()
         .background(Color.secondaryColor)

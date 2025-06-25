@@ -20,10 +20,6 @@ struct SearchProductCardView: View {
                 .font(.headline)
                 .foregroundColor(.tertiaryColor)
 
-            Text(product.category.localized)
-                .font(.subheadline)
-                .foregroundColor(.tertiaryColor)
-
             Text("Stock: \(product.stock_actual)")
                 .font(.caption)
                 .foregroundColor(.tertiaryColor)
