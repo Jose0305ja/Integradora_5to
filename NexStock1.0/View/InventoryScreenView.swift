@@ -94,11 +94,14 @@ struct InventoryScreenView: View {
                     if searchVM.isLoading {
                         ProgressView()
                             .padding()
+                    } else if searchVM.results.isEmpty {
+                        Text("No se encontraron productos")
+                            .foregroundColor(.tertiaryColor)
+                            .padding()
                     } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
                             ForEach(searchVM.results) { product in
-                                ProductCard(product: product) {
-                                    selectedProduct = product
+                                SearchProductCardView(product: product) {
                                     isSearchFocused = false
                                 }
                             }

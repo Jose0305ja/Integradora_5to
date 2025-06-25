@@ -124,7 +124,7 @@ class ProductService {
         }.resume()
     }
 
-    func searchProducts(name: String, limit: Int = 20, offset: Int = 0, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
+    func searchProducts(name: String, limit: Int = 20, offset: Int = 0, completion: @escaping (Result<[SearchProduct], Error>) -> Void) {
         var components = URLComponents(string: baseURL + "/search")
         components?.queryItems = [
             URLQueryItem(name: "name", value: name),
@@ -140,8 +140,8 @@ class ProductService {
                     print("🧾 Search JSON: \(jsonString)")
                 }
                 do {
-                    let decoded = try JSONDecoder().decode(ProductResponse.self, from: data)
-                    completion(.success(decoded.products))
+                    let decoded = try JSONDecoder().decode(SearchResultResponse.self, from: data)
+                    completion(.success(decoded.results))
                 } catch {
                     completion(.failure(error))
                 }

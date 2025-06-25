@@ -3,7 +3,7 @@ import Combine
 
 class ProductSearchViewModel: ObservableObject {
     @Published var query: String = ""
-    @Published var results: [ProductModel] = []
+    @Published var results: [SearchProduct] = []
     @Published var isLoading: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
