@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MonitoringPoint: Identifiable {
+struct MonitoringPoint: Identifiable, Codable {
     let id = UUID()
     let time: Date
     let value: Double

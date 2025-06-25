@@ -123,13 +123,19 @@ struct SideMenuView: View {
                     if activeMenu == "monitoreo" {
                         VStack(alignment: .leading, spacing: 6) {
                             Button {
-                                path.append(AppRoute.temperature)
+                                path.append(AppRoute.monitoringHome)
+                            } label: {
+                                Text("home".localized)
+                            }
+
+                            Button {
+                                path.append(AppRoute.temperatureGraph)
                             } label: {
                                 Text("temperature".localized)
                             }
 
                             Button {
-                                path.append(AppRoute.humidity)
+                                path.append(AppRoute.humidityGraph)
                             } label: {
                                 Text("humidity".localized)
                             }

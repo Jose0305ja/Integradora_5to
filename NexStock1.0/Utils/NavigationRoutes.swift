@@ -15,5 +15,8 @@ enum AppRoute: Hashable {
     case product
     case temperature
     case humidity
+    case monitoringHome
+    case temperatureGraph
+    case humidityGraph
     case alerts
 }

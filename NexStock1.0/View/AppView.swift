@@ -39,6 +39,12 @@ struct AppView: View {
                         TemperatureView(path: $path)
                     case .humidity:
                         HumidityView(path: $path)
+                    case .monitoringHome:
+                        MonitoringHomeView(path: $path)
+                    case .temperatureGraph:
+                        TemperatureGraphView(path: $path)
+                    case .humidityGraph:
+                        HumidityGraphView(path: $path)
                     case .alerts:
                         AlertView(path: $path)
                     }
