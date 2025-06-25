@@ -33,24 +33,30 @@ struct HumidityView: View {
                                         .font(.subheadline)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 6)
-                                        .background(viewModel.selectedTimeRange == range ? Color.primary.opacity(0.1) : Color.clear)
+                                        .background(viewModel.selectedTimeRange == range ? Color.secondaryColor : Color.secondaryColor.opacity(0.3))
                                         .cornerRadius(8)
-                                        .foregroundColor(viewModel.selectedTimeRange == range ? .primary : .gray)
+                                        .foregroundColor(.tertiaryColor)
                                 }
                             }
                         }
 
                         // Gráfica
-                        LineChartView(
-                            data: viewModel.chartValues,
-                            labels: viewModel.xAxisLabels
-                        )
+                        SectionContainer(title: "") {
+                            LineChartView(
+                                data: viewModel.chartValues,
+                                labels: viewModel.xAxisLabels
+                            )
+                        }
 
                         // Valores
-                        infoBox(title: "current_humidity".localized, value: "\(viewModel.current)%", color: .blue)
-                        infoBox(title: "average".localized, value: "\(viewModel.average)%")
-                        infoBox(title: "minimum".localized, value: "\(viewModel.min)%")
-                        infoBox(title: "maximum".localized, value: "\(viewModel.max)%")
+                        SectionContainer(title: "") {
+                            HStack {
+                                infoBox(title: "current_humidity".localized, value: "\(viewModel.current)%", color: .blue)
+                                infoBox(title: "average".localized, value: "\(viewModel.average)%")
+                                infoBox(title: "minimum".localized, value: "\(viewModel.min)%")
+                                infoBox(title: "maximum".localized, value: "\(viewModel.max)%")
+                            }
+                        }
 
                         if viewModel.current > viewModel.optimalMax {
                             Text("⚠️ Alerta: Humedad superior al rango óptimo")
@@ -75,15 +81,18 @@ struct HumidityView: View {
         .navigationBarBackButtonHidden(true)
     }
 
-    private func infoBox(title: String, value: String, color: Color = .primary) -> some View {
-        VStack {
+    private func infoBox(title: String, value: String, color: Color = .tertiaryColor) -> some View {
+        VStack(spacing: 4) {
             Text(title)
-                .font(.caption)
-                .foregroundColor(.gray)
+                .font(.caption2)
+                .foregroundColor(.tertiaryColor)
             Text(value)
                 .font(.headline)
                 .foregroundColor(color)
         }
         .frame(maxWidth: .infinity)
+        .padding(8)
+        .background(Color.secondaryColor)
+        .cornerRadius(10)
     }
 }

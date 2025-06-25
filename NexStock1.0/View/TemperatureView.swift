@@ -33,27 +33,30 @@ struct TemperatureView: View {
                                         .font(.subheadline)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 6)
-                                        .background(viewModel.selectedTimeRange == range ? Color.primary.opacity(0.1) : Color.clear)
+                                        .background(viewModel.selectedTimeRange == range ? Color.secondaryColor : Color.secondaryColor.opacity(0.3))
                                         .cornerRadius(8)
-                                        .foregroundColor(viewModel.selectedTimeRange == range ? .primary : .gray)
+                                        .foregroundColor(.tertiaryColor)
                                 }
                             }
                         }
 
                         // Gráfica
-                        LineChartView(
-                            data: viewModel.chartValues,
-                            labels: viewModel.xAxisLabels
-                        )
+                        SectionContainer(title: "") {
+                            LineChartView(
+                                data: viewModel.chartValues,
+                                labels: viewModel.xAxisLabels
+                            )
+                        }
 
                         // Valores clave
-                        HStack {
-                            infoBox(title: "average".localized, value: "\(String(format: "%.1f", viewModel.current))°C", color: .red)
-                            infoBox(title: "current_temperature".localized, value: "\(String(format: "%.1f", viewModel.average))°C")
-                            infoBox(title: "minimum".localized, value: "\(String(format: "%.1f", viewModel.min))°C")
-                            infoBox(title: "maximum".localized, value: "\(String(format: "%.1f", viewModel.max))°C")
+                        SectionContainer(title: "") {
+                            HStack {
+                                infoBox(title: "average".localized, value: "\(String(format: "%.1f", viewModel.current))°C", color: .red)
+                                infoBox(title: "current_temperature".localized, value: "\(String(format: "%.1f", viewModel.average))°C")
+                                infoBox(title: "minimum".localized, value: "\(String(format: "%.1f", viewModel.min))°C")
+                                infoBox(title: "maximum".localized, value: "\(String(format: "%.1f", viewModel.max))°C")
+                            }
                         }
-                        .padding(.vertical, 8)
 
                         // Alerta visual
                         if viewModel.current > viewModel.optimalMax {
@@ -79,15 +82,18 @@ struct TemperatureView: View {
         .navigationBarBackButtonHidden(true)
     }
 
-    private func infoBox(title: String, value: String, color: Color = .primary) -> some View {
-        VStack {
+    private func infoBox(title: String, value: String, color: Color = .tertiaryColor) -> some View {
+        VStack(spacing: 4) {
             Text(title)
-                .font(.caption)
-                .foregroundColor(.gray)
+                .font(.caption2)
+                .foregroundColor(.tertiaryColor)
             Text(value)
                 .font(.headline)
                 .foregroundColor(color)
         }
         .frame(maxWidth: .infinity)
+        .padding(8)
+        .background(Color.secondaryColor)
+        .cornerRadius(10)
     }
 }
