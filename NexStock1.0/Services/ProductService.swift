@@ -14,8 +14,12 @@ class ProductService {
 
     func fetchProducts(completion: @escaping (Result<[DetailedProductModel], Error>) -> Void) {
         guard let url = URL(string: baseURL) else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(AuthService.shared.token ?? "")", forHTTPHeaderField: "Authorization")
 
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        URLSession.shared.dataTask(with: request) { data, _, error in
             if let data = data {
                 if let jsonString = String(data: data, encoding: .utf8) {
                     print("🧾 JSON recibido: \(jsonString)")

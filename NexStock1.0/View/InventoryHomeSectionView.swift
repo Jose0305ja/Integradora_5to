@@ -3,7 +3,7 @@ import SwiftUI
 struct InventoryHomeSectionView: View {
     let title: String
     /// Products to display within the section
-    let products: [DetailedProductModel]
+    let products: [ProductModel]
     /// Optional action triggered when the "Ver más" button is pressed
     var loadMore: (() -> Void)? = nil
     @EnvironmentObject var theme: ThemeManager
