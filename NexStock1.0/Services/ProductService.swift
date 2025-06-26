@@ -103,7 +103,7 @@ class ProductService {
     }
 
     // 🔍 Detalle individual de producto
-    func fetchProductDetail(id: String, completion: @escaping (Result<ProductDetailResponse, Error>) -> Void) {
+    func fetchProductDetail(id: String, completion: @escaping (Result<ProductDetailInfo, Error>) -> Void) {
         guard let url = URL(string: baseURL + "/" + id) else { return }
         guard let request = authorizedRequest(url: url) else {
             completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
@@ -133,7 +133,7 @@ class ProductService {
             print("🧾 Detail JSON:", String(data: data, encoding: .utf8) ?? "")
             do {
                 let decoded = try JSONDecoder().decode(ProductDetailResponse.self, from: data)
-                completion(.success(decoded))
+                completion(.success(decoded.product))
             } catch {
                 completion(.failure(error))
             }

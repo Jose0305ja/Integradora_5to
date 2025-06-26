@@ -18,8 +18,8 @@ class ProductDetailViewModel: ObservableObject {
                 self.isLoading = false
                 switch result {
                 case .success(let detail):
-                    self.detail = detail.product
-                    self.fetchMovements(id: idToUse)
+                    self.detail = detail
+                    self.fetchMovements(for: idToUse)
                 case .failure(let error):
                     self.errorMessage = error.localizedDescription
                 }
@@ -27,7 +27,7 @@ class ProductDetailViewModel: ObservableObject {
         }
     }
 
-    private func fetchMovements(id: String) {
+    func fetchMovements(for id: String) {
         guard AuthService.shared.token != nil else {
             self.errorMessage = "No token disponible"
             return

@@ -20,7 +20,7 @@ struct InventoryScreenView: View {
     @StateObject private var searchVM = ProductSearchViewModel()
     @FocusState private var isSearchFocused: Bool
     @State private var showAddProductSheet = false
-    @State private var selectedProduct: ProductModel? = nil
+    @State private var selectedProduct: ProductDetailInfo? = nil
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -86,9 +86,7 @@ struct InventoryScreenView: View {
     private var productList: some View {
         Group {
             if searchVM.query.isEmpty {
-                InventoryGroupView(onProductTap: { product in
-                    selectedProduct = product
-                })
+                InventoryGroupView()
             } else {
                 ScrollView {
                     if searchVM.isLoading {
@@ -101,8 +99,9 @@ struct InventoryScreenView: View {
                     } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
                             ForEach(searchVM.results) { product in
-                                InventoryCardView(product: ProductModel(from: product)) {
-                                    selectedProduct = ProductModel(from: product)
+                                let model = ProductModel(from: product)
+                                InventoryCardView(product: model) {
+                                    openDetail(for: model)
                                 }
                             }
                         }
@@ -127,6 +126,20 @@ struct InventoryScreenView: View {
         }
         .padding(.trailing, 24)
         .padding(.bottom, 24)
+    }
+
+    private func openDetail(for product: ProductModel) {
+        let idToUse = product.realId ?? product.id
+        ProductService.shared.fetchProductDetail(id: idToUse) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let detail):
+                    selectedProduct = detail
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                }
+            }
+        }
     }
 
 }
