@@ -18,6 +18,7 @@ struct InventoryGroupView: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 24) {
                 ForEach(viewModel.productsByCategory.keys.sorted(), id: .self) { category in
+                    let categoryProducts = viewModel.productsByCategory[category] ?? []
                     VStack(alignment: .leading, spacing: 12) {
                         Text(category.localized)
                             .font(.title3.bold())
@@ -25,7 +26,7 @@ struct InventoryGroupView: View {
                             .padding(.horizontal)
 
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 16)], spacing: 16) {
-                            ForEach(viewModel.productsByCategory[category] ?? []) { product in
+                            ForEach(categoryProducts) { product in
                                 InventoryCardView(product: product) {
                                     onProductTap(product)
                                 }
