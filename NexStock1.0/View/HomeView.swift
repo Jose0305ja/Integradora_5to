@@ -41,29 +41,53 @@ struct HomeView: View {
 
                         if let summary = summaryVM.summary {
                             if let items = summary.expiring, !items.isEmpty {
-                                HomeSummarySectionView(title: "expiring".localized, products: items) { product in
-                                    selectedProduct = product
-                                }
+                                HomeSummarySectionView(
+                                    title: "expiring".localized,
+                                    products: items.map { ProductModel(from: $0) },
+                                    onProductTap: { product in
+                                        selectedProduct = product
+                                    }
+                                )
                             }
+
                             if let items = summary.out_of_stock, !items.isEmpty {
-                                HomeSummarySectionView(title: "out_of_stock".localized, products: items) { product in
-                                    selectedProduct = product
-                                }
+                                HomeSummarySectionView(
+                                    title: "out_of_stock".localized,
+                                    products: items.map { ProductModel(from: $0) },
+                                    onProductTap: { product in
+                                        selectedProduct = product
+                                    }
+                                )
                             }
+
                             if let items = summary.low_stock, !items.isEmpty {
-                                HomeSummarySectionView(title: "below_minimum".localized, products: items) { product in
-                                    selectedProduct = product
-                                }
+                                HomeSummarySectionView(
+                                    title: "below_minimum".localized,
+                                    products: items.map { ProductModel(from: $0) },
+                                    onProductTap: { product in
+                                        selectedProduct = product
+                                    }
+                                )
                             }
+
                             if let items = summary.near_minimum, !items.isEmpty {
-                                HomeSummarySectionView(title: "near_minimum".localized, products: items) { product in
-                                    selectedProduct = product
-                                }
+                                HomeSummarySectionView(
+                                    title: "near_minimum".localized,
+                                    products: items.map { ProductModel(from: $0) },
+                                    onProductTap: { product in
+                                        selectedProduct = product
+                                    }
+                                )
                             }
+
                             if let items = summary.overstock, !items.isEmpty {
-                                HomeSummarySectionView(title: "overstock".localized, products: items) { product in
-                                    selectedProduct = product
-                                }
+                                HomeSummarySectionView(
+                                    title: "overstock".localized,
+                                    products: items.map { ProductModel(from: $0) },
+                                    onProductTap: { product in
+                                        selectedProduct = product
+                                    }
+                                )
                             }
                         }
                     }

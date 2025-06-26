@@ -1,3 +1,11 @@
+//
+//  SimpleProduct.swift
+//  NexStock1.0
+//
+//  Created by Jose Antonio Rivera on 25/06/25.
+//
+
+
 import Foundation
 
 struct ProductModel: Identifiable, Codable {
@@ -7,9 +15,4 @@ struct ProductModel: Identifiable, Codable {
     let stock_actual: Int
     let category: String
     let sensor_type: String
-}
-
-struct ProductResponse: Codable {
-    let message: String
-    let products: [ProductModel]
 }
