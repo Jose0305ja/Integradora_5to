@@ -75,12 +75,12 @@ struct ProductDetailView: View {
                         SettingRow(
                             icon: "arrowtriangle.up.fill",
                             title: "minimum_stock".localized,
-                            subtitle: detail.stock_min.map(String.init) ?? "no_information".localized
+                            subtitle: detail.stock_minimum.map(String.init) ?? "no_information".localized
                         )
                         SettingRow(
                             icon: "arrowtriangle.down.fill",
                             title: "maximum_stock".localized,
-                            subtitle: detail.stock_max.map(String.init) ?? "no_information".localized
+                            subtitle: detail.stock_maximum.map(String.init) ?? "no_information".localized
                         )
                         SettingRow(
                             icon: "tag.fill",
@@ -88,9 +88,19 @@ struct ProductDetailView: View {
                             subtitle: detail.brand?.isEmpty == false ? detail.brand! : "no_information".localized
                         )
                         SettingRow(
+                            icon: "square.stack.3d.up.fill",
+                            title: "category".localized,
+                            subtitle: detail.category ?? "no_information".localized
+                        )
+                        SettingRow(
+                            icon: "sensor.tag.radiowaves.forward",
+                            title: "sensor".localized,
+                            subtitle: detail.sensor_type ?? "no_information".localized
+                        )
+                        SettingRow(
                             icon: "clock.fill",
                             title: "last_updated".localized,
-                            subtitle: formattedDate(detail.updated_at)
+                            subtitle: formattedDate(detail.last_updated)
                         )
                         SettingRow(
                             icon: "text.bubble.fill",

@@ -1,9 +1,8 @@
 import Foundation
 
 struct SearchResultResponse: Codable {
-    let message: String
-    let total: Int
-    let results: [SearchProduct]
+    let message: String?
+    let product: SearchProduct
 }
 
 struct SearchProduct: Identifiable, Codable {
