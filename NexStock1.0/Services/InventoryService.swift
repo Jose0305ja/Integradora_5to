@@ -7,7 +7,11 @@ class InventoryService {
     func fetchHomeSummary(limit: Int = 5, completion: @escaping (Result<InventoryHomeResponse, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/inventory/home?limit=\(limit)") else { return }
 
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(AuthService.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
             if let data = data {
                 do {
                     let decoded = try JSONDecoder().decode(InventoryHomeResponse.self, from: data)
@@ -24,7 +28,11 @@ class InventoryService {
     func fetchDetails(for name: String, completion: @escaping (Result<InventoryProduct, Error>) -> Void) {
         guard let url = URL(string: "\(baseURL)/inventory/home") else { return }
 
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(AuthService.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
             if let data = data {
                 do {
                     let decoded = try JSONDecoder().decode(InventoryHomeResponse.self, from: data)

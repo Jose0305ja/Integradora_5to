@@ -28,8 +28,12 @@ class InventoryHomeViewModel: ObservableObject {
             return
         }
 
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(AuthService.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, _) = try await URLSession.shared.data(for: request)
             if let jsonString = String(data: data, encoding: .utf8) {
                 print("🧾 JSON recibido: \(jsonString)")
             }
