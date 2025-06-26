@@ -26,14 +26,21 @@ class HumidityViewModel: ObservableObject {
         MonitoringService.shared.fetchHumidity(filter: filter) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }
+
                 switch result {
                 case .success(let response):
+                    print("✅ Humidity data received: \(response)")
+                    print("💧 Data points: \(response.humidity)")
+
                     self.humidityData = response.humidity
                     self.current = response.current
                     self.average = response.average
                     self.min = response.min
                     self.max = response.max
+                    self.errorMessage = nil
+
                 case .failure(let error):
+                    print("❌ Error loading humidity:", error.localizedDescription)
                     self.errorMessage = error.localizedDescription
                     self.humidityData = []
                 }
@@ -41,13 +48,14 @@ class HumidityViewModel: ObservableObject {
         }
     }
 
+    // Datos para el gráfico
     var chartValues: [Double] {
         humidityData.map { $0.value }
     }
 
     var xAxisLabels: [String] {
         let formatter = DateFormatter()
-        formatter.dateFormat = "ha"
+        formatter.dateFormat = "ha" // Ej: 1PM, 2PM
         return humidityData.map { formatter.string(from: $0.time) }
     }
 

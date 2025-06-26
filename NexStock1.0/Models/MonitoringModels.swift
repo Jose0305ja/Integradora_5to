@@ -1,7 +1,7 @@
 import Foundation
 
 struct MonitoringNotification: Identifiable, Decodable {
-    let id: Int
+    let id: String
     let type: String
     let message: String
     let status: String

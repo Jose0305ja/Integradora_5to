@@ -26,14 +26,19 @@ class TemperatureViewModel: ObservableObject {
         MonitoringService.shared.fetchTemperature(filter: filter) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }
+
                 switch result {
                 case .success(let response):
+                    print("🌡️ Temperature data received:", response)
                     self.temperatureData = response.temperature
                     self.current = response.current
                     self.average = response.average
                     self.min = response.min
                     self.max = response.max
+                    self.errorMessage = nil
+
                 case .failure(let error):
+                    print("❌ Error loading temperature:", error.localizedDescription)
                     self.errorMessage = error.localizedDescription
                     self.temperatureData = []
                 }
@@ -47,7 +52,7 @@ class TemperatureViewModel: ObservableObject {
 
     var xAxisLabels: [String] {
         let formatter = DateFormatter()
-        formatter.dateFormat = "ha"
+        formatter.dateFormat = "ha" // 1PM, 2PM
         return temperatureData.map { formatter.string(from: $0.time) }
     }
 
