@@ -9,10 +9,13 @@
 import Foundation
 
 struct ProductModel: Identifiable, Codable {
-    let id: String
+    let id: String           // usado para UI y SwiftUI
     let name: String
     let image_url: String
     let stock_actual: Int
     let category: String
     let sensor_type: String
+
+    // ⚠️ Solo para búsquedas sin ID real
+    var realId: String? = nil
 }

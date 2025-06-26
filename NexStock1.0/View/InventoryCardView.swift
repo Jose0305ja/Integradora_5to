@@ -35,9 +35,9 @@ struct InventoryCardView: View {
                 .font(.headline)
                 .foregroundColor(.tertiaryColor)
 
-            //Text(product.quantity)
-              //  .font(.caption)
-                //.foregroundColor(.fourthColor.opacity(0.6))
+            Text("Stock: \(product.stock_actual)")
+                .font(.caption)
+                .foregroundColor(.fourthColor.opacity(0.6))
         }
         .padding()
         .background(Color.secondaryColor)
