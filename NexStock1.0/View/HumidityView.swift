@@ -28,6 +28,7 @@ struct HumidityView: View {
                             ForEach(viewModel.timeRanges, id: \.self) { range in
                                 Button(action: {
                                     viewModel.selectedTimeRange = range
+                                    viewModel.fetch(for: range)
                                 }) {
                                     Text(range)
                                         .font(.subheadline)
@@ -42,19 +43,31 @@ struct HumidityView: View {
 
                         // Gráfica
                         SectionContainer(title: "") {
-                            LineChartView(
-                                data: viewModel.chartValues,
-                                labels: viewModel.xAxisLabels
-                            )
+                            if viewModel.humidityData.isEmpty {
+                                Text("Sin datos")
+                                    .foregroundColor(.tertiaryColor)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                            } else {
+                                LineChartView(
+                                    data: viewModel.chartValues,
+                                    labels: viewModel.xAxisLabels
+                                )
+                            }
                         }
 
                         // Valores
                         SectionContainer(title: "") {
-                            HStack {
-                                infoBox(title: "current_humidity".localized, value: "\(viewModel.current)%", color: .blue)
-                                infoBox(title: "average".localized, value: "\(viewModel.average)%")
-                                infoBox(title: "minimum".localized, value: "\(viewModel.min)%")
-                                infoBox(title: "maximum".localized, value: "\(viewModel.max)%")
+                            if viewModel.humidityData.isEmpty {
+                                Text("Sin datos")
+                                    .foregroundColor(.tertiaryColor)
+                                    .frame(maxWidth: .infinity)
+                            } else {
+                                HStack {
+                                    infoBox(title: "current_humidity".localized, value: "\(viewModel.current)%", color: .blue)
+                                    infoBox(title: "average".localized, value: "\(viewModel.average)%")
+                                    infoBox(title: "minimum".localized, value: "\(viewModel.min)%")
+                                    infoBox(title: "maximum".localized, value: "\(viewModel.max)%")
+                                }
                             }
                         }
 
@@ -79,6 +92,12 @@ struct HumidityView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
+        .task { viewModel.fetch(for: viewModel.selectedTimeRange) }
+        .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
+            Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")) {
+                viewModel.errorMessage = nil
+            })
+        }
     }
 
     private func infoBox(title: String, value: String, color: Color = .tertiaryColor) -> some View {

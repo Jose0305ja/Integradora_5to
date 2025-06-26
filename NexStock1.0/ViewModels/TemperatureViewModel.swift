@@ -8,34 +8,42 @@
 import Foundation
 
 class TemperatureViewModel: ObservableObject {
-    @Published var selectedTimeRange: String = "Ahora"
+    @Published var selectedTimeRange: String = "24h"
     @Published var temperatureData: [MonitoringPoint] = []
     @Published var current: Double = 0
     @Published var average: Double = 0
     @Published var min: Double = 0
     @Published var max: Double = 0
+    @Published var errorMessage: String? = nil
 
-    let timeRanges = ["Ahora", "24h", "last_week", "last_month", "last_3months"]
+    let timeRanges = ["24h", "last_5min", "last_week", "last_month", "last_3months"]
 
     init() {
-        simulateFetch(for: selectedTimeRange)
+        fetch(for: selectedTimeRange)
     }
 
-    func simulateFetch(for filter: String) {
-        let now = Date()
-        let calendar = Calendar.current
+    func fetch(for filter: String) {
+        MonitoringService.shared.fetchTemperature(filter: filter) { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
 
-        temperatureData = (0..<7).map { i in
-            let time = calendar.date(byAdding: .hour, value: i * 2, to: now)!
-            let value = Double.random(in: 23.0...28.0)
-            return MonitoringPoint(time: time, value: value)
+                switch result {
+                case .success(let response):
+                    print("🌡️ Temperature data received:", response)
+                    self.temperatureData = response.temperature
+                    self.current = response.current
+                    self.average = response.average
+                    self.min = response.min
+                    self.max = response.max
+                    self.errorMessage = nil
+
+                case .failure(let error):
+                    print("❌ Error loading temperature:", error.localizedDescription)
+                    self.errorMessage = error.localizedDescription
+                    self.temperatureData = []
+                }
+            }
         }
-
-        let values = temperatureData.map { $0.value }
-        current = values.last ?? 0
-        average = values.reduce(0, +) / Double(values.count)
-        min = values.min() ?? 0
-        max = values.max() ?? 0
     }
 
     var chartValues: [Double] {
@@ -44,7 +52,7 @@ class TemperatureViewModel: ObservableObject {
 
     var xAxisLabels: [String] {
         let formatter = DateFormatter()
-        formatter.dateFormat = "ha"
+        formatter.dateFormat = "ha" // 1PM, 2PM
         return temperatureData.map { formatter.string(from: $0.time) }
     }
 
