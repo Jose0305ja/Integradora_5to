@@ -105,6 +105,7 @@ struct HomeView: View {
         .navigationBarBackButtonHidden(true)
         .sheet(item: $selectedProduct) { product in
             ProductDetailView(product: product)
+                .environmentObject(ProductDetailViewModel())
                 .environmentObject(localization)
         }
         .task { summaryVM.fetchSummary() }

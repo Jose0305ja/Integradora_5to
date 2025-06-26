@@ -27,6 +27,7 @@ struct InventoryHomeSectionView: View {
         }
         .sheet(item: $selectedProduct) { product in
             ProductDetailView(product: product)
+                .environmentObject(ProductDetailViewModel())
                 .environmentObject(localization)
         }
     }

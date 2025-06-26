@@ -57,20 +57,26 @@ class ProductService {
         let request = authorizedRequest(url: url)
 
         URLSession.shared.dataTask(with: request) { data, _, error in
-            if let data = data {
-                print("🧾 JSON recibido:", String(data: data, encoding: .utf8) ?? "")
-                do {
-                    let decoded = try JSONDecoder().decode(ProductResponse.self, from: data)
-                    completion(.success(decoded.products))
-                } catch {
+            guard let data = data else {
+                completion(.failure(MyError.invalidData))
+                return
+            }
+
+            print("🧾 JSON recibido:", String(data: data, encoding: .utf8) ?? "")
+
+            do {
+                let decoded = try JSONDecoder().decode(ProductResponse.self, from: data)
+                completion(.success(decoded.products))
+            } catch {
+                if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                   json["products"] == nil {
+                    completion(.failure(MyError.missingProductsKey))
+                } else {
                     completion(.failure(error))
                 }
-            } else if let error = error {
-                completion(.failure(error))
             }
         }.resume()
     }
-
     // ➕ Agregar producto
     func addProduct(_ product: DetailedProductModel, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: baseURL) else { return }
