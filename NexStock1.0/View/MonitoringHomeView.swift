@@ -16,6 +16,12 @@ struct MonitoringHomeView: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
+                        if let error = viewModel.errorMessage {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(.caption)
+                        }
+
                         SectionContainer(title: "") {
                             HStack {
                                 VStack(alignment: .leading) {
@@ -40,7 +46,7 @@ struct MonitoringHomeView: View {
 
                         SectionContainer(title: "Notificaciones") {
                             if viewModel.notifications.isEmpty {
-                                Text("No hay notificaciones")
+                                Text("No hay notificaciones nuevas")
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             } else {
@@ -64,7 +70,11 @@ struct MonitoringHomeView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
-        .task { viewModel.fetch() }
+        .onAppear {
+            if viewModel.notifications.isEmpty {
+                viewModel.fetch()
+            }
+        }
         .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
             Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")) {
                 viewModel.errorMessage = nil
