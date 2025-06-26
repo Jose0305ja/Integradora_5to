@@ -60,8 +60,8 @@ class ProductService {
             if let data = data {
                 print("🧾 JSON recibido:", String(data: data, encoding: .utf8) ?? "")
                 do {
-                    let decoded = try JSONDecoder().decode(ProductResponse.self, from: data)
-                    completion(.success(decoded.products))
+                    let decoded = try JSONDecoder().decode([ProductModel].self, from: data)
+                    completion(.success(decoded))
                 } catch {
                     completion(.failure(error))
                 }
