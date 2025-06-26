@@ -2,10 +2,10 @@ import SwiftUI
 
 struct HomeSummarySectionView: View {
     let title: String
-    let products: [InventoryProduct]
+    let products: [ProductModel]
+    let onProductTap: (ProductModel) -> Void
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
-    @State private var selectedProduct: ProductModel? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -16,19 +16,15 @@ struct HomeSummarySectionView: View {
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(products.map { ProductModel(from: $0) }) { product in
+                    ForEach(products) { product in
                         InventoryCardView(product: product)
                             .onTapGesture {
-                                selectedProduct = product
+                                onProductTap(product)
                             }
                     }
                 }
                 .padding(.horizontal)
             }
-        }
-        .sheet(item: $selectedProduct) { product in
-            ProductDetailView(product: product)
-                .environmentObject(localization)
         }
     }
 }
