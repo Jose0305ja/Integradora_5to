@@ -2,13 +2,14 @@ import SwiftUI
 
 struct InventoryGroupView: View {
     var onProductTap: (ProductModel) -> Void
+
     @StateObject private var viewModel = PaginatedInventoryViewModel()
     @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 16) {
-                ForEach(viewModel.categories, id: \._self) { category in
+            VStack(alignment: .leading, spacing: 16) {
+                ForEach(viewModel.categories, id: \.self) { category in
                     if let items = viewModel.productsByCategory[category] {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(category.localized)
@@ -33,7 +34,10 @@ struct InventoryGroupView: View {
                     }
                 }
             }
+            .padding(.top)
         }
-        .onAppear { viewModel.fetchInitial() }
+        .onAppear {
+            viewModel.fetchInitial()
+        }
     }
 }

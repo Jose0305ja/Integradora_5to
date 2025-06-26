@@ -36,7 +36,7 @@ struct ProductDetailView: View {
             }
             .navigationTitle(product.name.localized)
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear { viewModel.fetch(id: product.id) }
+            .onAppear { viewModel.fetch(product: product) }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("close".localized) { dismiss() }
