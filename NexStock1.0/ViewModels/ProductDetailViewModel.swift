@@ -14,7 +14,7 @@ class ProductDetailViewModel: ObservableObject {
                 switch result {
                 case .success(let detail):
                     self.detail = detail.product
-                    self.fetchMovements(for: idToUse)
+                    self.fetchMovements(id: idToUse)
                 case .failure(let error):
                     self.errorMessage = error.localizedDescription
                 }
