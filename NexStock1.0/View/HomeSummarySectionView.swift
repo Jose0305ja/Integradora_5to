@@ -18,8 +18,8 @@ struct HomeSummarySectionView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
                     ForEach(products) { product in
-                        InventoryCardView(product: ProductModel(from: searchProduct)) {
-                            selectedProduct = ProductModel(from: searchProduct)
+                        InventoryCardView(product: product) {
+                            onProductTap(product)
                         }
                     }
                 }

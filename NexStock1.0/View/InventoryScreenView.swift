@@ -101,8 +101,8 @@ struct InventoryScreenView: View {
                     } else {
                         LazyVStack(alignment: .leading, spacing: 16) {
                             ForEach(searchVM.results) { product in
-                                InventoryCardView(product: ProductModel(from: searchProduct)) {
-                                    selectedProduct = ProductModel(from: searchProduct)
+                                InventoryCardView(product: ProductModel(from: product)) {
+                                    selectedProduct = ProductModel(from: product)
                                 }
                             }
                         }
