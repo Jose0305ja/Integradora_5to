@@ -10,13 +10,23 @@ struct ProductDetailResponse: Codable {
 struct ProductDetailInfo: Identifiable, Codable {
     let id: String
     let name: String
-    let brand: String?
-    let description: String?
     let image_url: String?
+    let description: String?
+    let brand: String?
+    let category: String?
     let stock_actual: Int?
-    let stock_min: Int?
-    let stock_max: Int?
-    let updated_at: String?
+    let stock_minimum: Int?
+    let stock_maximum: Int?
+    let sensor_type: String?
+    let last_updated: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, image_url, description, brand, category, stock_actual
+        case stock_minimum = "stock_min"
+        case stock_maximum = "stock_max"
+        case sensor_type
+        case last_updated = "updated_at"
+    }
 }
 
 /// Represents a single stock movement for a product

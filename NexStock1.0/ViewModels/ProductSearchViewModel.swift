@@ -25,12 +25,12 @@ class ProductSearchViewModel: ObservableObject {
         }
 
         isLoading = true
-        ProductService.shared.searchProducts(name: text) { [weak self] result in
+        ProductService.shared.searchProducts(query: text) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
                 switch result {
-                case .success(let products):
-                    self?.results = products
+                case .success(let product):
+                    self?.results = [product]
                 case .failure:
                     self?.results = []
                 }

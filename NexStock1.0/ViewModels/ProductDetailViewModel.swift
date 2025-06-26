@@ -7,6 +7,11 @@ class ProductDetailViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     func fetch(product: ProductModel) {
+        guard let _ = AuthService.shared.token else {
+            self.errorMessage = "No token disponible"
+            return
+        }
+
         let idToUse = product.realId ?? product.id
         ProductService.shared.fetchProductDetail(id: idToUse) { result in
             DispatchQueue.main.async {
@@ -23,6 +28,11 @@ class ProductDetailViewModel: ObservableObject {
     }
 
     private func fetchMovements(id: String) {
+        guard AuthService.shared.token != nil else {
+            self.errorMessage = "No token disponible"
+            return
+        }
+
         ProductService.shared.fetchProductMovements(id: id) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }

@@ -13,18 +13,22 @@ class ProductService {
     private let baseURL = NetworkConfig.inventoryBaseURL + "/inventory/products"
 
     // 🔐 Centraliza el uso del token
-    private func authorizedRequest(url: URL, method: String = "GET") -> URLRequest {
+    private func authorizedRequest(url: URL, method: String = "GET") -> URLRequest? {
+        guard let token = AuthService.shared.token else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(AuthService.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
 
     // 🔄 Obtener todos los productos detallados
     func fetchProducts(completion: @escaping (Result<[DetailedProductModel], Error>) -> Void) {
         guard let url = URL(string: baseURL) else { return }
-        let request = authorizedRequest(url: url)
+        guard let request = authorizedRequest(url: url) else {
+            completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
 
         URLSession.shared.dataTask(with: request) { data, _, error in
             if let data = data {
@@ -54,7 +58,10 @@ class ProductService {
         components?.queryItems = queryItems
 
         guard let url = components?.url else { return }
-        let request = authorizedRequest(url: url)
+        guard let request = authorizedRequest(url: url) else {
+            completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
 
         URLSession.shared.dataTask(with: request) { data, _, error in
             if let data = data {
@@ -74,7 +81,10 @@ class ProductService {
     // ➕ Agregar producto
     func addProduct(_ product: DetailedProductModel, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: baseURL) else { return }
-        var request = authorizedRequest(url: url, method: "POST")
+        guard var request = authorizedRequest(url: url, method: "POST") else {
+            completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
 
         do {
             request.httpBody = try JSONEncoder().encode(product)
@@ -95,18 +105,36 @@ class ProductService {
     // 🔍 Detalle individual de producto
     func fetchProductDetail(id: String, completion: @escaping (Result<ProductDetailResponse, Error>) -> Void) {
         guard let url = URL(string: baseURL + "/" + id) else { return }
-        let request = authorizedRequest(url: url)
+        guard let request = authorizedRequest(url: url) else {
+            completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
 
-        URLSession.shared.dataTask(with: request) { data, _, error in
-            if let data = data {
-                print("🧾 Detail JSON:", String(data: data, encoding: .utf8) ?? "")
-                do {
-                    let decoded = try JSONDecoder().decode(ProductDetailResponse.self, from: data)
-                    completion(.success(decoded))
-                } catch {
-                    completion(.failure(error))
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let http = response as? HTTPURLResponse, let data = data else {
+                completion(.failure(NSError(domain: "ProductService", code: 0, userInfo: nil)))
+                return
+            }
+
+            if http.statusCode != 200 {
+                if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
+                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
+                } else {
+                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: nil)))
                 }
-            } else if let error = error {
+                return
+            }
+
+            print("🧾 Detail JSON:", String(data: data, encoding: .utf8) ?? "")
+            do {
+                let decoded = try JSONDecoder().decode(ProductDetailResponse.self, from: data)
+                completion(.success(decoded))
+            } catch {
                 completion(.failure(error))
             }
         }.resume()
@@ -115,44 +143,78 @@ class ProductService {
     // 📦 Historial de movimientos
     func fetchProductMovements(id: String, completion: @escaping (Result<[ProductMovement], Error>) -> Void) {
         guard let url = URL(string: baseURL + "/" + id + "/movements") else { return }
-        let request = authorizedRequest(url: url)
+        guard let request = authorizedRequest(url: url) else {
+            completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
 
-        URLSession.shared.dataTask(with: request) { data, _, error in
-            if let data = data {
-                do {
-                    let decoded = try JSONDecoder().decode(ProductMovementsResponse.self, from: data)
-                    completion(.success(decoded.movements))
-                } catch {
-                    completion(.failure(error))
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let http = response as? HTTPURLResponse, let data = data else {
+                completion(.failure(NSError(domain: "ProductService", code: 0, userInfo: nil)))
+                return
+            }
+
+            if http.statusCode != 200 {
+                if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
+                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
+                } else {
+                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: nil)))
                 }
-            } else if let error = error {
+                return
+            }
+
+            do {
+                let decoded = try JSONDecoder().decode(ProductMovementsResponse.self, from: data)
+                completion(.success(decoded.movements))
+            } catch {
                 completion(.failure(error))
             }
         }.resume()
     }
 
     // 🔎 Búsqueda por nombre
-    func searchProducts(name: String, limit: Int = 20, offset: Int = 0, completion: @escaping (Result<[SearchProduct], Error>) -> Void) {
+    func searchProducts(query: String, completion: @escaping (Result<SearchProduct, Error>) -> Void) {
         var components = URLComponents(string: baseURL + "/search")
         components?.queryItems = [
-            URLQueryItem(name: "name", value: name),
-            URLQueryItem(name: "limit", value: String(limit)),
-            URLQueryItem(name: "offset", value: String(offset))
+            URLQueryItem(name: "query", value: query)
         ]
 
         guard let url = components?.url else { return }
-        let request = authorizedRequest(url: url)
+        guard let request = authorizedRequest(url: url) else {
+            completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
 
-        URLSession.shared.dataTask(with: request) { data, _, error in
-            if let data = data {
-                print("🧾 Search JSON:", String(data: data, encoding: .utf8) ?? "")
-                do {
-                    let decoded = try JSONDecoder().decode(SearchResultResponse.self, from: data)
-                    completion(.success(decoded.results))
-                } catch {
-                    completion(.failure(error))
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let http = response as? HTTPURLResponse, let data = data else {
+                completion(.failure(NSError(domain: "ProductService", code: 0, userInfo: nil)))
+                return
+            }
+
+            if http.statusCode != 200 {
+                if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
+                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
+                } else {
+                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: nil)))
                 }
-            } else if let error = error {
+                return
+            }
+
+            print("🧾 Search JSON:", String(data: data, encoding: .utf8) ?? "")
+            do {
+                let decoded = try JSONDecoder().decode(SearchResultResponse.self, from: data)
+                completion(.success(decoded.product))
+            } catch {
                 completion(.failure(error))
             }
         }.resume()
