@@ -86,9 +86,9 @@ struct InventoryScreenView: View {
     private var productList: some View {
         Group {
             if searchVM.query.isEmpty {
-                InventoryGroupView { product in
+                InventoryGroupView(onProductTap: { product in
                     selectedProduct = product
-                }
+                })
             } else {
                 ScrollView {
                     if searchVM.isLoading {
