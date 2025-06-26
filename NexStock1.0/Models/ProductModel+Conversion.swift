@@ -3,24 +3,25 @@ import Foundation
 extension ProductModel {
     init(from search: SearchProduct) {
         self.init(
-            id: UUID().uuidString, // ID solo para SwiftUI
+            id: search.id,
             name: search.name,
             image_url: search.image_url,
             stock_actual: search.stock_actual,
             category: search.category,
             sensor_type: search.sensor_type,
-            realId: nil // porque no hay ID real
+            realId: search.id
         )
     }
 
     init(from inventory: InventoryProduct) {
         self.init(
-            id: inventory.id.uuidString,
+            id: inventory.id,
             name: inventory.name,
             image_url: inventory.image_url ?? "",
             stock_actual: inventory.stock_actual ?? 0,
             category: "",
-            sensor_type: inventory.sensor_type ?? ""
+            sensor_type: inventory.sensor_type ?? "",
+            realId: inventory.id
         )
     }
 
@@ -31,7 +32,8 @@ extension ProductModel {
             image_url: detailed.image_url,
             stock_actual: 0,
             category: "",
-            sensor_type: detailed.input_method.rawValue
+            sensor_type: detailed.input_method.rawValue,
+            realId: String(detailed.id)
         )
     }
 }

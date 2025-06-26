@@ -11,7 +11,7 @@ struct InventoryHomeResponse: Codable {
 }
 
 struct InventoryProduct: Identifiable, Codable {
-    let id = UUID()
+    let id: String
     let name: String
     let stock_actual: Int?
     let expiration_date: String?

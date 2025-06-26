@@ -8,15 +8,16 @@ class ProductDetailViewModel: ObservableObject {
 
     func fetch(product: ProductModel) {
         let idToUse = product.realId ?? product.id
+        isLoading = true
         ProductService.shared.fetchProductDetail(id: idToUse) { result in
             DispatchQueue.main.async {
-                self.isLoading = false
                 switch result {
                 case .success(let detail):
                     self.detail = detail.product
                     self.fetchMovements(id: idToUse)
                 case .failure(let error):
                     self.errorMessage = error.localizedDescription
+                    self.isLoading = false
                 }
             }
         }
