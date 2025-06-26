@@ -22,4 +22,15 @@ extension ProductModel {
             sensor_type: inventory.sensor_type ?? ""
         )
     }
+
+    init(from detailed: DetailedProductModel) {
+        self.init(
+            id: String(detailed.id),
+            name: detailed.name,
+            image_url: detailed.image_url,
+            stock_actual: 0,
+            category: "",
+            sensor_type: detailed.input_method.rawValue
+        )
+    }
 }
