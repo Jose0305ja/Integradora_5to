@@ -5,7 +5,7 @@ struct InventoryHomeSectionView: View {
     let products: [ProductModel]
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
-    @State private var selectedProduct: ProductModel? = nil
+    @State private var selectedProduct: ProductDetailInfo? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -18,7 +18,7 @@ struct InventoryHomeSectionView: View {
                 HStack(spacing: 16) {
                     ForEach(products) { product in
                         InventoryCardView(product: product) {
-                            selectedProduct = product
+                            openDetail(for: product)
                         }
                     }
                 }
@@ -28,6 +28,20 @@ struct InventoryHomeSectionView: View {
         .sheet(item: $selectedProduct) { product in
             ProductDetailView(product: product)
                 .environmentObject(localization)
+        }
+    }
+
+    private func openDetail(for product: ProductModel) {
+        let idToUse = product.realId ?? product.id
+        ProductService.shared.fetchProductDetail(id: idToUse) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let detail):
+                    selectedProduct = detail
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                }
+            }
         }
     }
 }

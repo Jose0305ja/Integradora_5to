@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ProductDetailView: View {
-    let product: ProductModel
+    let product: ProductDetailInfo
     @StateObject private var viewModel = ProductDetailViewModel()
     @EnvironmentObject var localization: LocalizationManager
     @Environment(\.dismiss) var dismiss
@@ -36,7 +36,10 @@ struct ProductDetailView: View {
             }
             .navigationTitle(product.name.localized)
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear { viewModel.fetch(product: product) }
+            .onAppear {
+                viewModel.detail = product
+                viewModel.fetchMovements(for: product.id)
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("close".localized) { dismiss() }
@@ -213,7 +216,7 @@ struct ProductDetailView: View {
 
 struct ProductDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: ProductModel(id: "1", name: "Apple", image_url: "", stock_actual: 0, category: "Alimentos", sensor_type: "temperature"))
+        ProductDetailView(product: ProductDetailInfo(id: "1", name: "Apple", image_url: nil, description: nil, brand: nil, category: nil, stock_actual: 0, stock_minimum: 0, stock_maximum: 0, sensor_type: nil, last_updated: nil))
             .environmentObject(LocalizationManager())
     }
 }

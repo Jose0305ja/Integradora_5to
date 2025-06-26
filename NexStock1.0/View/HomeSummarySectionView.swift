@@ -3,7 +3,6 @@ import SwiftUI
 struct HomeSummarySectionView: View {
     let title: String
     let products: [ProductModel]
-    let onProductTap: (ProductModel) -> Void
 
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
@@ -19,11 +18,31 @@ struct HomeSummarySectionView: View {
                 HStack(spacing: 16) {
                     ForEach(products) { product in
                         InventoryCardView(product: product) {
-                            onProductTap(product)
+                            openDetail(for: product)
                         }
                     }
                 }
                 .padding(.horizontal)
+            }
+        }
+        .sheet(item: $selectedProduct) { product in
+            ProductDetailView(product: product)
+                .environmentObject(localization)
+        }
+    }
+
+    @State private var selectedProduct: ProductDetailInfo? = nil
+
+    private func openDetail(for product: ProductModel) {
+        let idToUse = product.realId ?? product.id
+        ProductService.shared.fetchProductDetail(id: idToUse) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let detail):
+                    selectedProduct = detail
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ extension ProductModel {
             stock_actual: search.stock_actual,
             category: search.category,
             sensor_type: search.sensor_type,
-            realId: nil // porque no hay ID real
+            realId: search.id // id real para poder obtener detalles
         )
     }
 
