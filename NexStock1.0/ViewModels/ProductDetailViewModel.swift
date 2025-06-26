@@ -2,6 +2,7 @@ import Foundation
 
 class ProductDetailViewModel: ObservableObject {
     @Published var detail: ProductDetailInfo?
+    @Published var product: ProductModel?
     @Published var movements: [ProductMovement] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -14,6 +15,7 @@ class ProductDetailViewModel: ObservableObject {
                 switch result {
                 case .success(let detail):
                     self.detail = detail.product
+                    self.product = ProductModel(from: detail.product)
                     self.fetchMovements(id: idToUse)
                 case .failure(let error):
                     self.errorMessage = error.localizedDescription
