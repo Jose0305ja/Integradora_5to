@@ -131,7 +131,7 @@ struct ProductDetailView: View {
                     .padding()
             } else {
                 VStack(spacing: 12) {
-                    ForEach(viewModel.movements) { move in
+                    ForEach(Array(viewModel.movements.enumerated()), id: \.offset) { _, move in
                         MovementRow(move: move)
                     }
                 }
