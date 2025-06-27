@@ -140,6 +140,33 @@ class ProductService {
         }.resume()
     }
 
+    func fetchProductDetail(by id: String, completion: @escaping (Result<ProductModel, Error>) -> Void) {
+        guard let url = URL(string: "https://inventory.nexusutd.online/inventory/products/\(id)") else { return }
+
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(AuthService.shared.token ?? "")", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            if let data = data {
+                do {
+                    let decoded = try JSONDecoder().decode(ProductDetailResponse.self, from: data)
+                    let converted = ProductModel(from: decoded.product)
+                    DispatchQueue.main.async {
+                        completion(.success(converted))
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    completion(.failure(error ?? URLError(.badServerResponse)))
+                }
+            }
+        }.resume()
+    }
+
     // 📦 Historial de movimientos
     func fetchProductMovements(id: String, completion: @escaping (Result<[ProductMovement], Error>) -> Void) {
         guard let url = URL(string: baseURL + "/" + id + "/movements") else { return }

@@ -5,7 +5,7 @@ struct InventoryHomeSectionView: View {
     let products: [ProductModel]
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
-    @State private var selectedProduct: ProductDetailInfo? = nil
+    @State private var selectedProduct: ProductModel? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -32,16 +32,12 @@ struct InventoryHomeSectionView: View {
     }
 
     private func openDetail(for product: ProductModel) {
-        let idToUse = product.realId ?? product.id
-        ProductService.shared.fetchProductDetail(id: idToUse) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let detail):
-                    selectedProduct = detail
-                    print("\u{1F4E6} Producto seleccionado:", detail)
-                case .failure(let error):
-                    print("Error: \(error.localizedDescription)")
-                }
+        ProductService.shared.fetchProductDetail(by: product.id) { result in
+            switch result {
+            case .success(let fullProduct):
+                selectedProduct = fullProduct
+            case .failure(let error):
+                print("\u{274C} Error al obtener detalles: \(error)")
             }
         }
     }

@@ -34,6 +34,17 @@ extension ProductModel {
             sensor_type: detailed.input_method.rawValue
         )
     }
+
+    init(from info: ProductDetailInfo) {
+        self.init(
+            id: info.id,
+            name: info.name,
+            image_url: info.image_url ?? "",
+            stock_actual: info.stock_actual ?? 0,
+            category: info.category ?? "",
+            sensor_type: info.sensor_type ?? ""
+        )
+    }
 }
 
 struct ProductResponse: Codable {
