@@ -19,7 +19,7 @@ struct InventoryGroupView: View {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 16) {
                                     ForEach(items) { product in
-                                        InventoryCardView(product: product) {
+                                        HomeInventoryCardView(product: product) {
                                             openDetail(for: product)
                                         }
                                         .onAppear {
