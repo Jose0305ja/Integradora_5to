@@ -178,7 +178,7 @@ class ProductService {
     }
 
     // 🔎 Búsqueda por nombre
-    func searchProducts(query: String, completion: @escaping (Result<SearchProduct, Error>) -> Void) {
+    func searchProducts(query: String, completion: @escaping (Result<[SearchProduct], Error>) -> Void) {
         var components = URLComponents(string: baseURL + "/search")
         components?.queryItems = [
             URLQueryItem(name: "query", value: query)
@@ -213,7 +213,7 @@ class ProductService {
             print("🧾 Search JSON:", String(data: data, encoding: .utf8) ?? "")
             do {
                 let decoded = try JSONDecoder().decode(SearchResultResponse.self, from: data)
-                completion(.success(decoded.product))
+                completion(.success(decoded.products))
             } catch {
                 completion(.failure(error))
             }
