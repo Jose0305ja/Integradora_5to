@@ -5,6 +5,11 @@ struct SearchResultResponse: Codable {
     let products: [SearchProduct]
 }
 
+/// Response for the new search endpoint
+struct SearchProductsResponse: Codable {
+    let results: [SearchProduct]
+}
+
 struct SearchProduct: Identifiable, Codable {
     /// Puede venir nulo si el producto no existe en inventario
     let id: String?

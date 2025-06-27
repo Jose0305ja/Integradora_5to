@@ -178,44 +178,28 @@ class ProductService {
     }
 
     // 🔎 Búsqueda por nombre
-    func searchProducts(query: String, completion: @escaping (Result<[SearchProduct], Error>) -> Void) {
-        var components = URLComponents(string: baseURL + "/search")
-        components?.queryItems = [
-            URLQueryItem(name: "query", value: query)
-        ]
-
-        guard let url = components?.url else { return }
-        guard let request = authorizedRequest(url: url) else {
-            completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+    func searchProducts(name: String, completion: @escaping ([ProductModel]) -> Void) {
+        guard let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "\(NetworkConfig.inventoryBaseURL)/inventory/products/search?name=\(encodedName)") else {
+            completion([])
             return
         }
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(AuthService.shared.token ?? "")", forHTTPHeaderField: "Authorization")
 
-            guard let http = response as? HTTPURLResponse, let data = data else {
-                completion(.failure(NSError(domain: "ProductService", code: 0, userInfo: nil)))
-                return
-            }
-
-            if http.statusCode != 200 {
-                if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
-                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
-                } else {
-                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: nil)))
+        URLSession.shared.dataTask(with: request) { data, _, _ in
+            if let data = data {
+                do {
+                    let decoded = try JSONDecoder().decode(SearchProductsResponse.self, from: data)
+                    let products = decoded.results.map { ProductModel(from: $0) }
+                    DispatchQueue.main.async { completion(products) }
+                } catch {
+                    print("❌ Decoding failed: \(error)")
+                    DispatchQueue.main.async { completion([]) }
                 }
-                return
-            }
-
-            print("🧾 Search JSON:", String(data: data, encoding: .utf8) ?? "")
-            do {
-                let decoded = try JSONDecoder().decode(SearchResultResponse.self, from: data)
-                completion(.success(decoded.products))
-            } catch {
-                completion(.failure(error))
+            } else {
+                DispatchQueue.main.async { completion([]) }
             }
         }.resume()
     }

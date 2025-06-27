@@ -3,7 +3,7 @@ import Combine
 
 class ProductSearchViewModel: ObservableObject {
     @Published var query: String = ""
-    @Published var results: [SearchProduct] = []
+    @Published var results: [ProductModel] = []
     @Published var isLoading: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
@@ -25,15 +25,10 @@ class ProductSearchViewModel: ObservableObject {
         }
 
         isLoading = true
-        ProductService.shared.searchProducts(query: text) { [weak self] result in
+        ProductService.shared.searchProducts(name: text) { [weak self] products in
             DispatchQueue.main.async {
                 self?.isLoading = false
-                switch result {
-                case .success(let products):
-                    self?.results = products
-                case .failure:
-                    self?.results = []
-                }
+                self?.results = products
             }
         }
     }
