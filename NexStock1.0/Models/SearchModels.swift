@@ -2,7 +2,7 @@ import Foundation
 
 struct SearchResultResponse: Codable {
     let message: String?
-    let product: SearchProduct
+    let products: [SearchProduct]
 }
 
 struct SearchProduct: Identifiable, Codable {

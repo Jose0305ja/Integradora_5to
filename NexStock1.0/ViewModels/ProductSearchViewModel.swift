@@ -29,8 +29,8 @@ class ProductSearchViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self?.isLoading = false
                 switch result {
-                case .success(let product):
-                    self?.results = [product]
+                case .success(let products):
+                    self?.results = products
                 case .failure:
                     self?.results = []
                 }
