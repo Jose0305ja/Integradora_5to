@@ -38,6 +38,7 @@ struct InventoryHomeSectionView: View {
                 switch result {
                 case .success(let detail):
                     selectedProduct = detail
+                    print("\u{1F4E6} Producto seleccionado:", detail)
                 case .failure(let error):
                     print("Error: \(error.localizedDescription)")
                 }

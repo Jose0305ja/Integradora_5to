@@ -3,7 +3,7 @@ import Foundation
 extension ProductModel {
     init(from search: SearchProduct) {
         self.init(
-            id: UUID().uuidString, // ID solo para SwiftUI
+            id: search.id ?? UUID().uuidString, // usa ID real o genera uno
             name: search.name,
             image_url: search.image_url,
             stock_actual: search.stock_actual,
@@ -15,7 +15,7 @@ extension ProductModel {
 
     init(from inventory: InventoryProduct) {
         self.init(
-            id: inventory.id.uuidString,
+            id: inventory.id ?? UUID().uuidString, // evita usar "0" o UUID aleatorio
             name: inventory.name,
             image_url: inventory.image_url ?? "",
             stock_actual: inventory.stock_actual ?? 0,
