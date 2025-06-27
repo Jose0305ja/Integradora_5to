@@ -104,33 +104,27 @@ class ProductService {
 
     // 🔍 Detalle individual de producto
     func fetchProductDetail(id: String, completion: @escaping (Result<ProductDetailInfo, Error>) -> Void) {
-        guard let url = URL(string: baseURL + "/" + id) else { return }
-        guard let request = authorizedRequest(url: url) else {
-            completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
-            return
+        guard let token = AuthService.shared.token else {
+            return completion(.failure(AuthError.invalidCredentials))
         }
+
+        guard let url = URL(string: "\(baseURL)/\(id)") else {
+            return completion(.failure(AuthError.invalidCredentials))
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                completion(.failure(error))
-                return
+                return completion(.failure(error))
             }
 
-            guard let http = response as? HTTPURLResponse, let data = data else {
-                completion(.failure(NSError(domain: "ProductService", code: 0, userInfo: nil)))
-                return
+            guard let data = data else {
+                return completion(.failure(AuthError.invalidCredentials))
             }
 
-            if http.statusCode != 200 {
-                if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
-                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
-                } else {
-                    completion(.failure(NSError(domain: "ProductService", code: http.statusCode, userInfo: nil)))
-                }
-                return
-            }
-
-            print("🧾 Detail JSON:", String(data: data, encoding: .utf8) ?? "")
             do {
                 let decoded = try JSONDecoder().decode(ProductDetailResponse.self, from: data)
                 completion(.success(decoded.product))

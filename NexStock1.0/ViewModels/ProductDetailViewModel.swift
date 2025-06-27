@@ -12,7 +12,10 @@ class ProductDetailViewModel: ObservableObject {
             return
         }
 
-        let idToUse = product.realId ?? product.id
+        guard let idToUse = product.backendID else {
+            self.errorMessage = "No se encontraron detalles"
+            return
+        }
         ProductService.shared.fetchProductDetail(id: idToUse) { result in
             DispatchQueue.main.async {
                 self.isLoading = false

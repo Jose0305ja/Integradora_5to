@@ -19,3 +19,14 @@ struct ProductModel: Identifiable, Codable {
     // ⚠️ Solo para búsquedas sin ID real
     var realId: String? = nil
 }
+
+extension ProductModel {
+    /// Returns the identifier to be used when requesting details from the back-end.
+    /// Some sources (like InventoryHome) don't include a real id and instead
+    /// generate a random UUID. In those cases this property returns `nil`.
+    var backendID: String? {
+        if let realId { return realId }
+        // If `id` looks like a UUID it means it was generated locally and is not valid
+        return UUID(uuidString: id) == nil ? id : nil
+    }
+}

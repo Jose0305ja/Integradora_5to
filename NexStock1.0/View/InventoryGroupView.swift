@@ -4,6 +4,7 @@ struct InventoryGroupView: View {
     @StateObject private var viewModel = PaginatedInventoryViewModel()
     @EnvironmentObject var localization: LocalizationManager
     @State private var selectedProduct: ProductDetailInfo? = nil
+    @State private var showIdAlert = false
 
     var body: some View {
         ScrollView {
@@ -42,10 +43,16 @@ struct InventoryGroupView: View {
             ProductDetailView(product: product)
                 .environmentObject(localization)
         }
+        .alert("Detalles no disponibles", isPresented: $showIdAlert) {
+            Button("OK", role: .cancel) {}
+        }
     }
 
     private func openDetail(for product: ProductModel) {
-        let idToUse = product.realId ?? product.id
+        guard let idToUse = product.backendID else {
+            showIdAlert = true
+            return
+        }
         ProductService.shared.fetchProductDetail(id: idToUse) { result in
             DispatchQueue.main.async {
                 switch result {

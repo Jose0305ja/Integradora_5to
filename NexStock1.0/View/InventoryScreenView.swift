@@ -21,6 +21,7 @@ struct InventoryScreenView: View {
     @FocusState private var isSearchFocused: Bool
     @State private var showAddProductSheet = false
     @State private var selectedProduct: ProductDetailInfo? = nil
+    @State private var showIdAlert = false
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -46,6 +47,9 @@ struct InventoryScreenView: View {
         .sheet(item: $selectedProduct) { product in
             ProductDetailView(product: product)
                 .environmentObject(localization)
+        }
+        .alert("Detalles no disponibles", isPresented: $showIdAlert) {
+            Button("OK", role: .cancel) {}
         }
         .navigationBarBackButtonHidden(true)
         .onChange(of: showAddProductSheet) { isPresented in
@@ -129,7 +133,10 @@ struct InventoryScreenView: View {
     }
 
     private func openDetail(for product: ProductModel) {
-        let idToUse = product.realId ?? product.id
+        guard let idToUse = product.backendID else {
+            showIdAlert = true
+            return
+        }
         ProductService.shared.fetchProductDetail(id: idToUse) { result in
             DispatchQueue.main.async {
                 switch result {
