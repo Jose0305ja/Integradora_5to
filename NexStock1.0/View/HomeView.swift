@@ -36,7 +36,8 @@ struct HomeView: View {
                         VStack(spacing: 12) {
                             ForEach(recentAlerts) { alert in
                                 AlertCardView(
-                                    icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
+                                    sensor: alert.sensor,
+                                    icon: iconFor(sensor: alert.sensor),
                                     title: alert.sensor.uppercased(),
                                     message: alert.message,
                                     date: formattedDate(alert.timestamp)
@@ -98,6 +99,18 @@ struct HomeView: View {
             NotificationService.shared.fetchNotifications(limit: 6) { alerts in
                 self.recentAlerts = alerts
             }
+        }
+
+    private func iconFor(sensor: String) -> String {
+        switch sensor.lowercased() {
+        case "gas":
+            return "flame.fill"
+        case "vibration":
+            return "waveform.path.ecg"
+        case "humidity":
+            return "drop.fill"
+        default:
+            return "exclamationmark.triangle"
         }
     }
 }
