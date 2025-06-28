@@ -102,6 +102,25 @@ struct APIUser: Decodable {
 }
 
 struct APIRole: Decodable {
-    let id: Int
+    let id: String
     let name: String
+
+    enum CodingKeys: String, CodingKey {
+        case id, name
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        // `id` might arrive as Int or String depending on backend version
+        if let intId = try? container.decode(Int.self, forKey: .id) {
+            id = String(intId)
+        } else if let strId = try? container.decode(String.self, forKey: .id) {
+            id = strId
+        } else {
+            throw DecodingError.dataCorruptedError(forKey: .id,
+                                                  in: container,
+                                                  debugDescription: "Role ID is neither Int nor String")
+        }
+        name = try container.decode(String.self, forKey: .name)
+    }
 }
