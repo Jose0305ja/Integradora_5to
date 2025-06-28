@@ -1,4 +1,5 @@
 import SwiftUI
+import Charts
 
 /// Chart view that adapts axis labels and ranges depending on the selected range
 /// and the type of sensor displayed.
