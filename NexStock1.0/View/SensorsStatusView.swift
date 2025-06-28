@@ -7,7 +7,11 @@ struct SensorsStatusView: View {
     @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
-        NavigationView {
+        VStack(spacing: 0) {
+            HeaderModeView(title: "\u{1F4E1} Estado de sensores", onBack: { dismiss() })
+                .environmentObject(theme)
+                .environmentObject(localization)
+
             ScrollView {
                 VStack(spacing: 12) {
                     ForEach(viewModel.sensors) { sensor in
@@ -19,14 +23,8 @@ struct SensorsStatusView: View {
                 }
                 .padding(.top)
             }
-            .navigationTitle("Estado de sensores")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cerrar") { dismiss() }
-                }
-            }
-            .background(Color.backColor.ignoresSafeArea())
         }
+        .background(Color.primaryColor.ignoresSafeArea())
         .onAppear { viewModel.fetch() }
     }
 }

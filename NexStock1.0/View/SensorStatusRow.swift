@@ -18,9 +18,8 @@ struct SensorStatusRow: View {
             Spacer()
 
             Text(sensor.status.uppercased())
-                .font(.caption)
-                .fontWeight(.bold)
-                .foregroundColor(sensor.status == "ok" ? .green : .red)
+                .font(.caption.bold())
+                .foregroundColor(.tertiaryColor)
         }
         .padding()
         .background(Color.secondaryColor)
