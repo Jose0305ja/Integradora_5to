@@ -32,7 +32,7 @@ struct InventoryStatusListView: View {
                     .padding(.horizontal)
 
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 16) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 16)], spacing: 16) {
                         ForEach(viewModel.products) { product in
                             InventoryCardView(product: product) {
                                 openDetail(for: product)
@@ -42,6 +42,7 @@ struct InventoryStatusListView: View {
                         if viewModel.isLoading {
                             ProgressView()
                                 .padding()
+                                .frame(maxWidth: .infinity)
                         }
                     }
                     .padding(.horizontal)
