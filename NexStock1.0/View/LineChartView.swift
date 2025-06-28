@@ -60,7 +60,7 @@ struct LineChartView: View {
                                 path.addLine(to: CGPoint(x: x, y: y))
                             }
                         }
-                        .stroke(Color.cyan, lineWidth: 2)
+                        .stroke(Color.accentColor, lineWidth: 2)
                     }
                     .frame(maxWidth: .infinity)
                 }
@@ -70,15 +70,27 @@ struct LineChartView: View {
             // Eje X (etiquetas debajo)
             HStack {
                 Spacer().frame(width: 32) // espacio para el eje Y
-                ForEach(labels.indices, id: \.self) { index in
-                    Text(labels[index])
-                        .font(.caption2)
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity)
+                let stride = max(labels.count / 6, 1)
+                ForEach(Array(labels.enumerated()), id: \.offset) { index, label in
+                    if index % stride == 0 {
+                        Text(label)
+                            .font(.caption2)
+                            .foregroundColor(.gray)
+                            .rotationEffect(.degrees(-45))
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Spacer().frame(maxWidth: .infinity)
+                    }
                 }
             }
             .padding(.top, 4)
+            .frame(height: 20)
         }
-        .padding(.horizontal)
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.secondaryColor)
+        )
+        .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 3)
     }
 }
