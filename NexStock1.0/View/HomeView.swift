@@ -11,6 +11,7 @@ struct HomeView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
     @StateObject private var summaryVM = HomeSummaryViewModel()
+    @StateObject private var monitoringVM = MonitoringHomeViewModel()
     @State private var recentAlerts: [AlertNotification] = []
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
@@ -30,7 +31,17 @@ struct HomeView: View {
                         ])
 
                         SectionView(title: "monitoring".localized, cards: [
-                            CardModel(title: "Movimiento", subtitle: "hace 15 min.")
+                            CardModel(title: "Movimiento", subtitle: "hace 15 min.", icon: "figure.walk.motion"),
+                            CardModel(
+                                title: "temperature".localized,
+                                subtitle: String(format: "%.1f °C", monitoringVM.temperature),
+                                icon: "thermometer"
+                            ),
+                            CardModel(
+                                title: "humidity".localized,
+                                subtitle: String(format: "%.0f %%", monitoringVM.humidity),
+                                icon: "drop.fill"
+                            )
                         ])
 
                         VStack(spacing: 12) {
@@ -95,6 +106,7 @@ struct HomeView: View {
         .navigationBarBackButtonHidden(true)
         .task {
             summaryVM.fetchSummary()
+            monitoringVM.fetch()
             NotificationService.shared.fetchNotifications(limit: 6) { alerts in
                 self.recentAlerts = alerts
             }
