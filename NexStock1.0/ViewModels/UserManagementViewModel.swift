@@ -14,9 +14,14 @@ class UserManagementViewModel: ObservableObject {
                 self.isLoading = false
                 switch result {
                 case .success(let users):
+                    print("[UserManagementVM] received users: \(users.count)")
+                    if users.isEmpty {
+                        print("[UserManagementVM] user array is empty")
+                    }
                     self.users = users
                     self.errorMessage = nil
                 case .failure(let error):
+                    print("[UserManagementVM] error: \(error.localizedDescription)")
                     self.errorMessage = error.localizedDescription
                     self.users = []
                 }

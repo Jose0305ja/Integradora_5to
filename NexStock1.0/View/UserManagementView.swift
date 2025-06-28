@@ -113,6 +113,11 @@ struct UserManagementView: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear { viewModel.fetchUsers() }
+        .onChange(of: viewModel.users) { users in
+            if users.isEmpty {
+                print("[UserManagementView] user list empty")
+            }
+        }
         .overlay(
             Group {
                 if viewModel.isLoading {

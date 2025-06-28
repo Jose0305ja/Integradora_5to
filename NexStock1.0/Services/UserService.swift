@@ -16,14 +16,21 @@ class UserService {
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
+                print("[UserService] request error: \(error.localizedDescription)")
                 completion(.failure(error))
                 return
             }
 
             guard let http = response as? HTTPURLResponse,
                   let data = data else {
+                print("[UserService] invalid response or data")
                 completion(.failure(NSError(domain: "UserService", code: 0, userInfo: nil)))
                 return
+            }
+
+            print("[UserService] statusCode: \(http.statusCode)")
+            if let body = String(data: data, encoding: .utf8) {
+                print("[UserService] body: \n\(body)")
             }
 
             if http.statusCode != 200 {
@@ -46,8 +53,10 @@ class UserService {
                         isActive: apiUser.is_active
                     )
                 }
+                print("[UserService] decoded users count: \(mapped.count)")
                 completion(.success(mapped))
             } catch {
+                print("[UserService] decode error: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }.resume()
