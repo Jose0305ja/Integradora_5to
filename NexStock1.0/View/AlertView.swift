@@ -49,11 +49,22 @@ struct AlertView: View {
 
                     VStack(spacing: 12) {
                         ForEach(sorted) { alert in
+                            let sensorLower = alert.sensor.lowercased()
+                            let color: Color
+                            if sensorLower.contains("gas") {
+                                color = .red
+                            } else if sensorLower.contains("vib") {
+                                color = .yellow
+                            } else {
+                                color = .red
+                            }
+
                             AlertCardView(
                                 icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
                                 title: alert.sensor.uppercased(),
                                 message: alert.message,
-                                date: formattedDate(alert.timestamp)
+                                date: formattedDate(alert.timestamp),
+                                highlight: color
                             )
                             .padding(.horizontal)
                         }
