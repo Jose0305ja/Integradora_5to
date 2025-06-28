@@ -45,22 +45,12 @@ struct HomeView: View {
 
                         VStack(spacing: 12) {
                             ForEach(recentAlerts) { alert in
-                                let sensorLower = alert.sensor.lowercased()
-                                let color: Color
-                                if sensorLower.contains("gas") {
-                                    color = .red
-                                } else if sensorLower.contains("vib") {
-                                    color = .yellow
-                                } else {
-                                    color = .red
-                                }
-
                                 AlertCardView(
                                     icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
                                     title: alert.sensor.uppercased(),
                                     message: alert.message,
                                     date: formattedDate(alert.timestamp),
-                                    highlight: color
+                                    highlight: highlightColor(for: alert.sensor)
                                 )
                             }
                         }
@@ -126,6 +116,17 @@ struct HomeView: View {
                     return false
                 }
             }
+        }
+    }
+
+    private func highlightColor(for sensor: String) -> Color {
+        let lower = sensor.lowercased()
+        if lower.contains("gas") {
+            return .red
+        } else if lower.contains("vib") {
+            return .yellow
+        } else {
+            return .red
         }
     }
 }
