@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct AlertCardView: View {
+    var sensor: String
     var icon: String
     var title: String
     var message: String
@@ -8,35 +9,41 @@ struct AlertCardView: View {
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
+    /// Background color depends on the sensor type
+    private var backgroundColor: Color {
+        switch sensor.lowercased() {
+        case "gas":
+            return Color.red.opacity(0.2)
+        case "vibration":
+            return Color.yellow.opacity(0.2)
+        case "humidity":
+            return Color.green.opacity(0.2)
+        default:
+            return Color.gray.opacity(0.1)
+        }
+    }
+
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .foregroundColor(.red)
-                .font(.system(size: 18))
-                .padding(.top, 2)
+        ZStack {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(backgroundColor)
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
+                    Image(systemName: icon)
+                        .foregroundColor(.primary)
                     Text(title)
-                        .fontWeight(.semibold)
-                    Spacer()
-                    Text(date)
-                        .foregroundColor(.gray)
-                        .font(.caption)
+                        .font(.headline)
                 }
 
                 Text(message)
-                    .font(.body)
+                    .font(.subheadline)
+
+                Text(date)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-            .padding(12)
-            .background(
-                LinearGradient(
-                    colors: [Color.red.opacity(0.2), Color.secondaryColor],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
-            .cornerRadius(10)
+            .padding()
         }
     }
 }

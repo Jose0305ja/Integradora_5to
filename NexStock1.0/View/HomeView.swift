@@ -16,6 +16,19 @@ struct HomeView: View {
     @EnvironmentObject var theme: ThemeManager
 
 
+    private func iconName(for sensor: String) -> String {
+        switch sensor.lowercased() {
+        case "gas":
+            return "flame.fill"
+        case "vibration":
+            return "waveform.path.ecg"
+        case "humidity":
+            return "drop.fill"
+        default:
+            return "questionmark.circle"
+        }
+    }
+
     var body: some View {
         ZStack(alignment: .leading) {
             Color.backColor.ignoresSafeArea()
@@ -36,7 +49,8 @@ struct HomeView: View {
                         VStack(spacing: 12) {
                             ForEach(recentAlerts) { alert in
                                 AlertCardView(
-                                    icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
+                                    sensor: alert.sensor,
+                                    icon: iconName(for: alert.sensor),
                                     title: alert.sensor.uppercased(),
                                     message: alert.message,
                                     date: formattedDate(alert.timestamp)

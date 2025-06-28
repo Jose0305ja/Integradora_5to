@@ -15,6 +15,19 @@ struct AlertView: View {
 
     @State private var allAlerts: [AlertNotification] = []
 
+    private func iconName(for sensor: String) -> String {
+        switch sensor.lowercased() {
+        case "gas":
+            return "flame.fill"
+        case "vibration":
+            return "waveform.path.ecg"
+        case "humidity":
+            return "drop.fill"
+        default:
+            return "questionmark.circle"
+        }
+    }
+
     var body: some View {
         ZStack(alignment: .leading) {
             Color.backColor.ignoresSafeArea()
@@ -39,7 +52,8 @@ struct AlertView: View {
 
                             ForEach(grouped[key] ?? []) { alert in
                                 AlertCardView(
-                                    icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
+                                    sensor: alert.sensor,
+                                    icon: iconName(for: alert.sensor),
                                     title: alert.sensor.uppercased(),
                                     message: alert.message,
                                     date: formattedDate(alert.timestamp)
