@@ -124,3 +124,82 @@ struct APIRole: Decodable {
         name = try container.decode(String.self, forKey: .name)
     }
 }
+
+extension UserService {
+    func fetchRoles(completion: @escaping (Result<[RoleModel], Error>) -> Void) {
+        guard let token = AuthService.shared.token else {
+            completion(.failure(NSError(domain: "UserService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
+        guard let url = URL(string: "\(baseURL)/auth/roles") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let http = response as? HTTPURLResponse, let data = data else {
+                completion(.failure(NSError(domain: "UserService", code: 0, userInfo: nil)))
+                return
+            }
+            if http.statusCode != 200 {
+                if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
+                    completion(.failure(NSError(domain: "UserService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
+                } else {
+                    completion(.failure(NSError(domain: "UserService", code: http.statusCode, userInfo: nil)))
+                }
+                return
+            }
+            do {
+                let decoded = try JSONDecoder().decode(RolesResponse.self, from: data)
+                completion(.success(decoded.roles))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+
+    func createUser(_ user: NewUserModel, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let token = AuthService.shared.token else {
+            completion(.failure(NSError(domain: "UserService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
+        guard let url = URL(string: "\(baseURL)/auth/users") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        do {
+            request.httpBody = try JSONEncoder().encode(user)
+        } catch {
+            completion(.failure(error))
+            return
+        }
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let http = response as? HTTPURLResponse, let data = data else {
+                completion(.failure(NSError(domain: "UserService", code: 0, userInfo: nil)))
+                return
+            }
+            if http.statusCode != 200 && http.statusCode != 201 {
+                if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
+                    completion(.failure(NSError(domain: "UserService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
+                } else {
+                    completion(.failure(NSError(domain: "UserService", code: http.statusCode, userInfo: nil)))
+                }
+                return
+            }
+            completion(.success(()))
+        }.resume()
+    }
+}
+
+struct RolesResponse: Decodable {
+    let roles: [RoleModel]
+}
