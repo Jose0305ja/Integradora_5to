@@ -48,9 +48,10 @@ struct HumidityView: View {
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity, alignment: .center)
                             } else {
-                                LineChartView(
-                                    data: viewModel.chartValues,
-                                    labels: viewModel.xAxisLabels
+                                SensorChartView(
+                                    data: viewModel.sensorPoints,
+                                    mode: viewModel.chartMode,
+                                    type: .humidity
                                 )
                             }
                         }

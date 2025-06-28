@@ -59,6 +59,21 @@ class HumidityViewModel: ObservableObject {
         return humidityData.map { formatter.string(from: $0.time) }
     }
 
+    // Data for the Swift Charts based view
+    var sensorPoints: [SensorDataPoint] {
+        humidityData.map { SensorDataPoint(timestamp: $0.time, value: $0.value) }
+    }
+
+    var chartMode: ChartRangeMode {
+        switch selectedTimeRange {
+        case "last_5min": return .last5min
+        case "last_week": return .week
+        case "last_month": return .month
+        case "last_3months": return .months3
+        default: return .day
+        }
+    }
+
     var optimalMax: Double {
         70.0
     }
