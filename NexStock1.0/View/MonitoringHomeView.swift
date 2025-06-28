@@ -4,6 +4,7 @@ struct MonitoringHomeView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
     @StateObject private var viewModel = MonitoringHomeViewModel()
+    @State private var recentAlerts: [NotificationModel] = []
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
@@ -39,14 +40,31 @@ struct MonitoringHomeView: View {
                         }
 
                         SectionContainer(title: "Notificaciones") {
-                            if viewModel.notifications.isEmpty {
+                            if recentAlerts.isEmpty {
                                 Text("No hay notificaciones")
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             } else {
-                                VStack(spacing: 10) {
-                                    ForEach(viewModel.notifications) { notif in
-                                        MonitoringNotificationCardView(notification: notif)
+                                VStack(alignment: .leading, spacing: 12) {
+                                    ForEach(recentAlerts) { alert in
+                                        HStack(spacing: 10) {
+                                            Image(systemName: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg")
+                                                .foregroundColor(alert.sensor == "Gas" ? .red : .blue)
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text(alert.message)
+                                                    .font(.subheadline.bold())
+                                                Text(formattedDate(from: alert.timestamp))
+                                                    .font(.caption)
+                                                    .foregroundColor(.gray)
+                                            }
+                                            Spacer()
+                                            if alert.status == "unread" {
+                                                Circle()
+                                                    .fill(Color.red)
+                                                    .frame(width: 8, height: 8)
+                                            }
+                                        }
+                                        .padding(.vertical, 6)
                                     }
                                 }
                             }
@@ -64,6 +82,11 @@ struct MonitoringHomeView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            NotificationService.shared.fetchNotifications(limit: 3) { notifications in
+                recentAlerts = notifications
+            }
+        }
         .task { viewModel.fetch() }
         .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
             Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")) {
