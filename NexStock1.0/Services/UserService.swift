@@ -60,7 +60,7 @@ struct UsersResponse: Decodable {
 }
 
 struct APIUser: Decodable {
-    let id: Int
+    let id: String
     let username: String
     let first_name: String
     let last_name: String
