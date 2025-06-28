@@ -1,33 +1,22 @@
-//
-//  AlertModel.swift
-//  NexStock1.0
-//
-//  Created by Jose Antonio Rivera on 18/06/25.
-//
-
-
 import Foundation
-import SwiftUI
 
-/// Level of importance for an alert. Each level defines its visual color.
-enum AlertSeverity {
-    case low, medium, high
-
-    /// Base color associated to each severity level
-    var color: Color {
-        switch self {
-        case .low: return .green
-        case .medium: return .yellow
-        case .high: return .red
-        }
-    }
-}
-
-struct AlertModel: Identifiable {
-    let id = UUID()
+struct AlertModel: Identifiable, Codable {
+    let id: String
     let sensor: String
     let message: String
-    let time: String
-    let icon: String
-    let severity: AlertSeverity
+    let timestamp: String
+    let status: String
+}
+
+struct AlertsResponse: Codable {
+    let message: String
+    let notifications: [AlertModel]
+    let pagination: PaginationInfo
+}
+
+struct PaginationInfo: Codable {
+    let current_page: Int
+    let total_pages: Int
+    let next_page: Int
+    let limit: Int
 }

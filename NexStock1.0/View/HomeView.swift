@@ -11,6 +11,7 @@ struct HomeView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
     @StateObject private var summaryVM = HomeSummaryViewModel()
+    @State private var recentAlerts: [AlertModel] = []
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
@@ -32,11 +33,29 @@ struct HomeView: View {
                             CardModel(title: "Movimiento", subtitle: "hace 15 min.")
                         ])
 
-                        AlertSectionView(alerts: [
-                            AlertModel(sensor: "Sensor de movimiento", message: "Movimiento detectado en zona 3", time: "14:22 h", icon: "exclamationmark.triangle.fill", severity: .high),
-                            AlertModel(sensor: "Sensor de humedad", message: "Humedad superior al 80%", time: "13:45 h", icon: "exclamationmark.triangle.fill", severity: .medium),
-                            AlertModel(sensor: "Sensor de temperatura", message: "Temperatura superior a 25 grados", time: "12:13 h", icon: "exclamationmark.triangle.fill", severity: .low)
-                        ])
+                        VStack(spacing: 12) {
+                            ForEach(recentAlerts) { alert in
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(alert.message)
+                                            .font(.headline)
+                                            .foregroundColor(.white)
+                                        Text(formattedDate(alert.timestamp))
+                                            .font(.caption)
+                                            .foregroundColor(.white.opacity(0.7))
+                                    }
+                                    Spacer()
+                                    Circle()
+                                        .fill(sensorColor(for: alert.sensor))
+                                        .frame(width: 12, height: 12)
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(sensorColor(for: alert.sensor).opacity(0.3))
+                                )
+                            }
+                        }
 
                         if let summary = summaryVM.summary {
                             if let items = summary.expiring, !items.isEmpty {
@@ -88,8 +107,14 @@ struct HomeView: View {
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
         .task { summaryVM.fetchSummary() }
+        .onAppear {
+            MonitoringService.shared.fetchAlerts(limit: 3) { alerts in
+                self.recentAlerts = alerts
+            }
+        }
     }
 }
+
 
 #Preview {
     HomeView(path: .constant(NavigationPath()))

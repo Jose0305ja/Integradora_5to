@@ -13,11 +13,7 @@ struct AlertView: View {
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
-    let alerts: [AlertModel] = [
-        .init(sensor: "Sensor de movimiento", message: "Se ha detectado una vibración fuerte en la zona A.", time: "13:42", icon: "exclamationmark.triangle.fill", severity: .high),
-        .init(sensor: "Sensor de gases", message: "Alta concentración de gas detectada en la cocina.", time: "12:10", icon: "exclamationmark.triangle.fill", severity: .medium),
-        .init(sensor: "Sensor de humedad", message: "Aumento repentino de humedad detectado.", time: "2 de junio", icon: "exclamationmark.triangle.fill", severity: .low)
-    ]
+    @State private var alerts: [AlertModel] = []
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -33,35 +29,25 @@ struct AlertView: View {
                 ScrollView {
                     VStack(spacing: 12) {
                         ForEach(alerts) { alert in
-                            HStack(alignment: .top, spacing: 12) {
-                                Image(systemName: alert.icon)
-                                    .foregroundColor(alert.severity.color)
-                                    .font(.system(size: 18))
-                                    .padding(.top, 2)
-
+                            HStack {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    HStack {
-                                        Text(alert.sensor)
-                                            .fontWeight(.semibold)
-                                        Spacer()
-                                        Text(alert.time)
-                                            .foregroundColor(.gray)
-                                            .font(.caption)
-                                    }
-
                                     Text(alert.message)
-                                        .font(.body)
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                    Text(formattedDate(alert.timestamp))
+                                        .font(.caption)
+                                        .foregroundColor(.white.opacity(0.7))
                                 }
-                                .padding(12)
-                                .background(
-                                    LinearGradient(
-                                        colors: [alert.severity.color.opacity(0.2), Color.secondaryColor],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .cornerRadius(10)
+                                Spacer()
+                                Circle()
+                                    .fill(sensorColor(for: alert.sensor))
+                                    .frame(width: 12, height: 12)
                             }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(sensorColor(for: alert.sensor).opacity(0.3))
+                            )
                             .padding(.horizontal)
                         }
                     }
@@ -77,5 +63,10 @@ struct AlertView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            MonitoringService.shared.fetchAlerts(limit: 20) { alerts in
+                self.alerts = alerts
+            }
+        }
     }
-} 
+}

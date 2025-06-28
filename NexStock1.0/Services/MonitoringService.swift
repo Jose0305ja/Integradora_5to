@@ -155,4 +155,34 @@ class MonitoringService {
             }
         }.resume()
     }
+
+    // MARK: - Alerts
+    func fetchAlerts(limit: Int = 3, completion: @escaping ([AlertModel]) -> Void) {
+        guard let token = AuthService.shared.token else {
+            completion([])
+            return
+        }
+
+        guard let url = URL(string: "\(baseURL)/notifications?sensor_type=all&read_status=all&page=1&limit=\(limit)") else {
+            completion([])
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, _, _ in
+            if let data = data {
+                do {
+                    let decoded = try JSONDecoder().decode(AlertsResponse.self, from: data)
+                    DispatchQueue.main.async { completion(decoded.notifications) }
+                } catch {
+                    print("❌ Error decoding alerts: \(error)")
+                    DispatchQueue.main.async { completion([]) }
+                }
+            } else {
+                DispatchQueue.main.async { completion([]) }
+            }
+        }.resume()
+    }
 }
