@@ -11,6 +11,7 @@ struct HomeView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
     @StateObject private var summaryVM = HomeSummaryViewModel()
+    @StateObject private var monitoringVM = MonitoringHomeViewModel()
     @State private var recentAlerts: [AlertNotification] = []
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
@@ -30,7 +31,16 @@ struct HomeView: View {
                         ])
 
                         SectionView(title: "monitoring".localized, cards: [
-                            CardModel(title: "Movimiento", subtitle: "hace 15 min.")
+                            CardModel(
+                                title: "temperature".localized,
+                                subtitle: String(format: "%.1f °C", monitoringVM.temperature),
+                                icon: "thermometer"
+                            ),
+                            CardModel(
+                                title: "humidity".localized,
+                                subtitle: String(format: "%.0f %%", monitoringVM.humidity),
+                                icon: "drop.fill"
+                            )
                         ])
 
                         VStack(spacing: 12) {
@@ -95,8 +105,15 @@ struct HomeView: View {
         .navigationBarBackButtonHidden(true)
         .task {
             summaryVM.fetchSummary()
+            monitoringVM.fetch()
             NotificationService.shared.fetchNotifications(limit: 6) { alerts in
-                self.recentAlerts = alerts
+                self.recentAlerts = alerts.sorted { a, b in
+                    if let d1 = ISO8601DateFormatter().date(from: a.timestamp),
+                       let d2 = ISO8601DateFormatter().date(from: b.timestamp) {
+                        return d1 > d2
+                    }
+                    return false
+                }
             }
         }
     }

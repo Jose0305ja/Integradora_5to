@@ -14,6 +14,12 @@ struct CardView: View {
 
     var body: some View {
         VStack(spacing: 12) {
+            if let iconName = model.icon {
+                Image(systemName: iconName)
+                    .font(.system(size: 32))
+                    .foregroundColor(.tertiaryColor)
+            }
+
             Text(model.title)
                 .font(.title3)
                 .fontWeight(.semibold)

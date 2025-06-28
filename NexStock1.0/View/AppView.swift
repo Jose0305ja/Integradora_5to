@@ -21,8 +21,6 @@ struct AppView: View {
                     switch route {
                     case .home:
                         HomeView(path: $path)
-                    case .monitoringHome:
-                        MonitoringHomeView(path: $path)
                     case .settings:
                         SettingsView(path: $path)
                     case .product:

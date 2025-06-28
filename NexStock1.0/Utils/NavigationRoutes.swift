@@ -9,7 +9,6 @@ import Foundation
 
 enum AppRoute: Hashable {
     case home
-    case monitoringHome
     case settings
     case userManagement
     case systemConfig
