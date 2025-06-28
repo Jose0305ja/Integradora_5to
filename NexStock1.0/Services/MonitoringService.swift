@@ -155,4 +155,35 @@ class MonitoringService {
             }
         }.resume()
     }
+
+    // MARK: - Notifications
+    func fetchNotifications(sensorType: String = "all", readStatus: String = "all", page: Int = 1, limit: Int = 20, completion: @escaping ([NotificationModel]) -> Void) {
+        var components = URLComponents(string: "\(baseURL)/notifications")!
+        components.queryItems = [
+            URLQueryItem(name: "sensor_type", value: sensorType),
+            URLQueryItem(name: "read_status", value: readStatus),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "limit", value: String(limit))
+        ]
+
+        guard let url = components.url else { return }
+        guard let token = AuthService.shared.token else {
+            completion([])
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, _, _ in
+            guard let data = data,
+                  let decoded = try? JSONDecoder().decode(NotificationResponse.self, from: data) else {
+                completion([])
+                return
+            }
+            DispatchQueue.main.async {
+                completion(decoded.notifications)
+            }
+        }.resume()
+    }
 }

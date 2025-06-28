@@ -46,7 +46,7 @@ struct MonitoringHomeView: View {
                             } else {
                                 VStack(spacing: 10) {
                                     ForEach(viewModel.notifications) { notif in
-                                        MonitoringNotificationCardView(notification: notif)
+                                        AlertCardView(notification: notif)
                                     }
                                 }
                             }
