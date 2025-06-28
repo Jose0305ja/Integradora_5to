@@ -75,6 +75,30 @@ struct APIUser: Decodable {
     let last_name: String
     let role: APIRole
     let is_active: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case id, username, first_name, last_name, role, is_active
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        if let intId = try? container.decode(Int.self, forKey: .id) {
+            id = String(intId)
+        } else if let strId = try? container.decode(String.self, forKey: .id) {
+            id = strId
+        } else {
+            throw DecodingError.dataCorruptedError(forKey: .id,
+                                                  in: container,
+                                                  debugDescription: "ID no es Int ni String")
+        }
+
+        username = try container.decode(String.self, forKey: .username)
+        first_name = try container.decode(String.self, forKey: .first_name)
+        last_name = try container.decode(String.self, forKey: .last_name)
+        role = try container.decode(APIRole.self, forKey: .role)
+        is_active = try container.decode(Bool.self, forKey: .is_active)
+    }
 }
 
 struct APIRole: Decodable {
