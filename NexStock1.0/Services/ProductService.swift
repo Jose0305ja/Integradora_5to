@@ -78,6 +78,39 @@ class ProductService {
         }.resume()
     }
 
+    // 🔄 Obtener productos por estado (paginados)
+    func fetchInventoryProducts(status: String? = nil, page: Int = 1, limit: Int = 10, completion: @escaping (Result<[ProductModel], Error>) -> Void) {
+        var components = URLComponents(string: baseURL)
+        var queryItems = [
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "limit", value: String(limit))
+        ]
+        if let status = status {
+            queryItems.append(URLQueryItem(name: "status", value: status))
+        }
+        components?.queryItems = queryItems
+
+        guard let url = components?.url else { return }
+        guard let request = authorizedRequest(url: url) else {
+            completion(.failure(NSError(domain: "ProductService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            if let data = data {
+                print("🧾 JSON recibido:", String(data: data, encoding: .utf8) ?? "")
+                do {
+                    let decoded = try JSONDecoder().decode(ProductResponse.self, from: data)
+                    completion(.success(decoded.products))
+                } catch {
+                    completion(.failure(error))
+                }
+            } else if let error = error {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+
     // ➕ Agregar producto
     func addProduct(_ product: DetailedProductModel, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: baseURL) else { return }
