@@ -36,10 +36,12 @@ struct HomeView: View {
                         VStack(spacing: 12) {
                             ForEach(recentAlerts) { alert in
                                 AlertCardView(
-                                    icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
+                                    icon: alert.sensor.lowercased() == "gas" ? "flame.fill" :
+                                          alert.sensor.lowercased() == "humidity" ? "drop.fill" : "waveform.path.ecg",
                                     title: alert.sensor.uppercased(),
                                     message: alert.message,
-                                    date: formattedDate(alert.timestamp)
+                                    date: formattedDate(alert.timestamp),
+                                    sensor: alert.sensor
                                 )
                             }
                         }

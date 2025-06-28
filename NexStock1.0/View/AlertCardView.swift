@@ -5,13 +5,14 @@ struct AlertCardView: View {
     var title: String
     var message: String
     var date: String
+    var sensor: String
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
-                .foregroundColor(.red)
+                .foregroundColor(.primary)
                 .font(.system(size: 18))
                 .padding(.top, 2)
 
@@ -29,14 +30,21 @@ struct AlertCardView: View {
                     .font(.body)
             }
             .padding(12)
-            .background(
-                LinearGradient(
-                    colors: [Color.red.opacity(0.2), Color.secondaryColor],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
+            .background(backgroundColor)
             .cornerRadius(10)
+        }
+    }
+
+    private var backgroundColor: Color {
+        switch sensor.lowercased() {
+        case "gas":
+            return Color.red.opacity(0.2)
+        case "vibration":
+            return Color.yellow.opacity(0.2)
+        case "humidity":
+            return Color.green.opacity(0.2)
+        default:
+            return Color.gray.opacity(0.1)
         }
     }
 }
