@@ -1,32 +1,22 @@
 import Foundation
 
 struct ProductDetailResponse: Codable {
-    let message: String?
+    let message: String
     let product: ProductDetailInfo
-    /// Movements may be absent in the response so make it optional
-    let movements: [ProductMovement]?
 }
 
 struct ProductDetailInfo: Identifiable, Codable {
     let id: String
     let name: String
-    let image_url: String?
+    let image_url: String
     let description: String?
-    let brand: String?
     let category: String?
+    let brand: String?
     let stock_actual: Int?
     let stock_minimum: Int?
     let stock_maximum: Int?
-    let sensor_type: String?
     let last_updated: String?
-
-    enum CodingKeys: String, CodingKey {
-        case id, name, image_url, description, brand, category, stock_actual
-        case stock_minimum = "stock_min"
-        case stock_maximum = "stock_max"
-        case sensor_type
-        case last_updated = "updated_at"
-    }
+    let sensor_type: String?
 }
 
 /// Represents a single stock movement for a product
