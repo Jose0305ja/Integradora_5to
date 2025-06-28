@@ -78,10 +78,11 @@ struct AddProductSheet: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            header
-            ScrollView {
-                VStack(spacing: 20) {
+        NavigationStack {
+            VStack(spacing: 0) {
+                header
+                ScrollView {
+                    VStack(spacing: 20) {
                         // Sección 1
                         SectionContainer(title: "information".localized) {
                             VStack(spacing: 12) {
@@ -219,8 +220,9 @@ struct AddProductSheet: View {
                 }
                 .scrollContentBackground(.hidden)
             }
+            .background(Color.primaryColor.ignoresSafeArea())
+            .navigationBarBackButtonHidden(true)
         }
-        .background(Color.primaryColor.ignoresSafeArea())
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(sourceType: sourceType) { image in
                 Task {
