@@ -134,7 +134,11 @@ struct AddUserSheet: View {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let roles):
+                    print("[AddUserSheet] loaded roles: \(roles.count)")
                     self.roles = roles
+                    if selectedRole == nil {
+                        selectedRole = roles.first
+                    }
                 case .failure(let error):
                     print(error)
                 }

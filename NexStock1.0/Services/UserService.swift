@@ -134,6 +134,7 @@ extension UserService {
         guard let url = URL(string: "\(baseURL)/auth/roles") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
         URLSession.shared.dataTask(with: request) { data, response, error in
@@ -145,6 +146,9 @@ extension UserService {
                 completion(.failure(NSError(domain: "UserService", code: 0, userInfo: nil)))
                 return
             }
+            print("[UserService] fetchRoles statusCode: \(http.statusCode)")
+            if let body = String(data: data, encoding: .utf8) { print("[UserService] fetchRoles body: \n\(body)") }
+
             if http.statusCode != 200 {
                 if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
                     completion(.failure(NSError(domain: "UserService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
@@ -155,6 +159,7 @@ extension UserService {
             }
             do {
                 let decoded = try JSONDecoder().decode(RolesResponse.self, from: data)
+                if let msg = decoded.message { print("[UserService] fetchRoles message: \(msg)") }
                 completion(.success(decoded.roles))
             } catch {
                 completion(.failure(error))
@@ -201,5 +206,6 @@ extension UserService {
 }
 
 struct RolesResponse: Decodable {
+    let message: String?
     let roles: [RoleModel]
 }
