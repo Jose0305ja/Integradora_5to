@@ -7,8 +7,13 @@ extension ProductModel {
             name: search.name,
             image_url: search.image_url,
             stock_actual: search.stock_actual,
+            stock_minimum: nil,
+            stock_maximum: nil,
+            brand: nil,
             category: search.category,
             sensor_type: search.sensor_type,
+            last_updated: nil,
+            description: nil,
             realId: search.id // id real para poder obtener detalles
         )
     }
@@ -19,8 +24,13 @@ extension ProductModel {
             name: inventory.name,
             image_url: inventory.image_url ?? "",
             stock_actual: inventory.stock_actual ?? 0,
+            stock_minimum: inventory.stock_minimum,
+            stock_maximum: inventory.stock_maximum,
+            brand: nil,
             category: "",
-            sensor_type: inventory.sensor_type ?? ""
+            sensor_type: inventory.sensor_type ?? "",
+            last_updated: nil,
+            description: nil
         )
     }
 
@@ -30,8 +40,13 @@ extension ProductModel {
             name: detailed.name,
             image_url: detailed.image_url,
             stock_actual: 0,
+            stock_minimum: detailed.stock_min,
+            stock_maximum: detailed.stock_max,
+            brand: detailed.brand,
             category: "",
-            sensor_type: detailed.input_method.rawValue
+            sensor_type: detailed.input_method.rawValue,
+            last_updated: nil,
+            description: detailed.description
         )
     }
 }
