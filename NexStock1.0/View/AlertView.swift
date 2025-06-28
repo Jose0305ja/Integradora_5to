@@ -12,12 +12,7 @@ struct AlertView: View {
     @State private var showMenu = false
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
-
-    let alerts: [AlertModel] = [
-        .init(sensor: "Sensor de movimiento", message: "Se ha detectado una vibración fuerte en la zona A.", time: "13:42", icon: "exclamationmark.triangle.fill", severity: .high),
-        .init(sensor: "Sensor de gases", message: "Alta concentración de gas detectada en la cocina.", time: "12:10", icon: "exclamationmark.triangle.fill", severity: .medium),
-        .init(sensor: "Sensor de humedad", message: "Aumento repentino de humedad detectado.", time: "2 de junio", icon: "exclamationmark.triangle.fill", severity: .low)
-    ]
+    @StateObject private var viewModel = NotificationsViewModel()
 
     var body: some View {
         ZStack(alignment: .leading) {
@@ -32,34 +27,28 @@ struct AlertView: View {
 
                 ScrollView {
                     VStack(spacing: 12) {
-                        ForEach(alerts) { alert in
+                        ForEach(viewModel.notifications) { notif in
                             HStack(alignment: .top, spacing: 12) {
-                                Image(systemName: alert.icon)
-                                    .foregroundColor(alert.severity.color)
-                                    .font(.system(size: 18))
-                                    .padding(.top, 2)
+                                Circle()
+                                    .fill(sensorColor(for: notif.sensor))
+                                    .frame(width: 10, height: 10)
+                                    .padding(.top, 6)
 
                                 VStack(alignment: .leading, spacing: 4) {
                                     HStack {
-                                        Text(alert.sensor)
+                                        Text(notif.sensor)
                                             .fontWeight(.semibold)
                                         Spacer()
-                                        Text(alert.time)
+                                        Text(formatNotificationDate(notif.timestamp))
                                             .foregroundColor(.gray)
                                             .font(.caption)
                                     }
 
-                                    Text(alert.message)
+                                    Text(notif.message)
                                         .font(.body)
                                 }
                                 .padding(12)
-                                .background(
-                                    LinearGradient(
-                                        colors: [alert.severity.color.opacity(0.2), Color.secondaryColor],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
+                                .background(Color.secondaryColor)
                                 .cornerRadius(10)
                             }
                             .padding(.horizontal)
@@ -67,6 +56,26 @@ struct AlertView: View {
                     }
                     .padding(.top, 10)
                 }
+
+                HStack {
+                    Button(action: { viewModel.loadPrev() }) {
+                        Image(systemName: "chevron.left")
+                    }
+                    .disabled(viewModel.currentPage <= 1)
+
+                    Spacer()
+
+                    Text("\(viewModel.currentPage)/\(viewModel.totalPages)")
+                        .font(.caption)
+
+                    Spacer()
+
+                    Button(action: { viewModel.loadNext() }) {
+                        Image(systemName: "chevron.right")
+                    }
+                    .disabled(viewModel.currentPage >= viewModel.totalPages)
+                }
+                .padding(.horizontal)
             }
 
             if showMenu {
@@ -77,5 +86,6 @@ struct AlertView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
+        .task { viewModel.fetch() }
     }
-} 
+}

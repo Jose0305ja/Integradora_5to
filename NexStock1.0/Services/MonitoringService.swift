@@ -155,4 +155,50 @@ class MonitoringService {
             }
         }.resume()
     }
+
+    // MARK: - Notifications
+    func fetchNotifications(limit: Int = 20, page: Int = 1, completion: @escaping (Result<NotificationResponse, Error>) -> Void) {
+        guard let token = AuthService.shared.token else {
+            completion(.failure(NSError(domain: "MonitoringService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
+
+        var components = URLComponents(string: "\(baseURL)/notifications")
+        components?.queryItems = [
+            URLQueryItem(name: "sensor_type", value: "all"),
+            URLQueryItem(name: "read_status", value: "all"),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "limit", value: String(limit))
+        ]
+        guard let url = components?.url else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse, let data = data else {
+                completion(.failure(NSError(domain: "MonitoringService", code: 0, userInfo: nil)))
+                return
+            }
+
+            if httpResponse.statusCode == 401 {
+                completion(.failure(NSError(domain: "MonitoringService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No autorizado."])))
+                return
+            }
+
+            do {
+                let decoded = try JSONDecoder().decode(NotificationResponse.self, from: data)
+                completion(.success(decoded))
+            } catch {
+                print("❌ Error al decodificar notificaciones:", error)
+                completion(.failure(error))
+            }
+        }.resume()
+    }
 }

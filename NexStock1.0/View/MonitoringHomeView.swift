@@ -46,7 +46,24 @@ struct MonitoringHomeView: View {
                             } else {
                                 VStack(spacing: 10) {
                                     ForEach(viewModel.notifications) { notif in
-                                        MonitoringNotificationCardView(notification: notif)
+                                        HStack {
+                                            Circle()
+                                                .fill(sensorColor(for: notif.sensor))
+                                                .frame(width: 10, height: 10)
+
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text(notif.message)
+                                                    .font(.body)
+                                                    .foregroundColor(.tertiaryColor)
+                                                Text(formatNotificationDate(notif.timestamp))
+                                                    .font(.caption)
+                                                    .foregroundColor(.tertiaryColor.opacity(0.7))
+                                            }
+                                        }
+                                        .padding(8)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .background(Color.secondaryColor)
+                                        .cornerRadius(10)
                                     }
                                 }
                             }
