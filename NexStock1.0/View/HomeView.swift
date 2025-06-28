@@ -11,6 +11,7 @@ struct HomeView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
     @StateObject private var summaryVM = HomeSummaryViewModel()
+    @State private var recentAlerts: [AlertNotification] = []
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
@@ -32,11 +33,16 @@ struct HomeView: View {
                             CardModel(title: "Movimiento", subtitle: "hace 15 min.")
                         ])
 
-                        AlertSectionView(alerts: [
-                            AlertModel(sensor: "Sensor de movimiento", message: "Movimiento detectado en zona 3", time: "14:22 h", icon: "exclamationmark.triangle.fill", severity: .high),
-                            AlertModel(sensor: "Sensor de humedad", message: "Humedad superior al 80%", time: "13:45 h", icon: "exclamationmark.triangle.fill", severity: .medium),
-                            AlertModel(sensor: "Sensor de temperatura", message: "Temperatura superior a 25 grados", time: "12:13 h", icon: "exclamationmark.triangle.fill", severity: .low)
-                        ])
+                        VStack(spacing: 12) {
+                            ForEach(recentAlerts) { alert in
+                                AlertCardView(
+                                    icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
+                                    title: alert.sensor.uppercased(),
+                                    message: alert.message,
+                                    date: formattedDate(alert.timestamp)
+                                )
+                            }
+                        }
 
                         if let summary = summaryVM.summary {
                             if let items = summary.expiring, !items.isEmpty {
@@ -87,7 +93,12 @@ struct HomeView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
-        .task { summaryVM.fetchSummary() }
+        .task {
+            summaryVM.fetchSummary()
+            NotificationService.shared.fetchNotifications(limit: 6) { alerts in
+                self.recentAlerts = alerts
+            }
+        }
     }
 }
 
