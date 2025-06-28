@@ -5,13 +5,27 @@ struct AlertCardView: View {
     var title: String
     var message: String
     var date: String
+    var sensor: String
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+
+    private var sensorColor: Color {
+        let lower = sensor.lowercased()
+        if lower.contains("vib") || lower.contains("mov") {
+            return .yellow
+        } else if lower.contains("gas") {
+            return .red
+        } else if lower.contains("hum") {
+            return .green
+        } else {
+            return .red
+        }
+    }
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
-                .foregroundColor(.red)
+                .foregroundColor(sensorColor)
                 .font(.system(size: 18))
                 .padding(.top, 2)
 
@@ -31,7 +45,7 @@ struct AlertCardView: View {
             .padding(12)
             .background(
                 LinearGradient(
-                    colors: [Color.red.opacity(0.2), Color.secondaryColor],
+                    colors: [sensorColor.opacity(0.2), Color.secondaryColor],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
