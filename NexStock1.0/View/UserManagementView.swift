@@ -9,13 +9,7 @@
 import SwiftUI
 
 struct UserManagementView: View {
-    let users: [UserTableModel] = [
-        .init(username: "juan123", firstName: "Juan", lastName: "Pérez", role: "Administrador", isActive: true),
-        .init(username: "ana_dev", firstName: "Ana", lastName: "López", role: "Editor", isActive: false),
-        .init(username: "maria_g", firstName: "María", lastName: "Gómez", role: "Gerente", isActive: true),
-        .init(username: "carlos_a", firstName: "Carlos", lastName: "Alvarez", role: "Administrador", isActive: true),
-        .init(username: "laura_m", firstName: "Laura", lastName: "Martínez", role: "Gerente", isActive: false)
-    ]
+    @StateObject private var viewModel = UserManagementViewModel()
 
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
@@ -49,7 +43,7 @@ struct UserManagementView: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
-                        ForEach(users) { user in
+                        ForEach(viewModel.users) { user in
                             HStack(alignment: .center) {
                                 // 🟢 Estado circular
                                 Circle()
@@ -118,6 +112,18 @@ struct UserManagementView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear { viewModel.fetchUsers() }
+        .overlay(
+            Group {
+                if viewModel.isLoading {
+                    Color.black.opacity(0.4).ignoresSafeArea()
+                    ProgressView()
+                        .padding(20)
+                        .background(.regularMaterial)
+                        .cornerRadius(12)
+                }
+            }
+        )
     }
 }
 
