@@ -39,7 +39,8 @@ struct HomeView: View {
                                     icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
                                     title: alert.sensor.uppercased(),
                                     message: alert.message,
-                                    date: formattedDate(alert.timestamp)
+                                    date: formattedDate(alert.timestamp),
+                                    sensor: alert.sensor
                                 )
                             }
                         }
