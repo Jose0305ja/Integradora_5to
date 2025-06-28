@@ -9,13 +9,19 @@
 import Foundation
 
 struct ProductModel: Identifiable, Codable {
-    let id: String           // usado para UI y SwiftUI
+    /// Identifier used for UI and SwiftUI
+    let id: String
     let name: String
     let image_url: String
     let stock_actual: Int
-    let category: String
-    let sensor_type: String
+    let stock_minimum: Int?
+    let stock_maximum: Int?
+    let brand: String?
+    let category: String?
+    let sensor_type: String?
+    let last_updated: String?
+    let description: String?
 
-    // ⚠️ Solo para búsquedas sin ID real
+    /// Real identifier returned by some endpoints used to fetch details
     var realId: String? = nil
 }
