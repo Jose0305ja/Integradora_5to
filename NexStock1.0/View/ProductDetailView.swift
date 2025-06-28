@@ -52,8 +52,7 @@ struct ProductDetailView: View {
         ScrollView {
             if let detail = viewModel.detail {
                 VStack(spacing: 16) {
-                    if let urlString = detail.image_url,
-                       let url = URL(string: urlString) {
+                    if let url = URL(string: detail.image_url) {
                         AsyncImage(url: url) { image in
                             image.resizable()
                                 .scaledToFit()
@@ -216,7 +215,7 @@ struct ProductDetailView: View {
 
 struct ProductDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductDetailView(product: ProductDetailInfo(id: "1", name: "Apple", image_url: nil, description: nil, brand: nil, category: nil, stock_actual: 0, stock_minimum: 0, stock_maximum: 0, sensor_type: nil, last_updated: nil))
+        ProductDetailView(product: ProductDetailInfo(id: "1", name: "Apple", image_url: "", description: nil, category: nil, brand: nil, stock_actual: 0, stock_minimum: 0, stock_maximum: 0, last_updated: nil, sensor_type: nil))
             .environmentObject(LocalizationManager())
     }
 }
