@@ -33,36 +33,7 @@ struct AlertView: View {
                 ScrollView {
                     VStack(spacing: 12) {
                         ForEach(alerts) { alert in
-                            HStack(alignment: .top, spacing: 12) {
-                                Image(systemName: alert.icon)
-                                    .foregroundColor(alert.severity.color)
-                                    .font(.system(size: 18))
-                                    .padding(.top, 2)
-
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack {
-                                        Text(alert.sensor)
-                                            .fontWeight(.semibold)
-                                        Spacer()
-                                        Text(alert.time)
-                                            .foregroundColor(.gray)
-                                            .font(.caption)
-                                    }
-
-                                    Text(alert.message)
-                                        .font(.body)
-                                }
-                                .padding(12)
-                                .background(
-                                    LinearGradient(
-                                        colors: [alert.severity.color.opacity(0.2), Color.secondaryColor],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                                .cornerRadius(10)
-                            }
-                            .padding(.horizontal)
+                            AlertCardView(alert: alert)
                         }
                     }
                     .padding(.top, 10)
