@@ -27,25 +27,23 @@ struct AlertView: View {
                     .padding(.horizontal)
 
                 ScrollView {
-                    let grouped = Dictionary(grouping: allAlerts) { alert in
-                        alert.sensor
+                    let sorted = allAlerts.sorted { a, b in
+                        if let d1 = ISO8601DateFormatter().date(from: a.timestamp),
+                           let d2 = ISO8601DateFormatter().date(from: b.timestamp) {
+                            return d1 > d2
+                        }
+                        return false
                     }
 
                     VStack(spacing: 12) {
-                        ForEach(grouped.keys.sorted(), id: \.self) { key in
-                            Text(key.uppercased())
-                                .font(.headline)
-                                .padding(.horizontal)
-
-                            ForEach(grouped[key] ?? []) { alert in
-                                AlertCardView(
-                                    icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
-                                    title: alert.sensor.uppercased(),
-                                    message: alert.message,
-                                    date: formattedDate(alert.timestamp)
-                                )
-                                .padding(.horizontal)
-                            }
+                        ForEach(sorted) { alert in
+                            AlertCardView(
+                                icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
+                                title: alert.sensor.uppercased(),
+                                message: alert.message,
+                                date: formattedDate(alert.timestamp)
+                            )
+                            .padding(.horizontal)
                         }
                     }
                     .padding(.top, 10)
@@ -62,7 +60,13 @@ struct AlertView: View {
         .navigationBarBackButtonHidden(true)
         .task {
             NotificationService.shared.fetchNotifications(limit: 50) { alerts in
-                self.allAlerts = alerts
+                self.allAlerts = alerts.sorted { a, b in
+                    if let d1 = ISO8601DateFormatter().date(from: a.timestamp),
+                       let d2 = ISO8601DateFormatter().date(from: b.timestamp) {
+                        return d1 > d2
+                    }
+                    return false
+                }
             }
         }
     }

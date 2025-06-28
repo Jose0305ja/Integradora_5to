@@ -31,7 +31,6 @@ struct HomeView: View {
                         ])
 
                         SectionView(title: "monitoring".localized, cards: [
-                            CardModel(title: "Movimiento", subtitle: "hace 15 min.", icon: "figure.walk.motion"),
                             CardModel(
                                 title: "temperature".localized,
                                 subtitle: String(format: "%.1f °C", monitoringVM.temperature),
@@ -108,7 +107,13 @@ struct HomeView: View {
             summaryVM.fetchSummary()
             monitoringVM.fetch()
             NotificationService.shared.fetchNotifications(limit: 6) { alerts in
-                self.recentAlerts = alerts
+                self.recentAlerts = alerts.sorted { a, b in
+                    if let d1 = ISO8601DateFormatter().date(from: a.timestamp),
+                       let d2 = ISO8601DateFormatter().date(from: b.timestamp) {
+                        return d1 > d2
+                    }
+                    return false
+                }
             }
         }
     }
