@@ -12,7 +12,13 @@ enum AppRoute: Hashable {
     case settings
     case userManagement
     case systemConfig
-    case product
+    case product // all products
+    case expiring
+    case outOfStock
+    case belowMinimum
+    case nearMinimum
+    case overstock
+    case shoppingList
     case temperature
     case humidity
     case alerts

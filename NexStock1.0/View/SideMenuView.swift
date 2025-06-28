@@ -96,13 +96,12 @@ struct SideMenuView: View {
                             Button("all".localized) {
                                 path.append(AppRoute.product)
                             }
-
-                            Text("expiring".localized)
-                            Text("out_of_stock".localized)
-                            Text("below_minimum".localized)
-                            Text("near_minimum".localized)
-                            Text("overstock".localized)
-                            Text("shopping_list".localized)
+                            Button("expiring".localized) { path.append(AppRoute.expiring) }
+                            Button("out_of_stock".localized) { path.append(AppRoute.outOfStock) }
+                            Button("below_minimum".localized) { path.append(AppRoute.belowMinimum) }
+                            Button("near_minimum".localized) { path.append(AppRoute.nearMinimum) }
+                            Button("overstock".localized) { path.append(AppRoute.overstock) }
+                            Button("shopping_list".localized) { path.append(AppRoute.shoppingList) }
                         }
                         .font(.body)
                         .foregroundColor(.tertiaryColor)
