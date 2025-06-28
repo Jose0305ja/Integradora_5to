@@ -155,4 +155,31 @@ class MonitoringService {
             }
         }.resume()
     }
+
+    // MARK: - Sensors Status
+    func fetchSensorsStatus(completion: @escaping (Result<[SensorStatus], Error>) -> Void) {
+        guard let url = URL(string: "\(baseURL)/sensors-status") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(NSError(domain: "MonitoringService", code: 0, userInfo: nil)))
+                return
+            }
+
+            do {
+                let decoded = try self.customDecoder().decode(SensorsStatusResponse.self, from: data)
+                completion(.success(decoded.sensors))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
 }

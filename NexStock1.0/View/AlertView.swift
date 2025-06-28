@@ -10,6 +10,7 @@ import SwiftUI
 struct AlertView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
+    @State private var showSensorsStatus = false
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
@@ -25,6 +26,17 @@ struct AlertView: View {
                 Text("alerts".localized)
                     .font(.title.bold())
                     .padding(.horizontal)
+
+                Button(action: { showSensorsStatus = true }) {
+                    Text("\u{1F4E1} Estado de sensores")
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity)
+                        .padding(8)
+                        .background(Color.secondaryColor)
+                        .cornerRadius(8)
+                        .foregroundColor(.tertiaryColor)
+                }
+                .padding(.horizontal)
 
                 ScrollView {
                     let sorted = allAlerts.sorted { a, b in
@@ -58,6 +70,11 @@ struct AlertView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $showSensorsStatus) {
+            SensorsStatusView()
+                .environmentObject(localization)
+                .environmentObject(theme)
+        }
         .task {
             NotificationService.shared.fetchNotifications(limit: 50) { alerts in
                 self.allAlerts = alerts.sorted { a, b in
