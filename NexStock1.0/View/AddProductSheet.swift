@@ -51,12 +51,42 @@ struct AddProductSheet: View {
         .init(id: 3, name: "pz")
     ]
 
+    private var header: some View {
+        HStack {
+            Button(action: { dismiss() }) {
+                Image(systemName: "chevron.left")
+                    .font(.title2)
+                    .foregroundColor(.tertiaryColor)
+            }
+
+            Spacer()
+
+            Text("new_product".localized)
+                .font(.headline)
+                .foregroundColor(.tertiaryColor)
+
+            Spacer()
+
+            Button("Guardar") { saveProduct() }
+                .disabled(name.isEmpty || selectedCategory == nil || selectedUnitType == nil || finalURL == nil)
+                .foregroundColor(.tertiaryColor)
+        }
+        .padding(.horizontal)
+        .padding(.top, 10)
+        .padding(.bottom, 4)
+        .background(Color.primaryColor)
+    }
+
     var body: some View {
         NavigationStack {
-            ZStack {
+            ZStack(alignment: .top) {
                 Color.primaryColor.ignoresSafeArea()
-                ScrollView {
-                    VStack(spacing: 20) {
+
+                VStack(spacing: 0) {
+                    header
+
+                    ScrollView {
+                        VStack(spacing: 20) {
                         // Sección 1
                         SectionContainer(title: "information".localized) {
                             VStack(spacing: 12) {
@@ -194,48 +224,8 @@ struct AddProductSheet: View {
                 }
                 .scrollContentBackground(.hidden)
             }
-            .navigationTitle("new_product".localized)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Guardar") {
-                        if let category = selectedCategory,
-                           let unit = selectedUnitType,
-                           let finalURL = finalURL {
-                            let producto = DetailedProductModel(
-                                name: name,
-                                brand: brand,
-                                description: description,
-                                category_id: category.id,
-                                unit_type_id: unit.id,
-                                image_url: finalURL.absoluteString,
-                                stock_min: stockMin,
-                                stock_max: stockMax,
-                                input_method: inputMethod
-                            )
-
-                            ProductService.shared.addProduct(producto) { result in
-                                DispatchQueue.main.async {
-                                    switch result {
-                                    case .success:
-                                        onSave(producto)
-                                        showSuccessAlert = true
-                                    case .failure(let error):
-                                        print("Error saving product:", error)
-                                        showErrorAlert = true
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .disabled(name.isEmpty || selectedCategory == nil || selectedUnitType == nil || finalURL == nil)
-                }
-
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") {
-                        dismiss()
-                    }
-                }
-            }
+        }
+        .navigationBarBackButtonHidden(true)
         }
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(sourceType: sourceType) { image in
@@ -257,6 +247,37 @@ struct AddProductSheet: View {
         }
         .alert("Ocurrió un error", isPresented: $showErrorAlert) {
             Button("OK", role: .cancel) {}
+        }
+    }
+
+    private func saveProduct() {
+        if let category = selectedCategory,
+           let unit = selectedUnitType,
+           let finalURL = finalURL {
+            let producto = DetailedProductModel(
+                name: name,
+                brand: brand,
+                description: description,
+                category_id: category.id,
+                unit_type_id: unit.id,
+                image_url: finalURL.absoluteString,
+                stock_min: stockMin,
+                stock_max: stockMax,
+                input_method: inputMethod
+            )
+
+            ProductService.shared.addProduct(producto) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success:
+                        onSave(producto)
+                        showSuccessAlert = true
+                    case .failure(let error):
+                        print("Error saving product:", error)
+                        showErrorAlert = true
+                    }
+                }
+            }
         }
     }
 

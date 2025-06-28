@@ -49,7 +49,8 @@ struct HomeView: View {
                                     icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
                                     title: alert.sensor.uppercased(),
                                     message: alert.message,
-                                    date: formattedDate(alert.timestamp)
+                                    date: formattedDate(alert.timestamp),
+                                    highlight: highlightColor(for: alert.sensor)
                                 )
                             }
                         }
@@ -115,6 +116,17 @@ struct HomeView: View {
                     return false
                 }
             }
+        }
+    }
+
+    private func highlightColor(for sensor: String) -> Color {
+        let lower = sensor.lowercased()
+        if lower.contains("gas") {
+            return .red
+        } else if lower.contains("vib") {
+            return .yellow
+        } else {
+            return .red
         }
     }
 }

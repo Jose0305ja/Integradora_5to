@@ -155,4 +155,44 @@ class MonitoringService {
             }
         }.resume()
     }
+
+    // MARK: - Sensors Status
+    func fetchSensorsStatus(completion: @escaping (Result<[SensorStatus], Error>) -> Void) {
+        guard let token = AuthService.shared.token else {
+            completion(.failure(NSError(domain: "MonitoringService", code: 401,
+                                     userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
+        guard let url = URL(string: "\(baseURL)/sensors-status") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse,
+                  let data = data else {
+                completion(.failure(NSError(domain: "MonitoringService", code: 0, userInfo: nil)))
+                return
+            }
+
+            if httpResponse.statusCode == 401 {
+                completion(.failure(NSError(domain: "MonitoringService", code: 401,
+                                            userInfo: [NSLocalizedDescriptionKey: "No autorizado."])))
+                return
+            }
+
+            do {
+                let decoded = try self.customDecoder().decode(SensorsStatusResponse.self, from: data)
+                completion(.success(decoded.sensors))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
 }

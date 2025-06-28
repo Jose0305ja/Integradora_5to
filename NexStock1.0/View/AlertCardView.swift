@@ -5,13 +5,14 @@ struct AlertCardView: View {
     var title: String
     var message: String
     var date: String
+    var highlight: Color = .red
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
-                .foregroundColor(.red)
+                .foregroundColor(highlight)
                 .font(.system(size: 18))
                 .padding(.top, 2)
 
@@ -31,7 +32,7 @@ struct AlertCardView: View {
             .padding(12)
             .background(
                 LinearGradient(
-                    colors: [Color.red.opacity(0.2), Color.secondaryColor],
+                    colors: [highlight.opacity(0.2), Color.secondaryColor],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )

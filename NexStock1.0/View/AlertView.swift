@@ -10,6 +10,7 @@ import SwiftUI
 struct AlertView: View {
     @Binding var path: NavigationPath
     @State private var showMenu = false
+    @State private var showSensorsStatus = false
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
 
@@ -26,6 +27,17 @@ struct AlertView: View {
                     .font(.title.bold())
                     .padding(.horizontal)
 
+                Button(action: { showSensorsStatus = true }) {
+                    Text("\u{1F4E1} Estado de sensores")
+                        .font(.subheadline.bold())
+                        .frame(maxWidth: .infinity)
+                        .padding(8)
+                        .background(Color.secondaryColor)
+                        .cornerRadius(8)
+                        .foregroundColor(.tertiaryColor)
+                }
+                .padding(.horizontal)
+
                 ScrollView {
                     let sorted = allAlerts.sorted { a, b in
                         if let d1 = ISO8601DateFormatter().date(from: a.timestamp),
@@ -41,7 +53,8 @@ struct AlertView: View {
                                 icon: alert.sensor == "Gas" ? "flame.fill" : "waveform.path.ecg",
                                 title: alert.sensor.uppercased(),
                                 message: alert.message,
-                                date: formattedDate(alert.timestamp)
+                                date: formattedDate(alert.timestamp),
+                                highlight: highlightColor(for: alert.sensor)
                             )
                             .padding(.horizontal)
                         }
@@ -58,6 +71,11 @@ struct AlertView: View {
         }
         .animation(.easeInOut, value: showMenu)
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $showSensorsStatus) {
+            SensorsStatusView()
+                .environmentObject(localization)
+                .environmentObject(theme)
+        }
         .task {
             NotificationService.shared.fetchNotifications(limit: 50) { alerts in
                 self.allAlerts = alerts.sorted { a, b in
@@ -68,6 +86,17 @@ struct AlertView: View {
                     return false
                 }
             }
+        }
+    }
+
+    private func highlightColor(for sensor: String) -> Color {
+        let lower = sensor.lowercased()
+        if lower.contains("gas") {
+            return .red
+        } else if lower.contains("vib") {
+            return .yellow
+        } else {
+            return .red
         }
     }
 }
