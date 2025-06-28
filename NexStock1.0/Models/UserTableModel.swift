@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserTableModel: Identifiable {
+struct UserTableModel: Identifiable, Equatable {
     let id = UUID()
     let username: String
     let firstName: String

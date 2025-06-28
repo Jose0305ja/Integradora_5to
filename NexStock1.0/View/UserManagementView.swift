@@ -9,18 +9,24 @@
 import SwiftUI
 
 struct UserManagementView: View {
-    let users: [UserTableModel] = [
-        .init(username: "juan123", firstName: "Juan", lastName: "Pérez", role: "Administrador", isActive: true),
-        .init(username: "ana_dev", firstName: "Ana", lastName: "López", role: "Editor", isActive: false),
-        .init(username: "maria_g", firstName: "María", lastName: "Gómez", role: "Gerente", isActive: true),
-        .init(username: "carlos_a", firstName: "Carlos", lastName: "Alvarez", role: "Administrador", isActive: true),
-        .init(username: "laura_m", firstName: "Laura", lastName: "Martínez", role: "Gerente", isActive: false)
-    ]
+    @StateObject private var viewModel = UserManagementViewModel()
 
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var theme: ThemeManager
+
+    private var loadingOverlay: some View {
+        Group {
+            if viewModel.isLoading {
+                Color.black.opacity(0.4).ignoresSafeArea()
+                ProgressView()
+                    .padding(20)
+                    .background(.regularMaterial)
+                    .cornerRadius(12)
+            }
+        }
+    }
 
     var body: some View {
         ZStack {
@@ -49,68 +55,8 @@ struct UserManagementView: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
-                        ForEach(users) { user in
-                            HStack(alignment: .center) {
-                                // 🟢 Estado circular
-                                Circle()
-                                    .fill(user.isActive ? Color.green : Color.red)
-                                    .frame(width: 12, height: 12)
-
-                                // 👤 Información de usuario
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("\(user.firstName) \(user.lastName)")
-                                        .font(.headline)
-                                        .foregroundColor(.fourthColor)
-
-                                    Text(user.username)
-                                        .font(.subheadline)
-                                        .foregroundColor(.backColor)
-
-                                    Text(user.role)
-                                        .font(.caption)
-                                        .foregroundColor(.primaryColor)
-                                }
-
-                                Spacer()
-
-                                // 🎨 Colores adaptativos para estado
-                                let isDarkMode = colorScheme == .dark
-                                let activeBackground = isDarkMode ? Color.green.opacity(0.7) : Color.green.opacity(0.2)
-                                let inactiveBackground = isDarkMode ? Color.red.opacity(0.7) : Color.red.opacity(0.2)
-                                let activeTextColor = isDarkMode ? Color.white : Color.green
-                                let inactiveTextColor = isDarkMode ? Color.white : Color.red
-
-                                Text(user.isActive ? "Activo" : "Inactivo")
-                                    .font(.caption)
-                                    .fontWeight(.bold)
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 4)
-                                    .background(user.isActive ? activeBackground : inactiveBackground)
-                                    .foregroundColor(user.isActive ? activeTextColor : inactiveTextColor)
-                                    .cornerRadius(8)
-
-                                // ✏️🗑️ Botones de acción
-                                HStack(spacing: 12) {
-                                    Button {
-                                        print("Editar \(user.username)")
-                                    } label: {
-                                        Image(systemName: "square.and.pencil")
-                                            .foregroundColor(.accentColor)
-                                    }
-
-                                    Button {
-                                        print("Eliminar \(user.username)")
-                                    } label: {
-                                        Image(systemName: "trash")
-                                            .foregroundColor(.red)
-                                    }
-                                }
-                            }
-                            .padding()
-                            .background(Color.secondaryColor.opacity(0.9))
-                            .cornerRadius(16)
-                            .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
-                            .padding(.horizontal)
+                        ForEach(viewModel.users) { user in
+                            UserRowView(user: user)
                         }
                     }
                     .padding(.top)
@@ -118,6 +64,78 @@ struct UserManagementView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .onAppear { viewModel.fetchUsers() }
+        .onChange(of: viewModel.users) { users in
+            if users.isEmpty {
+                print("[UserManagementView] user list empty")
+            }
+        }
+        .overlay(loadingOverlay)
+    }
+}
+
+struct UserRowView: View {
+    let user: UserTableModel
+    @Environment(\.colorScheme) var colorScheme
+
+    var body: some View {
+        HStack(alignment: .center) {
+            Circle()
+                .fill(user.isActive ? Color.green : Color.red)
+                .frame(width: 12, height: 12)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("\(user.firstName) \(user.lastName)")
+                    .font(.headline)
+                    .foregroundColor(.fourthColor)
+
+                Text(user.username)
+                    .font(.subheadline)
+                    .foregroundColor(.backColor)
+
+                Text(user.role)
+                    .font(.caption)
+                    .foregroundColor(.primaryColor)
+            }
+
+            Spacer()
+
+            let isDarkMode = colorScheme == .dark
+            let activeBackground = isDarkMode ? Color.green.opacity(0.7) : Color.green.opacity(0.2)
+            let inactiveBackground = isDarkMode ? Color.red.opacity(0.7) : Color.red.opacity(0.2)
+            let activeTextColor = isDarkMode ? Color.white : Color.green
+            let inactiveTextColor = isDarkMode ? Color.white : Color.red
+
+            Text(user.isActive ? "Activo" : "Inactivo")
+                .font(.caption)
+                .fontWeight(.bold)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(user.isActive ? activeBackground : inactiveBackground)
+                .foregroundColor(user.isActive ? activeTextColor : inactiveTextColor)
+                .cornerRadius(8)
+
+            HStack(spacing: 12) {
+                Button {
+                    print("Editar \(user.username)")
+                } label: {
+                    Image(systemName: "square.and.pencil")
+                        .foregroundColor(.accentColor)
+                }
+
+                Button {
+                    print("Eliminar \(user.username)")
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+            }
+        }
+        .padding()
+        .background(Color.secondaryColor.opacity(0.9))
+        .cornerRadius(16)
+        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+        .padding(.horizontal)
     }
 }
 
