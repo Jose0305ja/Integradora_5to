@@ -24,21 +24,14 @@ struct HumidityView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         // Selector de tiempo
-                        HStack(spacing: 12) {
+                        Picker("", selection: $viewModel.selectedTimeRange) {
                             ForEach(viewModel.timeRanges, id: \.self) { range in
-                                Button(action: {
-                                    viewModel.selectedTimeRange = range
-                                    viewModel.fetch(for: range)
-                                }) {
-                                    Text(range)
-                                        .font(.subheadline)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 6)
-                                        .background(viewModel.selectedTimeRange == range ? Color.secondaryColor : Color.secondaryColor.opacity(0.3))
-                                        .cornerRadius(8)
-                                        .foregroundColor(.tertiaryColor)
-                                }
+                                Text(range.labelKey.localized).tag(range)
                             }
+                        }
+                        .pickerStyle(.menu)
+                        .onChange(of: viewModel.selectedTimeRange) { newValue in
+                            viewModel.fetch(for: newValue)
                         }
 
                         // Gráfica

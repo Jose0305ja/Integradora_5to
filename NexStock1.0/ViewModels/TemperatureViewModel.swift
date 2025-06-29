@@ -8,7 +8,7 @@
 import Foundation
 
 class TemperatureViewModel: ObservableObject {
-    @Published var selectedTimeRange: String = "24h"
+    @Published var selectedTimeRange: TimeRange = .day
     @Published var temperatureData: [MonitoringPoint] = []
     @Published var current: Double = 0
     @Published var average: Double = 0
@@ -16,14 +16,14 @@ class TemperatureViewModel: ObservableObject {
     @Published var max: Double = 0
     @Published var errorMessage: String? = nil
 
-    let timeRanges = ["24h", "last_5min", "last_week", "last_month", "last_3months"]
+    let timeRanges = TimeRange.allCases
 
     init() {
         fetch(for: selectedTimeRange)
     }
 
-    func fetch(for filter: String) {
-        MonitoringService.shared.fetchTemperature(filter: filter) { [weak self] result in
+    func fetch(for range: TimeRange) {
+        MonitoringService.shared.fetchTemperature(filter: range.rawValue) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }
 
@@ -63,10 +63,10 @@ class TemperatureViewModel: ObservableObject {
 
     var chartMode: ChartRangeMode {
         switch selectedTimeRange {
-        case "last_5min": return .last5min
-        case "last_week": return .week
-        case "last_month": return .month
-        case "last_3months": return .months3
+        case .last5min: return .last5min
+        case .week: return .week
+        case .month: return .month
+        case .months3: return .months3
         default: return .day
         }
     }

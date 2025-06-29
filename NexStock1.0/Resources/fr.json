@@ -143,5 +143,10 @@
   "delete": "Supprimer",
   "active": "Actif",
   "inactive": "Inactif",
+  "range_24h": "24 heures",
+  "range_last_5min": "5 dernières minutes",
+  "range_last_week": "Semaine dernière",
+  "range_last_month": "Mois dernier",
+  "range_last_3months": "3 derniers mois",
   "saving": "Enregistrement..."
 }

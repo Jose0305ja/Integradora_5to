@@ -141,5 +141,10 @@
   "delete": "删除",
   "active": "启用",
   "inactive": "停用",
+  "range_24h": "24小时",
+  "range_last_5min": "最近5分钟",
+  "range_last_week": "最近一周",
+  "range_last_month": "最近一个月",
+  "range_last_3months": "最近三个月",
   "saving": "保存中..."
 }

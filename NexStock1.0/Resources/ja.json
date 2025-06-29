@@ -141,5 +141,10 @@
   "delete": "削除",
   "active": "アクティブ",
   "inactive": "非アクティブ",
+  "range_24h": "24時間",
+  "range_last_5min": "直近5分",
+  "range_last_week": "直近1週間",
+  "range_last_month": "直近1ヶ月",
+  "range_last_3months": "直近3ヶ月",
   "saving": "保存中..."
 }
