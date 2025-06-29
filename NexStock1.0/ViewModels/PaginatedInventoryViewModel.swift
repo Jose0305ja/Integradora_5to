@@ -3,12 +3,12 @@ import Foundation
 class PaginatedInventoryViewModel: ObservableObject {
     @Published var productsByCategory: [String: [ProductModel]] = [:]
 
-    let categories = ["Alimentos", "Bebidas", "Insumos", "Productos de limpieza"]
+    let categories = ["food", "drinks", "supplies", "cleaning_products"]
     private let categoryIDs: [String: Int] = [
-        "Alimentos": 1,
-        "Bebidas": 2,
-        "Insumos": 3,
-        "Productos de limpieza": 4
+        "food": 1,
+        "drinks": 2,
+        "supplies": 3,
+        "cleaning_products": 4
     ]
     private let limit = 20
     private var pages: [String: Int] = [:]
