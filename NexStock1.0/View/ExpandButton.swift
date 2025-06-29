@@ -1,7 +1,8 @@
 import SwiftUI
 
-struct SeeMoreButton: View {
+struct ExpandButton: View {
     var label: String
+    var isExpanded: Bool
     var action: () -> Void
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
@@ -10,7 +11,7 @@ struct SeeMoreButton: View {
         Button(action: action) {
             HStack(spacing: 4) {
                 Text(label)
-                Image(systemName: "chevron.right")
+                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
             }
             .font(.caption.bold())
             .padding(.vertical, 8)
@@ -35,7 +36,7 @@ struct SeeMoreButton: View {
 }
 
 #Preview {
-    SeeMoreButton(label: "See more") {}
+    ExpandButton(label: "Languages", isExpanded: false) {}
         .environmentObject(ThemeManager.shared)
         .environmentObject(LocalizationManager.shared)
 }
