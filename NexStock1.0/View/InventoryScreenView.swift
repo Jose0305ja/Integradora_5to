@@ -94,14 +94,17 @@ struct InventoryScreenView: View {
                             .foregroundColor(.tertiaryColor)
                             .padding()
                     } else {
-                        LazyVStack(alignment: .leading, spacing: 16) {
+                        LazyVGrid(
+                            columns: [GridItem(.adaptive(minimum: 160), spacing: 16)],
+                            spacing: 16
+                        ) {
                             ForEach(searchVM.results) { product in
                                 InventoryCardView(product: product) {
                                     openDetail(for: product)
                                 }
                             }
                         }
-                        .padding()
+                        .padding(.horizontal)
                     }
                 }
             }
