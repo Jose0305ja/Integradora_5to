@@ -23,6 +23,16 @@ struct AppView: View {
                         HomeView(path: $path)
                     case .settings:
                         SettingsView(path: $path)
+                    case .financeHome:
+                        FinanceHomeView(path: $path)
+                    case .financeStatus:
+                        FinanceStatusView(path: $path)
+                    case .payroll:
+                        PayrollView(path: $path)
+                    case .financeAI:
+                        FinanceAIView(path: $path)
+                    case .financeAnalysis:
+                        FinanceAnalysisView(path: $path)
                     case .product:
                         MenuContainerView(
                             content: {

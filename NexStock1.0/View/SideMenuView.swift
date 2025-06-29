@@ -69,11 +69,11 @@ struct SideMenuView: View {
 
                     if activeMenu == "finanzas" {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("home".localized)
-                            Text("status".localized)
-                            Text("payroll".localized)
-                            Text("ai".localized)
-                            Text("analysis".localized)
+                            Button("home".localized) { path.append(.financeHome) }
+                            Button("status".localized) { path.append(.financeStatus) }
+                            Button("payroll".localized) { path.append(.payroll) }
+                            Button("ai".localized) { path.append(.financeAI) }
+                            Button("analysis".localized) { path.append(.financeAnalysis) }
                         }
                         .font(.body)
                         .foregroundColor(.tertiaryColor)

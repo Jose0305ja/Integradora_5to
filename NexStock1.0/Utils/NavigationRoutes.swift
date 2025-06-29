@@ -12,6 +12,12 @@ enum AppRoute: Hashable {
     case settings
     case userManagement
     case systemConfig
+    // Finanzas
+    case financeHome
+    case financeStatus
+    case payroll
+    case financeAI
+    case financeAnalysis
     case product // all products
     case expiring
     case outOfStock
