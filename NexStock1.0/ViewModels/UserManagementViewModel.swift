@@ -28,4 +28,17 @@ class UserManagementViewModel: ObservableObject {
             }
         }
     }
+
+    func deleteUser(id: String) {
+        UserService.shared.deleteUser(id: id) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self?.users.removeAll { $0.id == id }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+    }
 }
