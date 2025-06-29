@@ -12,7 +12,9 @@ import SwiftUI
 class LocalizationManager: ObservableObject {
     static let shared = LocalizationManager()
 
-    @AppStorage("selectedLanguage") var selectedLanguage: String = "es" {
+    // Defaults to the device language when the app is first launched. The value
+    // is stored in AppStorage so the user's selection persists across launches.
+    @AppStorage("selectedLanguage") var selectedLanguage: String = Locale.current.languageCode ?? "es" {
         didSet {
             objectWillChange.send()
         }
@@ -22,8 +24,8 @@ class LocalizationManager: ObservableObject {
         selectedLanguage = language
     }
 
-    func localizedString(forKey key: String) -> String {
-        let language = selectedLanguage
+    func localizedString(forKey key: String, language override: String? = nil) -> String {
+        let language = override ?? selectedLanguage
         guard let path = Bundle.main.path(forResource: language, ofType: "json"),
               let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
               let dictionary = try? JSONDecoder().decode([String: String].self, from: data)
