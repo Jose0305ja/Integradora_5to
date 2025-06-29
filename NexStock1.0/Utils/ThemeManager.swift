@@ -4,7 +4,10 @@ class ThemeManager: ObservableObject {
     static let shared = ThemeManager()
 
     @AppStorage("selectedAppearance") var selectedAppearance: String = "system" {
-        didSet { applyAppearance() }
+        didSet {
+            objectWillChange.send()
+            applyAppearance()
+        }
     }
 
     @Published var primaryColor: Color = Color("appPrimaryColor")

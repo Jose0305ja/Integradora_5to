@@ -443,8 +443,7 @@ extension UserService {
                 return
             }
             do {
-                let decoded = try JSONDecoder().decode(UserPreferencesResponse.self, from: data)
-                let prefs = UserPreferences(language: decoded.language ?? "es", theme: decoded.theme ?? "light")
+                let prefs = try JSONDecoder().decode(UserPreferences.self, from: data)
                 completion(.success(prefs))
             } catch {
                 completion(.failure(error))
