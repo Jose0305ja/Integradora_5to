@@ -76,9 +76,13 @@ struct UserManagementView: View {
                         ForEach(viewModel.users) { user in
                             UserRowView(user: user,
                                         onEdit: {
+                                            print("[UserManagementView] edit tapped for \(user.id)")
                                             viewModel.fetchUserDetails(id: user.id) { details in
                                                 if let details = details {
+                                                    print("[UserManagementView] setting editingUser for \(details.user.id)")
                                                     editingUser = details
+                                                } else {
+                                                    print("[UserManagementView] no details returned")
                                                 }
                                             }
                                         },

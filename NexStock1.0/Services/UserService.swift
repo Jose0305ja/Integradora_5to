@@ -221,7 +221,7 @@ extension UserService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
+        print("[UserService] GET /auth/users/\(id)/details")
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -230,6 +230,10 @@ extension UserService {
             guard let http = response as? HTTPURLResponse, let data = data else {
                 completion(.failure(NSError(domain: "UserService", code: 0, userInfo: nil)))
                 return
+            }
+            print("[UserService] statusCode: \(http.statusCode)")
+            if let body = String(data: data, encoding: .utf8) {
+                print("[UserService] body:\n\(body)")
             }
             if http.statusCode != 200 {
                 if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
@@ -242,6 +246,7 @@ extension UserService {
 
             do {
                 let decoded = try JSONDecoder().decode(UserDetailsResponse.self, from: data)
+                print("[UserService] decoded details for \(decoded.user.id)")
                 completion(.success(decoded))
             } catch {
                 completion(.failure(error))

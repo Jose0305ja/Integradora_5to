@@ -43,16 +43,21 @@ class UserManagementViewModel: ObservableObject {
     }
 
     func fetchUserDetails(id: String, completion: @escaping (UserDetailsResponse?) -> Void) {
-        guard !isLoading else { return }
+        guard !isLoading else {
+            print("[UserManagementVM] fetchUserDetails ignored (isLoading)")
+            return
+        }
         isLoading = true
+        print("[UserManagementVM] fetching user details for \(id)")
         UserService.shared.fetchUserDetails(id: id) { [weak self] result in
             DispatchQueue.main.async {
                 self?.isLoading = false
                 switch result {
                 case .success(let response):
+                    print("[UserManagementVM] received details for \(response.user.id)")
                     completion(response)
                 case .failure(let error):
-                    print(error)
+                    print("[UserManagementVM] fetchUserDetails error: \(error)")
                     completion(nil)
                 }
             }

@@ -115,6 +115,7 @@ struct EditUserSheet: View {
                 .scrollContentBackground(.hidden)
             }
         }
+        .onAppear { print("[EditUserSheet] appear for \(details.user.id)") }
         .navigationBarBackButtonHidden(true)
         .alert("Cambios guardados", isPresented: $showSuccessAlert) {
             Button("OK", role: .cancel) {
