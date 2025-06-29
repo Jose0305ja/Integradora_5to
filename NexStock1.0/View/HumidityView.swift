@@ -70,9 +70,9 @@ struct HumidityView: View {
                         if viewModel.current > viewModel.optimalMax {
                             Text("humidity_alert".localized)
                                 .font(.callout)
-                                .foregroundColor(.primaryColor)
+                                .foregroundColor(.secondaryColor)
                                 .padding()
-                                .background(Color.primaryColor.opacity(0.1))
+                                .background(Color.secondaryColor.opacity(0.1))
                                 .cornerRadius(10)
                         }
                     }
