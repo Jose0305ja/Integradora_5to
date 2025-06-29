@@ -147,5 +147,8 @@
   "range_last_week": "直近1週間",
   "range_last_month": "直近1ヶ月",
   "range_last_3months": "直近3ヶ月",
-  "saving": "保存中..."
+  "saving": "保存中...",
+  "back": "戻る",
+  "notifications": "通知",
+  "press_to_access": "%@ にアクセスするには押します"
 }

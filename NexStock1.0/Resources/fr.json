@@ -149,5 +149,8 @@
   "range_last_week": "Semaine dernière",
   "range_last_month": "Mois dernier",
   "range_last_3months": "3 derniers mois",
-  "saving": "Enregistrement..."
+  "saving": "Enregistrement...",
+  "back": "Retour",
+  "notifications": "Notifications",
+  "press_to_access": "Appuyez pour accéder à %@"
 }

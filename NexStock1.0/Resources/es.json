@@ -148,5 +148,8 @@
   "range_last_week": "Última semana",
   "range_last_month": "Último mes",
   "range_last_3months": "Últimos 3 meses",
-  "saving": "Guardando..."
+  "saving": "Guardando...",
+  "back": "Volver",
+  "notifications": "Notificaciones",
+  "press_to_access": "Presiona para acceder a %@"
 }

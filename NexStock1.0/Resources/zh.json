@@ -147,5 +147,8 @@
   "range_last_week": "最近一周",
   "range_last_month": "最近一个月",
   "range_last_3months": "最近三个月",
-  "saving": "保存中..."
+  "saving": "保存中...",
+  "back": "返回",
+  "notifications": "通知",
+  "press_to_access": "按下以访问%@"
 }

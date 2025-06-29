@@ -147,5 +147,8 @@
   "range_last_week": "Letzte Woche",
   "range_last_month": "Letzter Monat",
   "range_last_3months": "Letzte 3 Monate",
-  "saving": "Speichern..."
+  "saving": "Speichern...",
+  "back": "Zurück",
+  "notifications": "Benachrichtigungen",
+  "press_to_access": "Zum Öffnen von %@ tippen"
 }

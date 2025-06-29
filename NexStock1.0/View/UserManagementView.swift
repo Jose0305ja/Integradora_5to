@@ -59,7 +59,7 @@ struct UserManagementView: View {
                         Image(systemName: "chevron.left")
                             .font(.title2)
                             .foregroundColor(.primary)
-                            .accessibilityLabel("Volver")
+                            .accessibilityLabel("back".localized)
                     }
 
                     Text("users".localized)
