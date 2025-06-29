@@ -363,4 +363,51 @@ extension UserService {
             completion(.success(()))
         }.resume()
     }
+
+    func fetchPreferences(id: String, completion: @escaping (Result<UserPreferences, Error>) -> Void) {
+        guard let token = AuthService.shared.token else {
+            completion(.failure(NSError(domain: "UserService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
+        guard let url = URL(string: "\(baseURL)/auth/users/\(id)/preferences") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        print("[UserService] GET /auth/users/\(id)/preferences")
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("[UserService] preferences error: \(error.localizedDescription)")
+                completion(.failure(error))
+                return
+            }
+            guard let http = response as? HTTPURLResponse, let data = data else {
+                completion(.failure(NSError(domain: "UserService", code: 0, userInfo: nil)))
+                return
+            }
+            if let body = String(data: data, encoding: .utf8) {
+                print("[UserService] preferences body:\n\(body)")
+            }
+            if http.statusCode != 200 {
+                if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
+                    completion(.failure(NSError(domain: "UserService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
+                } else {
+                    completion(.failure(NSError(domain: "UserService", code: http.statusCode, userInfo: nil)))
+                }
+                return
+            }
+            do {
+                let decoded = try JSONDecoder().decode(UserPreferencesResponse.self, from: data)
+                let prefs = UserPreferences(language: decoded.language ?? "es", theme: decoded.theme ?? "light")
+                completion(.success(prefs))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+}
+
+struct UserPreferencesResponse: Decodable {
+    let message: String
+    let language: String?
+    let theme: String?
 }

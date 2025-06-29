@@ -31,6 +31,20 @@ class LoginViewModel: ObservableObject {
                     self?.isLoggedIn = true
                     // Obtener configuraci\u00f3n del sistema al iniciar sesi\u00f3n
                     SystemConfigViewModel().fetchConfig()
+                    // Preferencias de usuario
+                    UserService.shared.fetchPreferences(id: response.user.id) { prefsResult in
+                        DispatchQueue.main.async {
+                            switch prefsResult {
+                            case .success(let prefs):
+                                LocalizationManager.shared.setLanguage(prefs.language)
+                                ThemeManager.shared.setTheme(prefs.theme)
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                                LocalizationManager.shared.setLanguage("es")
+                                ThemeManager.shared.setTheme("light")
+                            }
+                        }
+                    }
                     completion(true)
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
