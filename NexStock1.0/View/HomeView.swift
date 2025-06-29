@@ -30,18 +30,46 @@ struct HomeView: View {
                             CardModel(title: "Utilidad", subtitle: "$7,584.00")
                         ])
 
-                        SectionView(title: "monitoring".localized, cards: [
-                            CardModel(
-                                title: "temperature".localized,
-                                subtitle: String(format: "%.1f °C", monitoringVM.temperature),
-                                icon: "thermometer"
-                            ),
-                            CardModel(
-                                title: "humidity".localized,
-                                subtitle: String(format: "%.0f %%", monitoringVM.humidity),
-                                icon: "drop.fill"
-                            )
-                        ])
+                        VStack(alignment: .center, spacing: 10) {
+                            Text("monitoring".localized)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                                .frame(maxWidth: .infinity, alignment: .center)
+
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 20) {
+                                    Button(action: { path.append(AppRoute.temperature) }) {
+                                        CardView(model: CardModel(
+                                            title: "temperature".localized,
+                                            subtitle: String(format: "%.1f °C", monitoringVM.temperature),
+                                            icon: "thermometer"
+                                        ))
+                                    }
+                                    Button(action: { path.append(AppRoute.humidity) }) {
+                                        CardView(model: CardModel(
+                                            title: "humidity".localized,
+                                            subtitle: String(format: "%.0f %%", monitoringVM.humidity),
+                                            icon: "drop.fill"
+                                        ))
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                        }
+
+                        HStack {
+                            Text("alerts".localized)
+                                .font(.title3.bold())
+                                .foregroundColor(.primary)
+
+                            Spacer()
+
+                            SeeMoreButton(label: "see_more".localized) {
+                                path.append(AppRoute.alerts)
+                            }
+                        }
+                        .padding(.horizontal)
 
                         VStack(spacing: 12) {
                             ForEach(recentAlerts) { alert in
@@ -59,35 +87,40 @@ struct HomeView: View {
                             if let items = summary.expiring, !items.isEmpty {
                                 HomeSummarySectionView(
                                     title: "expiring".localized,
-                                    products: items.map { ProductModel(from: $0) }
+                                    products: items.map { ProductModel(from: $0) },
+                                    onSeeAll: { path.append(AppRoute.expiring) }
                                 )
                             }
 
                             if let items = summary.out_of_stock, !items.isEmpty {
                                 HomeSummarySectionView(
                                     title: "out_of_stock".localized,
-                                    products: items.map { ProductModel(from: $0) }
+                                    products: items.map { ProductModel(from: $0) },
+                                    onSeeAll: { path.append(AppRoute.outOfStock) }
                                 )
                             }
 
                             if let items = summary.low_stock, !items.isEmpty {
                                 HomeSummarySectionView(
                                     title: "below_minimum".localized,
-                                    products: items.map { ProductModel(from: $0) }
+                                    products: items.map { ProductModel(from: $0) },
+                                    onSeeAll: { path.append(AppRoute.belowMinimum) }
                                 )
                             }
 
                             if let items = summary.near_minimum, !items.isEmpty {
                                 HomeSummarySectionView(
                                     title: "near_minimum".localized,
-                                    products: items.map { ProductModel(from: $0) }
+                                    products: items.map { ProductModel(from: $0) },
+                                    onSeeAll: { path.append(AppRoute.nearMinimum) }
                                 )
                             }
 
                             if let items = summary.overstock, !items.isEmpty {
                                 HomeSummarySectionView(
                                     title: "overstock".localized,
-                                    products: items.map { ProductModel(from: $0) }
+                                    products: items.map { ProductModel(from: $0) },
+                                    onSeeAll: { path.append(AppRoute.overstock) }
                                 )
                             }
                         }

@@ -25,6 +25,7 @@ class AuthService: ObservableObject {
     @Published var token: String? = nil
     @Published var logoURL: String? = nil
     @Published var userInfo: UserInfo? = nil
+    @Published var showWelcome = false
 
     var isAuthenticated: Bool {
         return token != nil
@@ -80,6 +81,8 @@ class AuthService: ObservableObject {
                         ThemeManager.shared.tertiaryColor = t
                     }
 
+                    self.showWelcome = true
+
                     // Call completion after token is available
                     completion(.success(decoded))
                 }
@@ -95,6 +98,7 @@ class AuthService: ObservableObject {
     func logout() {
         token = nil
         userInfo = nil
+        showWelcome = false
         UserDefaults.standard.removeObject(forKey: "authToken")
     }
 }

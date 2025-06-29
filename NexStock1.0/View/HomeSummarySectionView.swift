@@ -3,16 +3,25 @@ import SwiftUI
 struct HomeSummarySectionView: View {
     let title: String
     let products: [ProductModel]
+    var onSeeAll: (() -> Void)? = nil
 
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.title3.bold())
-                .foregroundColor(.primary)
-                .padding(.horizontal)
+            HStack {
+                Text(title)
+                    .font(.title3.bold())
+                    .foregroundColor(.primary)
+
+                Spacer()
+
+                if let onSeeAll = onSeeAll {
+                    SeeMoreButton(label: "see_more".localized) { onSeeAll() }
+                }
+            }
+            .padding(.horizontal)
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
