@@ -104,7 +104,7 @@ struct SettingsView: View {
                                             .font(.body)
                                             .foregroundColor(.fourthColor)
 
-                                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))], spacing: 8) {
+                                        VStack(alignment: .leading, spacing: 8) {
                                             OptionButton(label: "Español 🇲🇽", isSelected: selectedLanguage == "es") {
                                                 selectedLanguage = "es"
                                             }
