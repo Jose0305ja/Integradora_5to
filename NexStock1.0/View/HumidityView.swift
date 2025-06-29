@@ -54,10 +54,15 @@ struct HumidityView: View {
                                     .frame(maxWidth: .infinity)
                             } else {
                                 HStack {
-                                    infoBox(title: "current_humidity".localized, value: "\(viewModel.current)%")
-                                    infoBox(title: "average".localized, value: "\(viewModel.average)%")
-                                    infoBox(title: "minimum".localized, value: "\(viewModel.min)%")
-                                    infoBox(title: "maximum".localized, value: "\(viewModel.max)%")
+                                    infoBox(title: "current_humidity".localized,
+                                            value: "\(String(format: "%.1f", viewModel.current))%",
+                                            color: .secondaryColor)
+                                    infoBox(title: "average".localized,
+                                            value: "\(String(format: "%.1f", viewModel.average))%")
+                                    infoBox(title: "minimum".localized,
+                                            value: "\(String(format: "%.1f", viewModel.min))%")
+                                    infoBox(title: "maximum".localized,
+                                            value: "\(String(format: "%.1f", viewModel.max))%")
                                 }
                             }
                         }
