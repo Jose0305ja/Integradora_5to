@@ -67,12 +67,12 @@ struct ChangePasswordSheet: View {
         }
         .navigationBarBackButtonHidden(true)
         .alert("password_updated".localized, isPresented: $showSuccessAlert) {
-            Button("OK", role: .cancel) {
+            Button("ok".localized, role: .cancel) {
                 dismiss()
             }
         }
         .alert("error_occurred".localized, isPresented: $showErrorAlert) {
-            Button("OK", role: .cancel) {}
+            Button("ok".localized, role: .cancel) {}
         }
     }
 

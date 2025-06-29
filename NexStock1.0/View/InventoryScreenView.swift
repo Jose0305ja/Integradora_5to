@@ -62,7 +62,7 @@ struct InventoryScreenView: View {
         HStack {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.tertiaryColor.opacity(0.7))
-            TextField("Buscar producto", text: $searchVM.query)
+            TextField("search_product".localized, text: $searchVM.query)
                 .textFieldStyle(PlainTextFieldStyle())
                 .focused($isSearchFocused)
         }
@@ -90,7 +90,7 @@ struct InventoryScreenView: View {
                         ProgressView()
                             .padding()
                     } else if searchVM.results.isEmpty {
-                        Text("No se encontraron productos")
+                        Text("no_products_found".localized)
                             .foregroundColor(.tertiaryColor)
                             .padding()
                     } else {

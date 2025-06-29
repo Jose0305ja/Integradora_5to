@@ -44,7 +44,7 @@ struct TemperatureView: View {
                         // Gráfica
                         SectionContainer(title: "") {
                             if viewModel.temperatureData.isEmpty {
-                                Text("Sin datos")
+                                Text("no_data".localized)
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity, alignment: .center)
                             } else {
@@ -59,7 +59,7 @@ struct TemperatureView: View {
                         // Valores clave
                         SectionContainer(title: "") {
                             if viewModel.temperatureData.isEmpty {
-                                Text("Sin datos")
+                                Text("no_data".localized)
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity)
                             } else {
@@ -96,7 +96,7 @@ struct TemperatureView: View {
         .navigationBarBackButtonHidden(true)
         .task { viewModel.fetch(for: viewModel.selectedTimeRange) }
         .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
-            Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")) {
+            Alert(title: Text("error".localized), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("ok".localized)) {
                 viewModel.errorMessage = nil
             })
         }

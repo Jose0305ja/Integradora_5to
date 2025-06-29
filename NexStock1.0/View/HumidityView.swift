@@ -44,7 +44,7 @@ struct HumidityView: View {
                         // Gráfica
                         SectionContainer(title: "") {
                             if viewModel.humidityData.isEmpty {
-                                Text("Sin datos")
+                                Text("no_data".localized)
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity, alignment: .center)
                             } else {
@@ -59,7 +59,7 @@ struct HumidityView: View {
                         // Valores
                         SectionContainer(title: "") {
                             if viewModel.humidityData.isEmpty {
-                                Text("Sin datos")
+                                Text("no_data".localized)
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity)
                             } else {
@@ -73,7 +73,7 @@ struct HumidityView: View {
                         }
 
                         if viewModel.current > viewModel.optimalMax {
-                            Text("⚠️ Alerta: Humedad superior al rango óptimo")
+                            Text("humidity_alert".localized)
                                 .font(.callout)
                                 .foregroundColor(.orange)
                                 .padding()
@@ -95,7 +95,7 @@ struct HumidityView: View {
         .navigationBarBackButtonHidden(true)
         .task { viewModel.fetch(for: viewModel.selectedTimeRange) }
         .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
-            Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")) {
+            Alert(title: Text("error".localized), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("ok".localized)) {
                 viewModel.errorMessage = nil
             })
         }

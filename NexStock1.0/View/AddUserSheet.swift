@@ -119,13 +119,13 @@ struct AddUserSheet: View {
         .navigationBarBackButtonHidden(true)
         .onAppear { fetchRoles() }
         .alert("user_created".localized, isPresented: $showSuccessAlert) {
-            Button("OK", role: .cancel) {
+            Button("ok".localized, role: .cancel) {
                 dismiss()
                 onSave()
             }
         }
         .alert("error_occurred".localized, isPresented: $showErrorAlert) {
-            Button("OK", role: .cancel) {}
+            Button("ok".localized, role: .cancel) {}
         }
     }
 

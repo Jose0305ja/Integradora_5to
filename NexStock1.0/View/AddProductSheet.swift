@@ -67,7 +67,7 @@ struct AddProductSheet: View {
 
             Spacer()
 
-            Button("Guardar") { saveProduct() }
+            Button("save".localized) { saveProduct() }
                 .disabled(name.isEmpty || selectedCategory == nil || selectedUnitType == nil || finalURL == nil)
                 .foregroundColor(.tertiaryColor)
         }
@@ -91,10 +91,10 @@ struct AddProductSheet: View {
                         SectionContainer(title: "information".localized) {
                             VStack(spacing: 12) {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Nombre")
+                                    Text("name".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    TextField("Nombre del producto", text: $name)
+                                    TextField("product_name".localized, text: $name)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -102,10 +102,10 @@ struct AddProductSheet: View {
                                 }
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Marca")
+                                    Text("brand".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    TextField("Marca registrada", text: $brand)
+                                    TextField("brand_placeholder".localized, text: $brand)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -113,10 +113,10 @@ struct AddProductSheet: View {
                                 }
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Descripción")
+                                    Text("description".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    TextField("Escribe una descripción breve...", text: $description)
+                                    TextField("description_placeholder".localized, text: $description)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -130,7 +130,7 @@ struct AddProductSheet: View {
                         // Sección 2
                         SectionContainer(title: "stock".localized) {
                             HStack {
-                                Text("Mínimo:")
+                                Text("minimum".localized + ":")
                                 TextField("0", value: $stockMin, format: .number)
                                     .keyboardType(.numberPad)
                                     .background(Color.backColor)
@@ -143,7 +143,7 @@ struct AddProductSheet: View {
                                     .cornerRadius(14)
                             }
                             HStack {
-                                Text("Máximo:")
+                                Text("maximum".localized + ":")
                                 TextField("0", value: $stockMax, format: .number)
                                     .keyboardType(.numberPad)
                                     .background(Color.backColor)
@@ -165,33 +165,33 @@ struct AddProductSheet: View {
                                     .scaledToFit()
                                     .frame(height: 150)
                             } else if isUploading {
-                                ProgressView("Subiendo imagen...")
+                                ProgressView("image_uploading".localized)
                             } else {
-                                Text("No hay imagen seleccionada")
+                                Text("no_image".localized)
                                     .font(.footnote)
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .foregroundColor(.primary)
                             }
 
-                            Button("Subir desde galería o cámara") {
+                            Button("upload_image".localized) {
                                 showImageSourceOptions = true
                             }
-                            .confirmationDialog("Selecciona origen de la imagen", isPresented: $showImageSourceOptions) {
-                                Button("Tomar foto") {
+                            .confirmationDialog("select_image".localized, isPresented: $showImageSourceOptions) {
+                                Button("take_photo".localized) {
                                     sourceType = .camera
                                     showImagePicker = true
                                 }
-                                Button("Seleccionar de galería") {
+                                Button("choose_gallery".localized) {
                                     sourceType = .photoLibrary
                                     showImagePicker = true
                                 }
-                                Button("Cancelar", role: .cancel) {}
+                                Button("cancel".localized, role: .cancel) {}
                             }
                         }
 
                         // Sección 4
                         SectionContainer(title: "category".localized) {
-                            Picker("Categoría", selection: $selectedCategory) {
+                            Picker("category".localized, selection: $selectedCategory) {
                                 ForEach(categories, id: \.self) { category in
                                     Text(category.name.localized).tag(category as Category?)
                                 }
@@ -201,7 +201,7 @@ struct AddProductSheet: View {
 
                         // Sección 5
                         SectionContainer(title: "unit".localized) {
-                            Picker("Tipo de unidad", selection: $selectedUnitType) {
+                            Picker("unit".localized, selection: $selectedUnitType) {
                                 ForEach(unitTypes, id: \.self) { unit in
                                     Text(unit.name.localized).tag(unit as UnitType?)
                                 }
@@ -240,13 +240,13 @@ struct AddProductSheet: View {
                 }
             }
         }
-        .alert("Producto guardado", isPresented: $showSuccessAlert) {
-            Button("OK", role: .cancel) {
+        .alert("product_saved".localized, isPresented: $showSuccessAlert) {
+            Button("ok".localized, role: .cancel) {
                 dismiss()
             }
         }
-        .alert("Ocurrió un error", isPresented: $showErrorAlert) {
-            Button("OK", role: .cancel) {}
+        .alert("error_occurred".localized, isPresented: $showErrorAlert) {
+            Button("ok".localized, role: .cancel) {}
         }
     }
 

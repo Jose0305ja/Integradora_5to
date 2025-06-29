@@ -118,13 +118,13 @@ struct EditUserSheet: View {
         .onAppear { print("[EditUserSheet] appear for \(details.user.id)") }
         .navigationBarBackButtonHidden(true)
         .alert("changes_saved".localized, isPresented: $showSuccessAlert) {
-            Button("OK", role: .cancel) {
+            Button("ok".localized, role: .cancel) {
                 dismiss()
                 onSave()
             }
         }
         .alert("error_occurred".localized, isPresented: $showErrorAlert) {
-            Button("OK", role: .cancel) {}
+            Button("ok".localized, role: .cancel) {}
         }
     }
 

@@ -189,17 +189,17 @@ struct SystemConfigView: View {
             }
         }
 
-        .alert("Cambios guardados", isPresented: $viewModel.showSuccessAlert) {
-            Button("OK", role: .cancel) { }
+        .alert("changes_saved".localized, isPresented: $viewModel.showSuccessAlert) {
+            Button("ok".localized, role: .cancel) { }
         }
-        .alert("Error al guardar", isPresented: $viewModel.showErrorAlert) {
-            Button("OK", role: .cancel) { }
+        .alert("error_occurred".localized, isPresented: $viewModel.showErrorAlert) {
+            Button("ok".localized, role: .cancel) { }
         }
         .overlay(
             Group {
                 if viewModel.isSaving {
                     Color.black.opacity(0.4).ignoresSafeArea()
-                    ProgressView("Guardando...")
+                    ProgressView("saving".localized)
                         .padding(20)
                         .background(.regularMaterial)
                         .cornerRadius(12)
