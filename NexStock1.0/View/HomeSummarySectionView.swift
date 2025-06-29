@@ -18,9 +18,7 @@ struct HomeSummarySectionView: View {
                 Spacer()
 
                 if let onSeeAll = onSeeAll {
-                    Button("see_more".localized) { onSeeAll() }
-                        .font(.caption)
-                        .foregroundColor(.blue)
+                    SeeMoreButton(label: "see_more".localized) { onSeeAll() }
                 }
             }
             .padding(.horizontal)

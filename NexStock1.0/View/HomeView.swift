@@ -65,11 +65,9 @@ struct HomeView: View {
 
                             Spacer()
 
-                            Button("see_more".localized) {
+                            SeeMoreButton(label: "see_more".localized) {
                                 path.append(AppRoute.alerts)
                             }
-                            .font(.caption)
-                            .foregroundColor(.blue)
                         }
                         .padding(.horizontal)
 
