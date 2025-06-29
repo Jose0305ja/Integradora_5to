@@ -18,6 +18,7 @@ struct SettingsView: View {
     @EnvironmentObject var theme: ThemeManager
     @State private var notificationsEnabled = true
     @State private var userRole: UserRole = .admin
+    @State private var showChangePassword = false
     @Environment(\.presentationMode) var presentationMode
     @Binding var path: NavigationPath
 
@@ -56,6 +57,7 @@ struct SettingsView: View {
                             SettingRow(icon: "person.fill", title: "username".localized, subtitle: "Jose Rodriguez")
                             SettingRow(icon: "envelope.fill", title: "email".localized, subtitle: "jose@email.com")
                             SettingRow(icon: "key.fill", title: "change_password".localized)
+                                .onTapGesture { showChangePassword = true }
                         }
 
                         // ⚙️ Preferencias
@@ -147,6 +149,9 @@ struct SettingsView: View {
             applyAppearance()
         }
         .onAppear { applyAppearance() }
+        .sheet(isPresented: $showChangePassword) {
+            ChangePasswordSheet()
+        }
         .navigationBarBackButtonHidden(true)
     }
 
