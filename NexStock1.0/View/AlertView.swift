@@ -23,18 +23,19 @@ struct AlertView: View {
             VStack(alignment: .leading, spacing: 16) {
                 HeaderView(showMenu: $showMenu, path: $path)
 
-                Text("alerts".localized)
-                    .font(.title.bold())
-                    .padding(.horizontal)
+                HStack {
+                    Text("alerts".localized)
+                        .font(.title.bold())
 
-                Button(action: { showSensorsStatus = true }) {
-                    Text("\u{1F4E1} Estado de sensores")
-                        .font(.subheadline.bold())
-                        .frame(maxWidth: .infinity)
-                        .padding(8)
-                        .background(Color.secondaryColor)
-                        .cornerRadius(8)
-                        .foregroundColor(.tertiaryColor)
+                    Spacer()
+
+                    Button(action: { showSensorsStatus = true }) {
+                        Image(systemName: "antenna.radiowaves.left.and.right")
+                            .padding(8)
+                            .background(Color.secondaryColor)
+                            .clipShape(Circle())
+                            .foregroundColor(.tertiaryColor)
+                    }
                 }
                 .padding(.horizontal)
 
