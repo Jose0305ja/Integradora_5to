@@ -21,9 +21,10 @@ enum AuthError: LocalizedError {
 
 class AuthService: ObservableObject {
     static let shared = AuthService()
-    
+
     @Published var token: String? = nil
     @Published var logoURL: String? = nil
+    @Published var userInfo: UserInfo? = nil
 
     var isAuthenticated: Bool {
         return token != nil
@@ -68,6 +69,7 @@ class AuthService: ObservableObject {
                 DispatchQueue.main.async {
                     self.token = decoded.accessToken
                     self.logoURL = decoded.settings.logo_url
+                    self.userInfo = decoded.user
                     if let p = Color(hex: decoded.settings.color_primary) {
                         ThemeManager.shared.primaryColor = p
                     }
@@ -91,6 +93,7 @@ class AuthService: ObservableObject {
 
     func logout() {
         token = nil
+        userInfo = nil
         UserDefaults.standard.removeObject(forKey: "authToken")
     }
 }
