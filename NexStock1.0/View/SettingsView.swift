@@ -141,12 +141,12 @@ struct SettingsView: View {
             }
         }
         .onChange(of: selectedLanguage) { newLanguage in
-            localization.selectedLanguage = newLanguage
-            simulatePatchPreferences(language: newLanguage, theme: selectedAppearance)
+            localization.setLanguage(newLanguage)
+            patchPreferences(language: newLanguage, theme: selectedAppearance)
         }
         .onChange(of: selectedAppearance) { newTheme in
-            simulatePatchPreferences(language: selectedLanguage, theme: newTheme)
-            applyAppearance()
+            theme.setTheme(newTheme)
+            patchPreferences(language: selectedLanguage, theme: newTheme)
         }
         .onAppear { applyAppearance() }
         .sheet(isPresented: $showChangePassword) {
@@ -168,16 +168,19 @@ struct SettingsView: View {
         }
     }
 
-    // 👇 Simula una petición PATCH
-    private func simulatePatchPreferences(language: String, theme: String) {
-        let preferences = UserPreferences(language: language, theme: theme)
-        if let jsonData = try? JSONEncoder().encode(preferences),
-           let jsonString = String(data: jsonData, encoding: .utf8) {
-            print("🔄 PATCH: https://auth.nexusutd.online/auth/users/:id/preferences")
-            print("Body:")
-            print(jsonString)
-        } else {
-            print("❌ Error al codificar preferencias")
+    // 👇 Envía las preferencias actualizadas al backend
+    private func patchPreferences(language: String, theme: String) {
+        guard let id = AuthService.shared.userInfo?.id else { return }
+        let prefs = UserPreferences(language: language, theme: theme)
+        UserService.shared.patchPreferences(id: id, preferences: prefs) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    print(response.message)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
         }
     }
 }
