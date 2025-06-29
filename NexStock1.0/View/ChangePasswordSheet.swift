@@ -25,7 +25,7 @@ struct ChangePasswordSheet: View {
 
             Spacer()
 
-            Button("Guardar") { changePassword() }
+            Button("save".localized) { changePassword() }
                 .disabled(newPassword.isEmpty)
                 .foregroundColor(.tertiaryColor)
         }
@@ -47,10 +47,10 @@ struct ChangePasswordSheet: View {
                         VStack(spacing: 20) {
                             SectionContainer(title: "") {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Nueva contraseña")
+                                    Text("new_password".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    SecureField("Nueva contraseña", text: $newPassword)
+                                    SecureField("new_password".localized, text: $newPassword)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -66,12 +66,12 @@ struct ChangePasswordSheet: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .alert("Contraseña actualizada correctamente", isPresented: $showSuccessAlert) {
+        .alert("password_updated".localized, isPresented: $showSuccessAlert) {
             Button("OK", role: .cancel) {
                 dismiss()
             }
         }
-        .alert("Ocurrió un error", isPresented: $showErrorAlert) {
+        .alert("error_occurred".localized, isPresented: $showErrorAlert) {
             Button("OK", role: .cancel) {}
         }
     }

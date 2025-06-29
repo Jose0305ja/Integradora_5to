@@ -98,5 +98,19 @@
   "no_information": "Sin información",
   "before": "Antes",
   "after": "Después",
-  "see_more": "Ver más"
+  "see_more": "Ver más",
+  "password": "Contraseña",
+  "log_in": "Iniciar sesión",
+  "verifying": "Verificando...",
+  "new_user": "Nuevo usuario",
+  "edit_user": "Editar usuario",
+  "first_name": "Nombre",
+  "last_name": "Apellido",
+  "role": "Rol",
+  "save": "Guardar",
+  "user_created": "Usuario creado",
+  "error_occurred": "Ocurrió un error",
+  "changes_saved": "Cambios guardados",
+  "new_password": "Nueva contraseña",
+  "password_updated": "Contraseña actualizada correctamente"
 }

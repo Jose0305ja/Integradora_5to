@@ -97,5 +97,19 @@
   "no_information": "没有信息",
   "before": "之前",
   "after": "之后",
-  "see_more": "查看更多"
+  "see_more": "查看更多",
+  "password": "密码",
+  "log_in": "登录",
+  "verifying": "验证中...",
+  "new_user": "新用户",
+  "edit_user": "编辑用户",
+  "first_name": "名",
+  "last_name": "姓",
+  "role": "角色",
+  "save": "保存",
+  "user_created": "用户已创建",
+  "error_occurred": "发生错误",
+  "changes_saved": "更改已保存",
+  "new_password": "新密码",
+  "password_updated": "密码已更新"
 }

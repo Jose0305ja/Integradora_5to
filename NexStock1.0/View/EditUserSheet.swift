@@ -36,13 +36,13 @@ struct EditUserSheet: View {
 
             Spacer()
 
-            Text("Editar usuario")
+            Text("edit_user".localized)
                 .font(.headline)
                 .foregroundColor(.tertiaryColor)
 
             Spacer()
 
-            Button("Guardar") { saveChanges() }
+            Button("save".localized) { saveChanges() }
                 .disabled(username.isEmpty || firstName.isEmpty || lastName.isEmpty || selectedRole == nil)
                 .foregroundColor(.tertiaryColor)
         }
@@ -62,12 +62,12 @@ struct EditUserSheet: View {
 
                     ScrollView {
                         VStack(spacing: 20) {
-                            SectionContainer(title: "Información") {
+                            SectionContainer(title: "information".localized) {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Nombre de usuario")
+                                    Text("username".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    TextField("Usuario", text: $username)
+                                    TextField("username".localized, text: $username)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -75,10 +75,10 @@ struct EditUserSheet: View {
                                 }
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Nombre")
+                                    Text("first_name".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    TextField("Nombre", text: $firstName)
+                                    TextField("first_name".localized, text: $firstName)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -86,10 +86,10 @@ struct EditUserSheet: View {
                                 }
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Apellido")
+                                    Text("last_name".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    TextField("Apellido", text: $lastName)
+                                    TextField("last_name".localized, text: $lastName)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -99,8 +99,8 @@ struct EditUserSheet: View {
                             .padding(.vertical, 4)
                             .foregroundColor(.tertiaryColor)
 
-                            SectionContainer(title: "Rol") {
-                                Picker("Rol", selection: $selectedRole) {
+                            SectionContainer(title: "role".localized) {
+                                Picker("role".localized, selection: $selectedRole) {
                                     ForEach(roles, id: \.self) { role in
                                         Text(role.name).tag(role as RoleModel?)
                                     }
@@ -117,13 +117,13 @@ struct EditUserSheet: View {
         }
         .onAppear { print("[EditUserSheet] appear for \(details.user.id)") }
         .navigationBarBackButtonHidden(true)
-        .alert("Cambios guardados", isPresented: $showSuccessAlert) {
+        .alert("changes_saved".localized, isPresented: $showSuccessAlert) {
             Button("OK", role: .cancel) {
                 dismiss()
                 onSave()
             }
         }
-        .alert("Ocurrió un error", isPresented: $showErrorAlert) {
+        .alert("error_occurred".localized, isPresented: $showErrorAlert) {
             Button("OK", role: .cancel) {}
         }
     }

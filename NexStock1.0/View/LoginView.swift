@@ -35,7 +35,7 @@ struct LoginView: View {
                             .cornerRadius(30)
 
                         // Usuario
-                        TextField("Usuario", text: $viewModel.username)
+                        TextField("username".localized, text: $viewModel.username)
                             .textFieldStyle(PlainTextFieldStyle())
                             .padding()
                             .background(.thinMaterial)
@@ -45,9 +45,9 @@ struct LoginView: View {
                         // Contraseña
                         ZStack(alignment: .trailing) {
                             if isPasswordVisible {
-                                TextField("Contraseña", text: $viewModel.password)
+                                TextField("password".localized, text: $viewModel.password)
                             } else {
-                                SecureField("Contraseña", text: $viewModel.password)
+                                SecureField("password".localized, text: $viewModel.password)
                             }
 
                             Button(action: {
@@ -83,7 +83,7 @@ struct LoginView: View {
                                 }
                             }
                         }) {
-                            Text("Iniciar sesión")
+                            Text("log_in".localized)
                                 .fontWeight(.semibold)
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -104,7 +104,7 @@ struct LoginView: View {
                 Group {
                     if viewModel.isLoading {
                         Color.black.opacity(0.4).ignoresSafeArea()
-                        ProgressView("Verificando...")
+                        ProgressView("verifying".localized)
                             .padding(20)
                             .background(.regularMaterial)
                             .cornerRadius(12)

@@ -47,7 +47,7 @@
   "tap_to_change_logo": "Appuyez sur le logo pour le changer",
   "text": "Texte",
   "current_temperature": "Température actuelle",
-  "temperature_alert": "⚠️ Alerte : Température au-dessus de la plage optimale"
+  "temperature_alert": "⚠️ Alerte : Température au-dessus de la plage optimale",
   "fruits": "Fruits",
   "vegetables": "Légumes",
   "blueberry": "Myrtille",
@@ -99,5 +99,19 @@
   "no_information": "Pas d'information",
   "before": "Avant",
   "after": "Après",
-  "see_more": "Voir plus"
+  "see_more": "Voir plus",
+  "password": "Mot de passe",
+  "log_in": "Connexion",
+  "verifying": "Vérification...",
+  "new_user": "Nouvel utilisateur",
+  "edit_user": "Modifier l'utilisateur",
+  "first_name": "Prénom",
+  "last_name": "Nom de famille",
+  "role": "Rôle",
+  "save": "Enregistrer",
+  "user_created": "Utilisateur créé",
+  "error_occurred": "Une erreur est survenue",
+  "changes_saved": "Modifications enregistrées",
+  "new_password": "Nouveau mot de passe",
+  "password_updated": "Mot de passe mis à jour"
 }
