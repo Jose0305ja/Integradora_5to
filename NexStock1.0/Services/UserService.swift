@@ -364,6 +364,53 @@ extension UserService {
         }.resume()
     }
 
+    func patchPreferences(id: String, preferences: UserPreferences, completion: @escaping (Result<UserPreferencesResponse, Error>) -> Void) {
+        guard let token = AuthService.shared.token else {
+            completion(.failure(NSError(domain: "UserService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
+            return
+        }
+        guard let url = URL(string: "\(baseURL)/auth/users/\(id)/preferences") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        do {
+            request.httpBody = try JSONEncoder().encode(preferences)
+        } catch {
+            completion(.failure(error))
+            return
+        }
+
+        print("[UserService] PATCH /auth/users/\(id)/preferences")
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let http = response as? HTTPURLResponse, let data = data else {
+                completion(.failure(NSError(domain: "UserService", code: 0, userInfo: nil)))
+                return
+            }
+            if let body = String(data: data, encoding: .utf8) {
+                print("[UserService] patchPreferences body:\n\(body)")
+            }
+            if http.statusCode != 200 {
+                if let msg = try? JSONDecoder().decode([String: String].self, from: data)["message"] {
+                    completion(.failure(NSError(domain: "UserService", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])))
+                } else {
+                    completion(.failure(NSError(domain: "UserService", code: http.statusCode, userInfo: nil)))
+                }
+                return
+            }
+            do {
+                let decoded = try JSONDecoder().decode(UserPreferencesResponse.self, from: data)
+                completion(.success(decoded))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+
     func fetchPreferences(id: String, completion: @escaping (Result<UserPreferences, Error>) -> Void) {
         guard let token = AuthService.shared.token else {
             completion(.failure(NSError(domain: "UserService", code: 401, userInfo: [NSLocalizedDescriptionKey: "No token disponible."])))
