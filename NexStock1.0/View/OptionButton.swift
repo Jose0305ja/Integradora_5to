@@ -10,9 +10,9 @@ struct OptionButton: View {
     var body: some View {
         Button(action: action) {
             Text(label)
-                .font(.caption.bold())
-                .padding(.vertical, 6)
-                .padding(.horizontal, 10)
+                .font(.footnote.weight(.semibold))
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
                 .background(isSelected ? Color.tertiaryColor : Color.secondaryColor)
                 .foregroundColor(isSelected ? Color.secondaryColor : Color.tertiaryColor)
                 .clipShape(Capsule())
