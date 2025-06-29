@@ -8,7 +8,7 @@
 import Foundation
 
 struct UserTableModel: Identifiable, Equatable {
-    let id = UUID()
+    let id: String
     let username: String
     let firstName: String
     let lastName: String
