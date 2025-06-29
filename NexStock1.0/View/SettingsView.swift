@@ -19,6 +19,7 @@ struct SettingsView: View {
     @State private var notificationsEnabled = true
     @State private var userRole: UserRole = .admin
     @State private var showChangePassword = false
+    @State private var languagesExpanded = false
     @Environment(\.presentationMode) var presentationMode
     @Binding var path: NavigationPath
 
@@ -100,39 +101,45 @@ struct SettingsView: View {
                                         .font(.body)
 
                                     VStack(alignment: .leading, spacing: 8) {
-                                        Text("languages")
-                                            .font(.body)
-                                            .foregroundColor(.fourthColor)
+                                        DisclosureGroup(
+                                            isExpanded: $languagesExpanded,
+                                            content: {
+                                                VStack(alignment: .leading, spacing: 8) {
+                                                    OptionButton(label: "Español 🇲🇽", isSelected: selectedLanguage == "es") {
+                                                        selectedLanguage = "es"
+                                                    }
 
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            OptionButton(label: "Español 🇲🇽", isSelected: selectedLanguage == "es") {
-                                                selectedLanguage = "es"
-                                            }
+                                                    OptionButton(label: "English 🇺🇸", isSelected: selectedLanguage == "en") {
+                                                        selectedLanguage = "en"
+                                                    }
 
-                                            OptionButton(label: "English 🇺🇸", isSelected: selectedLanguage == "en") {
-                                                selectedLanguage = "en"
-                                            }
+                                                    OptionButton(label: "Français 🇫🇷", isSelected: selectedLanguage == "fr") {
+                                                        selectedLanguage = "fr"
+                                                    }
 
-                                            OptionButton(label: "Français 🇫🇷", isSelected: selectedLanguage == "fr") {
-                                                selectedLanguage = "fr"
-                                            }
+                                                    OptionButton(label: "Deutsch 🇩🇪", isSelected: selectedLanguage == "de") {
+                                                        selectedLanguage = "de"
+                                                    }
 
-                                            OptionButton(label: "Deutsch 🇩🇪", isSelected: selectedLanguage == "de") {
-                                                selectedLanguage = "de"
-                                            }
+                                                    OptionButton(label: "Italiano 🇮🇹", isSelected: selectedLanguage == "it") {
+                                                        selectedLanguage = "it"
+                                                    }
 
-                                            OptionButton(label: "Italiano 🇮🇹", isSelected: selectedLanguage == "it") {
-                                                selectedLanguage = "it"
-                                            }
+                                                    OptionButton(label: "日本語 🇯🇵", isSelected: selectedLanguage == "ja") {
+                                                        selectedLanguage = "ja"
+                                                    }
 
-                                            OptionButton(label: "日本語 🇯🇵", isSelected: selectedLanguage == "ja") {
-                                                selectedLanguage = "ja"
+                                                    OptionButton(label: "中文 🇨🇳", isSelected: selectedLanguage == "zh") {
+                                                        selectedLanguage = "zh"
+                                                    }
+                                                }
+                                            },
+                                            label: {
+                                                Text("languages")
+                                                    .font(.body)
+                                                    .foregroundColor(.fourthColor)
                                             }
-
-                                            OptionButton(label: "中文 🇨🇳", isSelected: selectedLanguage == "zh") {
-                                                selectedLanguage = "zh"
-                                            }
-                                        }
+                                        )
                                     }
 
                                     Spacer()
