@@ -10,7 +10,7 @@ import SwiftUI
 struct HeaderView: View {
     @Binding var showMenu: Bool
     @Binding var path: NavigationPath
-    @State private var showUsername = true
+    @State private var showUsername = false
     @Environment(\.sizeCategory) var sizeCategory
     @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var authService: AuthService
@@ -85,9 +85,13 @@ struct HeaderView: View {
         .padding(.bottom, 6)
         .background(Color.primaryColor)
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                withAnimation {
-                    showUsername = false
+            showUsername = authService.showWelcome
+            if showUsername {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    withAnimation {
+                        showUsername = false
+                        authService.showWelcome = false
+                    }
                 }
             }
         }
