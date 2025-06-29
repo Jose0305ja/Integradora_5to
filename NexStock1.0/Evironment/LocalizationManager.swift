@@ -18,6 +18,10 @@ class LocalizationManager: ObservableObject {
         }
     }
 
+    func setLanguage(_ language: String) {
+        selectedLanguage = language
+    }
+
     func localizedString(forKey key: String) -> String {
         let language = selectedLanguage
         guard let path = Bundle.main.path(forResource: language, ofType: "json"),
