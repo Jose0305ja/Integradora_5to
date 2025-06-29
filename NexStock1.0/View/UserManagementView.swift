@@ -12,8 +12,7 @@ struct UserManagementView: View {
     @StateObject private var viewModel = UserManagementViewModel()
     @EnvironmentObject var authService: AuthService
     @State private var showAddUserSheet = false
-    @State private var editingUserId: String? = nil
-    @State private var showEditUserSheet = false
+    @State private var editingUser: UserTableModel? = nil
     @State private var userToDelete: UserTableModel? = nil
     @State private var showDeleteAlert = false
 
@@ -77,8 +76,7 @@ struct UserManagementView: View {
                         ForEach(viewModel.users) { user in
                             UserRowView(user: user,
                                         onEdit: {
-                                            editingUserId = user.id
-                                            showEditUserSheet = true
+                                            editingUser = user
                                         },
                                         onDelete: {
                                             userToDelete = user
@@ -105,13 +103,11 @@ struct UserManagementView: View {
             }
             .environmentObject(authService)
         }
-        .sheet(isPresented: $showEditUserSheet) {
-            if let id = editingUserId {
-                EditUserSheet(userId: id) {
-                    viewModel.fetchUsers()
-                }
-                .environmentObject(authService)
+        .sheet(item: $editingUser, onDismiss: { editingUser = nil }) { user in
+            EditUserSheet(userId: user.id) {
+                viewModel.fetchUsers()
             }
+            .environmentObject(authService)
         }
         .alert("¿Eliminar usuario?", isPresented: $showDeleteAlert) {
             Button("Cancelar", role: .cancel) {}
