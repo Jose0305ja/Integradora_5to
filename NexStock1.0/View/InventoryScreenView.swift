@@ -28,15 +28,8 @@ struct InventoryScreenView: View {
             content
         }
         .overlay(addButton, alignment: .bottomTrailing)
-        .overlay(
-            Group {
-                if isSearchFocused {
-                    Color.black.opacity(0.3)
-                        .ignoresSafeArea()
-                        .onTapGesture { isSearchFocused = false }
-                }
-            }
-        )
+        // Removed dimming overlay when search bar is focused so that only the
+        // search bar highlights without darkening the rest of the screen
         .sheet(isPresented: $showAddProductSheet) {
             AddProductSheet { _ in
                 showAddProductSheet = false
@@ -76,6 +69,10 @@ struct InventoryScreenView: View {
         .padding()
         .background(isSearchFocused ? Color.tertiaryColor : Color.secondaryColor)
         .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.primaryColor.opacity(isSearchFocused ? 0.8 : 0), lineWidth: 2)
+        )
         .shadow(radius: isSearchFocused ? 8 : 0)
         .padding(.horizontal)
         .onChange(of: searchVM.query) { text in
