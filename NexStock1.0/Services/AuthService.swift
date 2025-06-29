@@ -79,9 +79,10 @@ class AuthService: ObservableObject {
                     if let t = Color(hex: decoded.settings.color_tertiary) {
                         ThemeManager.shared.tertiaryColor = t
                     }
-                }
 
-                completion(.success(decoded))
+                    // Call completion after token is available
+                    completion(.success(decoded))
+                }
             } catch {
                 if let responseStr = String(data: data, encoding: .utf8) {
                     print("🔴 Falló la decodificación. Respuesta:\n\(responseStr)")
