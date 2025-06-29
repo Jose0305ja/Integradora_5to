@@ -27,10 +27,16 @@ struct TemperatureView: View {
                         SectionContainer(title: "time_range".localized) {
                             Picker("time_range".localized, selection: $viewModel.selectedTimeRange) {
                                 ForEach(viewModel.timeRanges, id: \.self) { range in
-                                    Text(range.labelKey.localized).tag(range)
+                                    Text(range.labelKey.localized)
+                                        .tag(range)
                                 }
                             }
                             .pickerStyle(.menu)
+                            .tint(.tertiaryColor)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 6)
+                            .background(Color.fourthColor)
+                            .cornerRadius(8)
                             .onChange(of: viewModel.selectedTimeRange) { newValue in
                                 viewModel.fetch(for: newValue)
                             }
@@ -97,7 +103,7 @@ struct TemperatureView: View {
         }
     }
 
-    private func infoBox(title: String, value: String, color: Color = .tertiaryColor) -> some View {
+    private func infoBox(title: String, value: String, color: Color = .primaryColor) -> some View {
         VStack(spacing: 4) {
             Text(title)
                 .font(.caption2)
