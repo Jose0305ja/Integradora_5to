@@ -101,45 +101,42 @@ struct SettingsView: View {
                                         .font(.body)
 
                                     VStack(alignment: .leading, spacing: 8) {
-                                        DisclosureGroup(
-                                            isExpanded: $languagesExpanded,
-                                            content: {
-                                                VStack(alignment: .leading, spacing: 8) {
-                                                    OptionButton(label: "Español 🇲🇽", isSelected: selectedLanguage == "es") {
-                                                        selectedLanguage = "es"
-                                                    }
+                                        ExpandButton(label: "languages".localized,
+                                                     isExpanded: languagesExpanded) {
+                                            withAnimation { languagesExpanded.toggle() }
+                                        }
 
-                                                    OptionButton(label: "English 🇺🇸", isSelected: selectedLanguage == "en") {
-                                                        selectedLanguage = "en"
-                                                    }
-
-                                                    OptionButton(label: "Français 🇫🇷", isSelected: selectedLanguage == "fr") {
-                                                        selectedLanguage = "fr"
-                                                    }
-
-                                                    OptionButton(label: "Deutsch 🇩🇪", isSelected: selectedLanguage == "de") {
-                                                        selectedLanguage = "de"
-                                                    }
-
-                                                    OptionButton(label: "Italiano 🇮🇹", isSelected: selectedLanguage == "it") {
-                                                        selectedLanguage = "it"
-                                                    }
-
-                                                    OptionButton(label: "日本語 🇯🇵", isSelected: selectedLanguage == "ja") {
-                                                        selectedLanguage = "ja"
-                                                    }
-
-                                                    OptionButton(label: "中文 🇨🇳", isSelected: selectedLanguage == "zh") {
-                                                        selectedLanguage = "zh"
-                                                    }
+                                        if languagesExpanded {
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                OptionButton(label: "Español 🇲🇽", isSelected: selectedLanguage == "es") {
+                                                    selectedLanguage = "es"
                                                 }
-                                            },
-                                            label: {
-                                                Text("languages")
-                                                    .font(.body)
-                                                    .foregroundColor(.fourthColor)
+
+                                                OptionButton(label: "English 🇺🇸", isSelected: selectedLanguage == "en") {
+                                                    selectedLanguage = "en"
+                                                }
+
+                                                OptionButton(label: "Français 🇫🇷", isSelected: selectedLanguage == "fr") {
+                                                    selectedLanguage = "fr"
+                                                }
+
+                                                OptionButton(label: "Deutsch 🇩🇪", isSelected: selectedLanguage == "de") {
+                                                    selectedLanguage = "de"
+                                                }
+
+                                                OptionButton(label: "Italiano 🇮🇹", isSelected: selectedLanguage == "it") {
+                                                    selectedLanguage = "it"
+                                                }
+
+                                                OptionButton(label: "日本語 🇯🇵", isSelected: selectedLanguage == "ja") {
+                                                    selectedLanguage = "ja"
+                                                }
+
+                                                OptionButton(label: "中文 🇨🇳", isSelected: selectedLanguage == "zh") {
+                                                    selectedLanguage = "zh"
+                                                }
                                             }
-                                        )
+                                        }
                                     }
 
                                     Spacer()
