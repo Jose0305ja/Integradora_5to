@@ -11,15 +11,22 @@ struct OptionButton: View {
         Button(action: action) {
             Text(label)
                 .font(.footnote.weight(.semibold))
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
-                .background(isSelected ? Color.tertiaryColor : Color.secondaryColor)
+                .padding(.vertical, 10)
+                .padding(.horizontal, 14)
+                .background(
+                    LinearGradient(
+                        colors: isSelected ? [Color.tertiaryColor, Color.primaryColor] : [Color.secondaryColor, Color.primaryColor.opacity(0.7)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
                 .foregroundColor(isSelected ? Color.secondaryColor : Color.tertiaryColor)
                 .clipShape(Capsule())
                 .overlay(
                     Capsule()
-                        .stroke(Color.tertiaryColor.opacity(0.5), lineWidth: 1)
+                        .stroke(Color.tertiaryColor.opacity(0.4), lineWidth: 1)
                 )
+                .shadow(color: Color.primaryColor.opacity(0.2), radius: 2, x: 0, y: 1)
         }
         .buttonStyle(.plain)
     }
