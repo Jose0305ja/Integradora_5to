@@ -12,6 +12,9 @@ struct UserManagementView: View {
     @StateObject private var viewModel = UserManagementViewModel()
     @EnvironmentObject var authService: AuthService
     @State private var showAddUserSheet = false
+    @State private var editingUser: UserDetailsResponse? = nil
+    @State private var userToDelete: UserTableModel? = nil
+    @State private var showDeleteAlert = false
 
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
@@ -71,7 +74,22 @@ struct UserManagementView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         ForEach(viewModel.users) { user in
-                            UserRowView(user: user)
+                            UserRowView(user: user,
+                                        onEdit: {
+                                            print("[UserManagementView] edit tapped for \(user.id)")
+                                            viewModel.fetchUserDetails(id: user.id) { details in
+                                                if let details = details {
+                                                    print("[UserManagementView] setting editingUser for \(details.user.id)")
+                                                    editingUser = details
+                                                } else {
+                                                    print("[UserManagementView] no details returned")
+                                                }
+                                            }
+                                        },
+                                        onDelete: {
+                                            userToDelete = user
+                                            showDeleteAlert = true
+                                        })
                         }
                     }
                     .padding(.top)
@@ -93,12 +111,28 @@ struct UserManagementView: View {
             }
             .environmentObject(authService)
         }
+        .sheet(item: $editingUser, onDismiss: { editingUser = nil }) { details in
+            EditUserSheet(details: details) {
+                viewModel.fetchUsers()
+            }
+            .environmentObject(authService)
+        }
+        .alert("¿Eliminar usuario?", isPresented: $showDeleteAlert) {
+            Button("Cancelar", role: .cancel) {}
+            Button("Eliminar", role: .destructive) {
+                if let user = userToDelete {
+                    viewModel.deleteUser(id: user.id)
+                }
+            }
+        }
         .overlay(loadingOverlay)
     }
 }
 
 struct UserRowView: View {
     let user: UserTableModel
+    var onEdit: () -> Void
+    var onDelete: () -> Void
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
@@ -139,16 +173,12 @@ struct UserRowView: View {
                 .cornerRadius(8)
 
             HStack(spacing: 12) {
-                Button {
-                    print("Editar \(user.username)")
-                } label: {
+                Button(action: onEdit) {
                     Image(systemName: "square.and.pencil")
                         .foregroundColor(.accentColor)
                 }
 
-                Button {
-                    print("Eliminar \(user.username)")
-                } label: {
+                Button(action: onDelete) {
                     Image(systemName: "trash")
                         .foregroundColor(.red)
                 }
