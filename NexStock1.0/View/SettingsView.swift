@@ -74,12 +74,17 @@ struct SettingsView: View {
                                         .font(.body)
                                         .foregroundColor(.fourthColor)
 
-                                    Picker("Apariencia", selection: $selectedAppearance) {
-                                        Text("light".localized).tag("light")
-                                        Text("dark".localized).tag("dark")
-                                        Text("automatic".localized).tag("system")
+                                    OptionButton(label: "light".localized, isSelected: selectedAppearance == "light") {
+                                        selectedAppearance = "light"
                                     }
-                                    .pickerStyle(MenuPickerStyle())
+
+                                    OptionButton(label: "dark".localized, isSelected: selectedAppearance == "dark") {
+                                        selectedAppearance = "dark"
+                                    }
+
+                                    OptionButton(label: "automatic".localized, isSelected: selectedAppearance == "system") {
+                                        selectedAppearance = "system"
+                                    }
 
                                     Spacer()
                                 }
@@ -94,16 +99,33 @@ struct SettingsView: View {
                                         .font(.body)
                                         .foregroundColor(.fourthColor)
 
-                                    Picker("Idioma", selection: $selectedLanguage) {
-                                        Text("Español 🇲🇽").tag("es")
-                                        Text("English 🇺🇸").tag("en")
-                                        Text("Français 🇫🇷").tag("fr")
-                                        Text("Deutsch 🇩🇪").tag("de")
-                                        Text("Italiano 🇮🇹").tag("it")
-                                        Text("日本語 🇯🇵").tag("ja")
-                                        Text("中文 🇨🇳").tag("zh")
+                                    OptionButton(label: "Español 🇲🇽", isSelected: selectedLanguage == "es") {
+                                        selectedLanguage = "es"
                                     }
-                                    .pickerStyle(MenuPickerStyle())
+
+                                    OptionButton(label: "English 🇺🇸", isSelected: selectedLanguage == "en") {
+                                        selectedLanguage = "en"
+                                    }
+
+                                    OptionButton(label: "Français 🇫🇷", isSelected: selectedLanguage == "fr") {
+                                        selectedLanguage = "fr"
+                                    }
+
+                                    OptionButton(label: "Deutsch 🇩🇪", isSelected: selectedLanguage == "de") {
+                                        selectedLanguage = "de"
+                                    }
+
+                                    OptionButton(label: "Italiano 🇮🇹", isSelected: selectedLanguage == "it") {
+                                        selectedLanguage = "it"
+                                    }
+
+                                    OptionButton(label: "日本語 🇯🇵", isSelected: selectedLanguage == "ja") {
+                                        selectedLanguage = "ja"
+                                    }
+
+                                    OptionButton(label: "中文 🇨🇳", isSelected: selectedLanguage == "zh") {
+                                        selectedLanguage = "zh"
+                                    }
 
                                     Spacer()
                                 }
