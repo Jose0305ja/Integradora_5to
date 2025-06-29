@@ -38,7 +38,7 @@ struct HeaderView: View {
                         Text("welcome".localized)
                             .font(.caption)
                             .foregroundColor(.tertiaryColor)
-                        Text("Jose Rodriguez")
+                        Text(authService.userInfo?.username ?? "")
                             .font(.caption2)
                             .foregroundColor(.tertiaryColor)
                     }
