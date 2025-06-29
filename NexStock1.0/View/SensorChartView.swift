@@ -18,18 +18,29 @@ struct SensorChartView: View {
                     )
                     .interpolationMethod(.catmullRom)
                     .foregroundStyle(type == .temperature ? Color.primaryColor : Color.secondaryColor)
-                    .lineStyle(StrokeStyle(lineWidth: 2))
+                    .lineStyle(StrokeStyle(lineWidth: 3, lineJoin: .round))
                 }
             }
             .chartXAxis {
                 AxisMarks(values: .automatic(desiredCount: axisLabelCount)) { value in
+                    AxisGridLine()
+                        .foregroundStyle(Color.tertiaryColor.opacity(0.3))
                     AxisValueLabel() {
                         if let date = value.as(Date.self) {
                             Text(axisLabelFormatter.string(from: date))
                                 .font(.caption2)
+                                .foregroundColor(.tertiaryColor)
                                 .rotationEffect(.degrees(-45))
                         }
                     }
+                }
+            }
+            .chartYAxis {
+                AxisMarks(position: .leading) { value in
+                    AxisGridLine()
+                        .foregroundStyle(Color.tertiaryColor.opacity(0.3))
+                    AxisValueLabel()
+                        .foregroundStyle(Color.tertiaryColor)
                 }
             }
             .chartYScale(domain: yAxisRange)
