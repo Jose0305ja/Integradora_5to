@@ -1,20 +1,30 @@
 import SwiftUI
 
 struct EditUserSheet: View {
-    let userId: String
+    let details: UserDetailsResponse
     var onSave: () -> Void
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var authService: AuthService
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
 
-    @State private var username = ""
-    @State private var firstName = ""
-    @State private var lastName = ""
+    @State private var username: String
+    @State private var firstName: String
+    @State private var lastName: String
     @State private var selectedRole: RoleModel?
-    @State private var roles: [RoleModel] = []
+    @State private var roles: [RoleModel]
     @State private var showSuccessAlert = false
     @State private var showErrorAlert = false
+
+    init(details: UserDetailsResponse, onSave: @escaping () -> Void) {
+        self.details = details
+        self.onSave = onSave
+        _username = State(initialValue: details.user.username)
+        _firstName = State(initialValue: details.user.first_name)
+        _lastName = State(initialValue: details.user.last_name)
+        _roles = State(initialValue: details.roles)
+        _selectedRole = State(initialValue: details.roles.first(where: { $0.id == details.user.role.id }))
+    }
 
     private var header: some View {
         HStack {
@@ -106,7 +116,6 @@ struct EditUserSheet: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .onAppear { fetchDetails() }
         .alert("Cambios guardados", isPresented: $showSuccessAlert) {
             Button("OK", role: .cancel) {
                 dismiss()
@@ -118,28 +127,11 @@ struct EditUserSheet: View {
         }
     }
 
-    private func fetchDetails() {
-        UserService.shared.fetchUserDetails(id: userId) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let response):
-                    let u = response.user
-                    username = u.username
-                    firstName = u.first_name
-                    lastName = u.last_name
-                    roles = response.roles
-                    selectedRole = response.roles.first(where: { $0.id == u.role.id })
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        }
-    }
 
     private func saveChanges() {
         guard let role = selectedRole else { return }
         let update = UpdateUserModel(username: username, first_name: firstName, last_name: lastName, role_id: role.id)
-        UserService.shared.updateUser(id: userId, user: update) { result in
+        UserService.shared.updateUser(id: details.user.id, user: update) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success:

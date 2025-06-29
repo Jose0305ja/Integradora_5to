@@ -12,3 +12,7 @@ struct UserDetailsResponse: Codable {
     let user: UserDetail
     let roles: [RoleModel]
 }
+
+extension UserDetailsResponse: Identifiable {
+    var id: String { user.id }
+}

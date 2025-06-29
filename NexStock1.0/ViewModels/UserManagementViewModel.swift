@@ -41,4 +41,21 @@ class UserManagementViewModel: ObservableObject {
             }
         }
     }
+
+    func fetchUserDetails(id: String, completion: @escaping (UserDetailsResponse?) -> Void) {
+        guard !isLoading else { return }
+        isLoading = true
+        UserService.shared.fetchUserDetails(id: id) { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isLoading = false
+                switch result {
+                case .success(let response):
+                    completion(response)
+                case .failure(let error):
+                    print(error)
+                    completion(nil)
+                }
+            }
+        }
+    }
 }

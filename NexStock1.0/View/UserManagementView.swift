@@ -12,7 +12,7 @@ struct UserManagementView: View {
     @StateObject private var viewModel = UserManagementViewModel()
     @EnvironmentObject var authService: AuthService
     @State private var showAddUserSheet = false
-    @State private var editingUser: UserTableModel? = nil
+    @State private var editingUser: UserDetailsResponse? = nil
     @State private var userToDelete: UserTableModel? = nil
     @State private var showDeleteAlert = false
 
@@ -76,7 +76,11 @@ struct UserManagementView: View {
                         ForEach(viewModel.users) { user in
                             UserRowView(user: user,
                                         onEdit: {
-                                            editingUser = user
+                                            viewModel.fetchUserDetails(id: user.id) { details in
+                                                if let details = details {
+                                                    editingUser = details
+                                                }
+                                            }
                                         },
                                         onDelete: {
                                             userToDelete = user
@@ -103,8 +107,8 @@ struct UserManagementView: View {
             }
             .environmentObject(authService)
         }
-        .sheet(item: $editingUser, onDismiss: { editingUser = nil }) { user in
-            EditUserSheet(userId: user.id) {
+        .sheet(item: $editingUser, onDismiss: { editingUser = nil }) { details in
+            EditUserSheet(details: details) {
                 viewModel.fetchUsers()
             }
             .environmentObject(authService)
