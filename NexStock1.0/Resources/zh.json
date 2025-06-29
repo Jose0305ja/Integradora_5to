@@ -141,6 +141,7 @@
   "delete": "删除",
   "active": "启用",
   "inactive": "停用",
+  "time_range": "时间范围",
   "range_24h": "24小时",
   "range_last_5min": "最近5分钟",
   "range_last_week": "最近一周",

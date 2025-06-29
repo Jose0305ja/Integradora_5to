@@ -24,14 +24,16 @@ struct HumidityView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         // Selector de tiempo
-                        Picker("", selection: $viewModel.selectedTimeRange) {
-                            ForEach(viewModel.timeRanges, id: \.self) { range in
-                                Text(range.labelKey.localized).tag(range)
+                        SectionContainer(title: "time_range".localized) {
+                            Picker("time_range".localized, selection: $viewModel.selectedTimeRange) {
+                                ForEach(viewModel.timeRanges, id: \.self) { range in
+                                    Text(range.labelKey.localized).tag(range)
+                                }
                             }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: viewModel.selectedTimeRange) { newValue in
-                            viewModel.fetch(for: newValue)
+                            .pickerStyle(.menu)
+                            .onChange(of: viewModel.selectedTimeRange) { newValue in
+                                viewModel.fetch(for: newValue)
+                            }
                         }
 
                         // Gráfica

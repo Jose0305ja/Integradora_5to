@@ -141,6 +141,7 @@
   "delete": "Löschen",
   "active": "Aktiv",
   "inactive": "Inaktiv",
+  "time_range": "Zeitraum",
   "range_24h": "24 Stunden",
   "range_last_5min": "Letzte 5 Minuten",
   "range_last_week": "Letzte Woche",

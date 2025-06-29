@@ -146,6 +146,7 @@
   "delete": "Delete",
   "active": "Active",
   "inactive": "Inactive",
+  "time_range": "Time range",
   "range_24h": "24 Hours",
   "range_last_5min": "Last 5 Minutes",
   "range_last_week": "Last Week",
