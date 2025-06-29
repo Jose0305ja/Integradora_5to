@@ -10,6 +10,8 @@ import SwiftUI
 
 struct UserManagementView: View {
     @StateObject private var viewModel = UserManagementViewModel()
+    @EnvironmentObject var authService: AuthService
+    @State private var showAddUserSheet = false
 
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
@@ -27,6 +29,19 @@ struct UserManagementView: View {
             }
         }
     }
+    private var addButton: some View {
+        Button(action: { showAddUserSheet = true }) {
+            Image(systemName: "plus")
+                .foregroundColor(.white)
+                .font(.system(size: 20, weight: .bold))
+                .padding()
+                .background(Circle().fill(Color.primaryColor))
+                .shadow(radius: 5)
+        }
+        .padding(.trailing, 24)
+        .padding(.bottom, 24)
+    }
+
 
     var body: some View {
         ZStack {
@@ -69,6 +84,14 @@ struct UserManagementView: View {
             if users.isEmpty {
                 print("[UserManagementView] user list empty")
             }
+        }
+        .overlay(addButton, alignment: .bottomTrailing)
+        .sheet(isPresented: $showAddUserSheet) {
+            AddUserSheet {
+                viewModel.fetchUsers()
+                showAddUserSheet = false
+            }
+            .environmentObject(authService)
         }
         .overlay(loadingOverlay)
     }
