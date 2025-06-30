@@ -59,7 +59,7 @@ struct UserManagementView: View {
                         Image(systemName: "chevron.left")
                             .font(.title2)
                             .foregroundColor(.primary)
-                            .accessibilityLabel("Volver")
+                            .accessibilityLabel("back".localized)
                     }
 
                     Text("users".localized)
@@ -117,9 +117,9 @@ struct UserManagementView: View {
             }
             .environmentObject(authService)
         }
-        .alert("¿Eliminar usuario?", isPresented: $showDeleteAlert) {
-            Button("Cancelar", role: .cancel) {}
-            Button("Eliminar", role: .destructive) {
+        .alert("delete_user_question".localized, isPresented: $showDeleteAlert) {
+            Button("cancel".localized, role: .cancel) {}
+            Button("delete".localized, role: .destructive) {
                 if let user = userToDelete {
                     viewModel.deleteUser(id: user.id)
                 }
@@ -163,7 +163,7 @@ struct UserRowView: View {
             let activeTextColor = isDarkMode ? Color.white : Color.green
             let inactiveTextColor = isDarkMode ? Color.white : Color.red
 
-            Text(user.isActive ? "Activo" : "Inactivo")
+            Text(user.isActive ? "active".localized : "inactive".localized)
                 .font(.caption)
                 .fontWeight(.bold)
                 .padding(.horizontal, 10)

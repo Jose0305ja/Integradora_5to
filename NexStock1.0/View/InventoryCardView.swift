@@ -35,7 +35,7 @@ struct InventoryCardView: View {
                 .font(.headline)
                 .foregroundColor(.tertiaryColor)
 
-            Text("Stock: \(product.stock_actual)")
+            Text("\("stock_prefix".localized) \(product.stock_actual)")
                 .font(.caption)
                 .foregroundColor(.fourthColor.opacity(0.6))
         }

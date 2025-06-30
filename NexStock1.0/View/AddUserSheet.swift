@@ -26,13 +26,13 @@ struct AddUserSheet: View {
 
             Spacer()
 
-            Text("Nuevo usuario")
+            Text("new_user".localized)
                 .font(.headline)
                 .foregroundColor(.tertiaryColor)
 
             Spacer()
 
-            Button("Guardar") { saveUser() }
+            Button("save".localized) { saveUser() }
                 .disabled(username.isEmpty || password.isEmpty || firstName.isEmpty || lastName.isEmpty || selectedRole == nil)
                 .foregroundColor(.tertiaryColor)
         }
@@ -52,12 +52,12 @@ struct AddUserSheet: View {
 
                     ScrollView {
                         VStack(spacing: 20) {
-                            SectionContainer(title: "Información") {
+                            SectionContainer(title: "information".localized) {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Nombre de usuario")
+                                    Text("username".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    TextField("Usuario", text: $username)
+                                    TextField("username".localized, text: $username)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -65,10 +65,10 @@ struct AddUserSheet: View {
                                 }
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Contraseña")
+                                    Text("password".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    SecureField("Contraseña", text: $password)
+                                    SecureField("password".localized, text: $password)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -76,10 +76,10 @@ struct AddUserSheet: View {
                                 }
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Nombre")
+                                    Text("first_name".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    TextField("Nombre", text: $firstName)
+                                    TextField("first_name".localized, text: $firstName)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -87,10 +87,10 @@ struct AddUserSheet: View {
                                 }
 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text("Apellido")
+                                    Text("last_name".localized)
                                         .font(.caption)
                                         .foregroundColor(.tertiaryColor)
-                                    TextField("Apellido", text: $lastName)
+                                    TextField("last_name".localized, text: $lastName)
                                         .padding(10)
                                         .background(Color.fourthColor)
                                         .cornerRadius(8)
@@ -100,8 +100,8 @@ struct AddUserSheet: View {
                             .padding(.vertical, 4)
                             .foregroundColor(.tertiaryColor)
 
-                            SectionContainer(title: "Rol") {
-                                Picker("Rol", selection: $selectedRole) {
+                            SectionContainer(title: "role".localized) {
+                                Picker("role".localized, selection: $selectedRole) {
                                     ForEach(roles, id: \.self) { role in
                                         Text(role.name).tag(role as RoleModel?)
                                     }
@@ -118,14 +118,14 @@ struct AddUserSheet: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear { fetchRoles() }
-        .alert("Usuario creado", isPresented: $showSuccessAlert) {
-            Button("OK", role: .cancel) {
+        .alert("user_created".localized, isPresented: $showSuccessAlert) {
+            Button("ok".localized, role: .cancel) {
                 dismiss()
                 onSave()
             }
         }
-        .alert("Ocurrió un error", isPresented: $showErrorAlert) {
-            Button("OK", role: .cancel) {}
+        .alert("error_occurred".localized, isPresented: $showErrorAlert) {
+            Button("ok".localized, role: .cancel) {}
         }
     }
 

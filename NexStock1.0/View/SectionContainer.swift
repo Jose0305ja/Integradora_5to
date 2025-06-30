@@ -144,6 +144,6 @@ struct SettingsTile: View {
         .shadow(color: Color.primaryColor.opacity(0.05), radius: 5, x: 0, y: 2)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(title))
-        .accessibilityHint("Presiona para acceder a \(title.lowercased())")
+        .accessibilityHint(String(format: "press_to_access".localized, title.lowercased()))
     }
 }

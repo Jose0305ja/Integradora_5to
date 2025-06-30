@@ -36,7 +36,7 @@ struct SettingsView: View {
                         Image(systemName: "chevron.left")
                             .font(.title2)
                             .foregroundColor(.primary)
-                            .accessibilityLabel("Volver")
+                            .accessibilityLabel("back".localized)
                     }
 
                     Text("settings".localized)
@@ -144,7 +144,7 @@ struct SettingsView: View {
                             }
 
                             // 🔔 Notificaciones
-                            ToggleRow(icon: "bell.fill", title: "Notificaciones", isOn: $notificationsEnabled)
+                            ToggleRow(icon: "bell.fill", title: "notifications".localized, isOn: $notificationsEnabled)
                         }
 
                         // 🛠️ Avanzado

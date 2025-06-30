@@ -23,28 +23,22 @@ struct TemperatureView: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
+                        Text("temperature".localized)
+                            .font(.title3.bold())
+                            .padding(.bottom, 4)
+
                         // Selector de tiempo
-                        HStack(spacing: 12) {
-                            ForEach(viewModel.timeRanges, id: \.self) { range in
-                                Button(action: {
-                                    viewModel.selectedTimeRange = range
-                                    viewModel.fetch(for: range)
-                                }) {
-                                    Text(range)
-                                        .font(.subheadline)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 6)
-                                        .background(viewModel.selectedTimeRange == range ? Color.secondaryColor : Color.secondaryColor.opacity(0.3))
-                                        .cornerRadius(8)
-                                        .foregroundColor(.tertiaryColor)
-                                }
+                        SectionContainer(title: "time_range".localized) {
+                            TimeRangeDropdown(selection: $viewModel.selectedTimeRange,
+                                             ranges: viewModel.timeRanges) { newValue in
+                                viewModel.fetch(for: newValue)
                             }
                         }
 
                         // Gráfica
                         SectionContainer(title: "") {
                             if viewModel.temperatureData.isEmpty {
-                                Text("Sin datos")
+                                Text("no_data".localized)
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity, alignment: .center)
                             } else {
@@ -59,15 +53,20 @@ struct TemperatureView: View {
                         // Valores clave
                         SectionContainer(title: "") {
                             if viewModel.temperatureData.isEmpty {
-                                Text("Sin datos")
+                                Text("no_data".localized)
                                     .foregroundColor(.tertiaryColor)
                                     .frame(maxWidth: .infinity)
                             } else {
                                 HStack {
-                                    infoBox(title: "current_temperature".localized, value: "\(String(format: "%.1f", viewModel.current))°C", color: .red)
-                                    infoBox(title: "average".localized, value: "\(String(format: "%.1f", viewModel.average))°C")
-                                    infoBox(title: "minimum".localized, value: "\(String(format: "%.1f", viewModel.min))°C")
-                                    infoBox(title: "maximum".localized, value: "\(String(format: "%.1f", viewModel.max))°C")
+                                    SensorStatView(label: "current_temperature".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.current))°C",
+                                                   highlight: true)
+                                    SensorStatView(label: "average".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.average))°C")
+                                    SensorStatView(label: "minimum".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.min))°C")
+                                    SensorStatView(label: "maximum".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.max))°C")
                                 }
                             }
                         }
@@ -96,24 +95,10 @@ struct TemperatureView: View {
         .navigationBarBackButtonHidden(true)
         .task { viewModel.fetch(for: viewModel.selectedTimeRange) }
         .alert(isPresented: .constant(viewModel.errorMessage != nil)) {
-            Alert(title: Text("Error"), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("OK")) {
+            Alert(title: Text("error".localized), message: Text(viewModel.errorMessage ?? ""), dismissButton: .default(Text("ok".localized)) {
                 viewModel.errorMessage = nil
             })
         }
     }
 
-    private func infoBox(title: String, value: String, color: Color = .tertiaryColor) -> some View {
-        VStack(spacing: 4) {
-            Text(title)
-                .font(.caption2)
-                .foregroundColor(.tertiaryColor)
-            Text(value)
-                .font(.headline)
-                .foregroundColor(color)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(8)
-        .background(Color.secondaryColor)
-        .cornerRadius(10)
-    }
 }
