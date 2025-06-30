@@ -17,7 +17,7 @@ struct SensorChartView: View {
                         y: .value("Valor", point.value)
                     )
                     .interpolationMethod(.catmullRom)
-                    .foregroundStyle(type == .temperature ? Color.primaryColor : Color.secondaryColor)
+                    .foregroundStyle(Color.black)
                     .lineStyle(StrokeStyle(lineWidth: 3, lineJoin: .round))
                 }
             }
