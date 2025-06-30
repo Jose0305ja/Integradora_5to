@@ -21,7 +21,7 @@ struct TimeRangeDropdown: View {
                 Text(selection.labelKey.localized)
                 Image(systemName: "chevron.down")
             }
-            .font(.caption.bold())
+            .font(.subheadline.bold())
             .padding(.vertical, 8)
             .padding(.horizontal, 12)
             .background(

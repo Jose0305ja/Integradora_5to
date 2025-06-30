@@ -31,6 +31,10 @@ struct TemperatureView: View {
                             }
                         }
 
+                        Text("temperature".localized)
+                            .font(.title3.bold())
+                            .padding(.bottom, 4)
+
                         // Gráfica
                         SectionContainer(title: "") {
                             if viewModel.temperatureData.isEmpty {
@@ -54,10 +58,15 @@ struct TemperatureView: View {
                                     .frame(maxWidth: .infinity)
                             } else {
                                 HStack {
-                                    infoBox(title: "current_temperature".localized, value: "\(String(format: "%.1f", viewModel.current))°C", color: .red)
-                                    infoBox(title: "average".localized, value: "\(String(format: "%.1f", viewModel.average))°C")
-                                    infoBox(title: "minimum".localized, value: "\(String(format: "%.1f", viewModel.min))°C")
-                                    infoBox(title: "maximum".localized, value: "\(String(format: "%.1f", viewModel.max))°C")
+                                    SensorStatView(label: "current_temperature".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.current))°C",
+                                                   highlight: true)
+                                    SensorStatView(label: "average".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.average))°C")
+                                    SensorStatView(label: "minimum".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.min))°C")
+                                    SensorStatView(label: "maximum".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.max))°C")
                                 }
                             }
                         }
@@ -92,18 +101,4 @@ struct TemperatureView: View {
         }
     }
 
-    private func infoBox(title: String, value: String, color: Color = .primaryColor) -> some View {
-        VStack(spacing: 4) {
-            Text(title)
-                .font(.caption2)
-                .foregroundColor(.tertiaryColor)
-            Text(value)
-                .font(.title3.monospacedDigit())
-                .foregroundColor(color)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(8)
-        .background(Color.secondaryColor)
-        .cornerRadius(10)
-    }
 }

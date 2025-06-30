@@ -31,6 +31,10 @@ struct HumidityView: View {
                             }
                         }
 
+                        Text("humidity".localized)
+                            .font(.title3.bold())
+                            .padding(.bottom, 4)
+
                         // Gráfica
                         SectionContainer(title: "") {
                             if viewModel.humidityData.isEmpty {
@@ -54,15 +58,15 @@ struct HumidityView: View {
                                     .frame(maxWidth: .infinity)
                             } else {
                                 HStack {
-                                    infoBox(title: "current_humidity".localized,
-                                            value: "\(String(format: "%.1f", viewModel.current))%",
-                                            color: .secondaryColor)
-                                    infoBox(title: "average".localized,
-                                            value: "\(String(format: "%.1f", viewModel.average))%")
-                                    infoBox(title: "minimum".localized,
-                                            value: "\(String(format: "%.1f", viewModel.min))%")
-                                    infoBox(title: "maximum".localized,
-                                            value: "\(String(format: "%.1f", viewModel.max))%")
+                                    SensorStatView(label: "current_humidity".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.current))%",
+                                                   highlight: true)
+                                    SensorStatView(label: "average".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.average))%")
+                                    SensorStatView(label: "minimum".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.min))%")
+                                    SensorStatView(label: "maximum".localized,
+                                                   value: "\(String(format: "%.1f", viewModel.max))%")
                                 }
                             }
                         }
@@ -96,18 +100,4 @@ struct HumidityView: View {
         }
     }
 
-    private func infoBox(title: String, value: String, color: Color = .primaryColor) -> some View {
-        VStack(spacing: 4) {
-            Text(title)
-                .font(.caption2)
-                .foregroundColor(.tertiaryColor)
-            Text(value)
-                .font(.title3.monospacedDigit())
-                .foregroundColor(color)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(8)
-        .background(Color.secondaryColor)
-        .cornerRadius(10)
-    }
 }
