@@ -14,10 +14,11 @@ struct LoginView: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var theme: ThemeManager
     @EnvironmentObject var localization: LocalizationManager
+    @Environment(\.locale) private var locale
 
     // Use the system language for this screen regardless of the app's selected language
     private var systemLanguage: String {
-        Locale.current.languageCode ?? "es"
+        locale.languageCode ?? Locale.autoupdatingCurrent.languageCode ?? "es"
     }
 
     var body: some View {
