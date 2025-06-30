@@ -61,7 +61,7 @@ struct HumidityView: View {
                                     SensorStatView(label: "current_humidity".localized,
                                                    value: "\(String(format: "%.1f", viewModel.current))%",
                                                    highlight: true,
-                                                   highlightColor: .secondaryColor)
+                                                   highlightColor: .blue)
                                     SensorStatView(label: "average".localized,
                                                    value: "\(String(format: "%.1f", viewModel.average))%")
                                     SensorStatView(label: "minimum".localized,
