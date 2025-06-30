@@ -5,6 +5,7 @@ struct SensorStatView: View {
     let label: String
     let value: String
     var highlight: Bool = false
+    var highlightColor: Color = .red
 
     var body: some View {
         VStack(spacing: 4) {
@@ -13,7 +14,7 @@ struct SensorStatView: View {
                 .foregroundColor(.tertiaryColor)
             Text(value)
                 .font(.headline.monospacedDigit())
-                .foregroundColor(highlight ? .red : .tertiaryColor)
+                .foregroundColor(highlight ? highlightColor : .tertiaryColor)
         }
         .frame(maxWidth: .infinity)
         .padding(8)

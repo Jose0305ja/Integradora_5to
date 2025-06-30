@@ -23,6 +23,10 @@ struct TemperatureView: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
+                        Text("temperature".localized)
+                            .font(.title3.bold())
+                            .padding(.bottom, 4)
+
                         // Selector de tiempo
                         SectionContainer(title: "time_range".localized) {
                             TimeRangeDropdown(selection: $viewModel.selectedTimeRange,
@@ -30,10 +34,6 @@ struct TemperatureView: View {
                                 viewModel.fetch(for: newValue)
                             }
                         }
-
-                        Text("temperature".localized)
-                            .font(.title3.bold())
-                            .padding(.bottom, 4)
 
                         // Gráfica
                         SectionContainer(title: "") {

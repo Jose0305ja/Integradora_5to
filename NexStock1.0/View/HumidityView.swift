@@ -23,6 +23,10 @@ struct HumidityView: View {
 
                 ScrollView {
                     VStack(spacing: 16) {
+                        Text("humidity".localized)
+                            .font(.title3.bold())
+                            .padding(.bottom, 4)
+
                         // Selector de tiempo
                         SectionContainer(title: "time_range".localized) {
                             TimeRangeDropdown(selection: $viewModel.selectedTimeRange,
@@ -30,10 +34,6 @@ struct HumidityView: View {
                                 viewModel.fetch(for: newValue)
                             }
                         }
-
-                        Text("humidity".localized)
-                            .font(.title3.bold())
-                            .padding(.bottom, 4)
 
                         // Gráfica
                         SectionContainer(title: "") {
@@ -60,7 +60,8 @@ struct HumidityView: View {
                                 HStack {
                                     SensorStatView(label: "current_humidity".localized,
                                                    value: "\(String(format: "%.1f", viewModel.current))%",
-                                                   highlight: true)
+                                                   highlight: true,
+                                                   highlightColor: .secondaryColor)
                                     SensorStatView(label: "average".localized,
                                                    value: "\(String(format: "%.1f", viewModel.average))%")
                                     SensorStatView(label: "minimum".localized,
